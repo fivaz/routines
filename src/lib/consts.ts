@@ -8,7 +8,7 @@ export const Routes = {
 // firebase paths
 export const DB_PATH = {
 	AVATARS: 'avatars',
-	ROUTINES: 'routines',
+	ROUTINES: 'routines2',
 	TASKS: 'tasks',
 	USERS: 'users',
 };

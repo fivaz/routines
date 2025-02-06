@@ -1,33 +1,14 @@
-// <Dialog>
-// 	<DialogTrigger asChild>
-// 		<Button className="w-full mt-4 flex items-center gap-2">
-// 			<Plus /> New Routine
-// 		</Button>
-// 	</DialogTrigger>
-// 	<DialogContent>
-// 		<DialogHeader>
-// 			<DialogTitle>Add New Routine</DialogTitle>
-// 		</DialogHeader>
-// 		<Input
-// 			value={newRoutine}
-// 			onChange={(e) => setNewRoutine(e.target.value)}
-// 			placeholder="Routine Name"
-// 		/>
-// 		<Button className="w-full mt-2" onClick={addRoutine}>
-// 			Save
-// 		</Button>
-// 	</DialogContent>
-// </Dialog>;
-
 import { Button } from '@/components/base/button';
 import { Dialog, DialogActions, DialogBody, DialogTitle } from '@/components/base/dialog';
 import { Field, Label } from '@/components/base/fieldset';
 import { Input } from '@/components/base/input';
 import { Dispatch, SetStateAction, useState } from 'react';
-import { addDoc, collection } from 'firebase/firestore';
 import { db, storage } from '@/lib/firebase';
-import { Routine } from '@/lib/routine/type';
+import { Routine } from '@/lib/routine/routine.type';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { getRoutinePath } from '@/lib/routine/routine.repository';
+import { AuthProvider, useAuth } from '@/lib/auth-context';
+import { collection, doc, setDoc } from 'firebase/firestore';
 export function RoutineForm({
 	isOpen,
 	setIsOpen,
@@ -41,19 +22,33 @@ export function RoutineForm({
 
 	const [imageFile, setImageFile] = useState<File | null>(null);
 
-	const addRoutine = async () => {
-		if (!imageFile) return;
+	const { user } = useAuth();
 
-		const imageRef = ref(storage, `users/1/routines-2/${imageFile.name}`);
-		await uploadBytes(imageRef, imageFile);
+	async function addRoutine() {
+		if (!user) return;
+		console.log('addRoutine');
 
-		setRoutine({ ...routine, image: await getDownloadURL(imageRef) });
+		const newRoutineRef = doc(collection(db, getRoutinePath(user.uid)));
 
-		addDoc(collection(db, 'routines'), routine);
-		setImageFile(null);
-		setRoutine(emptyRoutine);
+		const imageRef = ref(storage, `${getRoutinePath(user.uid)}/${newRoutineRef.id}`);
+
+		let newRoutine = routine;
+		if (imageFile) {
+			await uploadBytes(imageRef, imageFile);
+
+			const imageLink = await getDownloadURL(imageRef);
+
+			console.log('imageLink', imageLink);
+			const routineWithImage = { ...routine, image: imageLink };
+			console.log('routine string', JSON.stringify(routineWithImage));
+
+			newRoutine = { ...routine, image: imageLink };
+			setImageFile(null);
+		}
+		setDoc(newRoutineRef, newRoutine);
+		// setRoutine(emptyRoutine);
 		setIsOpen(false);
-	};
+	}
 
 	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (e.target.files) {
