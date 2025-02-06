@@ -1,7 +1,6 @@
 'use client';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
-import '../globals.css';
 import { Dashboard } from '@/components/Dashboard';
 import { onAuthStateChanged } from 'firebase/auth';
 import { useEffect } from 'react';

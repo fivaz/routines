@@ -8,6 +8,7 @@ import { type Routine } from '@/lib/routine/routine.type';
 import { DB_PATH } from '@/lib/consts';
 import { getRoutinePath } from '@/lib/routine/routine.repository';
 import { useAuth } from '@/lib/auth-context';
+import { PlusIcon } from '@heroicons/react/16/solid';
 
 export default function Routines() {
 	const [loading, setLoading] = useState(true);
@@ -41,7 +42,7 @@ export default function Routines() {
 	return (
 		<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 			<div className="mx-auto max-w-3xl">
-				<h1 className="text-2xl font-bold mb-4">Routines</h1>
+				<h1 className="text-2xl font-bold mb-4 text-green-500">Routines</h1>
 				<div className="space-y-4">
 					{routines.map((routine) => (
 						<div
@@ -53,10 +54,17 @@ export default function Routines() {
 						</div>
 					))}
 				</div>
-				<Button type="button" onClick={() => setIsRoutineFormOpen(true)}>
-					New Routine
-				</Button>
-
+				<div className="absolute bottom-2 m-auto left-1/2 -translate-x-1/2">
+					<Button
+						className="w-40"
+						color="green"
+						type="button"
+						onClick={() => setIsRoutineFormOpen(true)}
+					>
+						<PlusIcon />
+						New Routine
+					</Button>
+				</div>
 				<RoutineForm isOpen={isRoutineFormOpen} setIsOpen={setIsRoutineFormOpen} />
 			</div>
 		</div>
