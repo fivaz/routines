@@ -20,12 +20,9 @@ export default function Layout({
 	const router = useRouter();
 
 	useEffect(() => {
-		// onAuthStateChanged(auth, (user) => {
-		// 	setUser(user);
 		if (!loading && !user) {
 			void router.push(Routes.LOGIN);
 		}
-		// });
 	}, [loading, router, user]);
 
 	if (loading) return <div>Loading...</div>;

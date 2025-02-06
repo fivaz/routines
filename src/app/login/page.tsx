@@ -24,7 +24,7 @@ export default function Login() {
 	// 	isLoading.email || isLoading.google || isLoading.github,
 	// );
 
-	async function onSubmit(event: SubmitEvent) {
+	async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
 		event.preventDefault();
 		setErrorMessage(validateFields(email, password));
 		if (errorMessage) {

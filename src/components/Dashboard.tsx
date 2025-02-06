@@ -35,6 +35,11 @@ import {
 	UserIcon,
 } from '@heroicons/react/16/solid';
 import { InboxIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid';
+import { useAuth } from '@/lib/auth-context';
+import { signOut } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
+import { Routes } from '@/lib/consts';
+import { useRouter } from 'next/navigation';
 
 const navItems = [{ label: 'Routines', url: '/' }];
 
@@ -64,6 +69,16 @@ function TeamDropdownMenu() {
 }
 
 export function Dashboard({ children }: React.PropsWithChildren) {
+	const { user } = useAuth();
+	const router = useRouter();
+
+	async function handleSignOut() {
+		await signOut(auth);
+		void router.push(Routes.LOGIN);
+	}
+
+	if (!user) return;
+
 	return (
 		<StackedLayout
 			navbar={
@@ -94,30 +109,17 @@ export function Dashboard({ children }: React.PropsWithChildren) {
 						</NavbarItem>
 						<Dropdown>
 							<DropdownButton as={NavbarItem}>
-								<Avatar src="/profile-photo.jpg" square />
+								<Avatar src={user.photoURL} square />
 							</DropdownButton>
 							<DropdownMenu className="min-w-64" anchor="bottom end">
 								<DropdownItem href="/my-profile">
 									<UserIcon />
-									<DropdownLabel>My profile</DropdownLabel>
-								</DropdownItem>
-								<DropdownItem href="/settings">
-									<Cog8ToothIcon />
-									<DropdownLabel>Settings</DropdownLabel>
-								</DropdownItem>
-								<DropdownDivider />
-								<DropdownItem href="/privacy-policy">
-									<ShieldCheckIcon />
-									<DropdownLabel>Privacy policy</DropdownLabel>
-								</DropdownItem>
-								<DropdownItem href="/share-feedback">
-									<LightBulbIcon />
-									<DropdownLabel>Share feedback</DropdownLabel>
+									<DropdownLabel>Profile</DropdownLabel>
 								</DropdownItem>
 								<DropdownDivider />
 								<DropdownItem href="/logout">
 									<ArrowRightStartOnRectangleIcon />
-									<DropdownLabel>Sign out</DropdownLabel>
+									<DropdownLabel onClick={handleSignOut}>Sign out</DropdownLabel>
 								</DropdownItem>
 							</DropdownMenu>
 						</Dropdown>
