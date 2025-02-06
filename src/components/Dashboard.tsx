@@ -1,4 +1,5 @@
-import { Avatar } from '@/app/components/base/avatar';
+'use client';
+import { Avatar } from '@/components/base/avatar';
 import {
 	Dropdown,
 	DropdownButton,
@@ -6,7 +7,7 @@ import {
 	DropdownItem,
 	DropdownLabel,
 	DropdownMenu,
-} from '@/app/components/base/dropdown';
+} from '@/components/base/dropdown';
 import {
 	Navbar,
 	NavbarDivider,
@@ -14,7 +15,7 @@ import {
 	NavbarLabel,
 	NavbarSection,
 	NavbarSpacer,
-} from '@/app/components/base/navbar';
+} from '@/components/base/navbar';
 import {
 	Sidebar,
 	SidebarBody,
@@ -22,8 +23,8 @@ import {
 	SidebarItem,
 	SidebarLabel,
 	SidebarSection,
-} from '@/app/components/base/sidebar';
-import { StackedLayout } from '@/app/components/base/stacked-layout';
+} from '@/components/base/sidebar';
+import { StackedLayout } from '@/components/base/stacked-layout';
 import {
 	ArrowRightStartOnRectangleIcon,
 	ChevronDownIcon,
@@ -35,13 +36,7 @@ import {
 } from '@heroicons/react/16/solid';
 import { InboxIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 
-const navItems = [
-	{ label: 'Home', url: '/' },
-	{ label: 'Events', url: '/events' },
-	{ label: 'Orders', url: '/orders' },
-	{ label: 'Broadcasts', url: '/broadcasts' },
-	{ label: 'Settings', url: '/settings' },
-];
+const navItems = [{ label: 'Routines', url: '/' }];
 
 function TeamDropdownMenu() {
 	return (
