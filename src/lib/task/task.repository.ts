@@ -62,12 +62,12 @@ export async function editTask(
 	task: Task,
 	imageFile: File | null,
 ) {
-	const newTaskRef = doc(db, getTaskPath(userId, routineId), task.id);
+	const taskRef = doc(db, getTaskPath(userId, routineId), task.id);
 
 	let newTask = task;
 
 	if (imageFile) {
-		const imageRef = ref(storage, `${getTaskPath(userId, routineId)}/${newTaskRef.id}`);
+		const imageRef = ref(storage, `${getTaskPath(userId, routineId)}/${taskRef.id}`);
 
 		await uploadBytes(imageRef, imageFile);
 
@@ -76,7 +76,7 @@ export async function editTask(
 		newTask = { ...task, image: imageLink };
 	}
 
-	setDoc(newTaskRef, newTask);
+	setDoc(taskRef, newTask);
 }
 
 export async function getTask(userId: string, routineId: string, taskId: string) {
@@ -101,4 +101,10 @@ export async function updateTasks(userId: string, routineId: string, tasks: Task
 	} catch (error) {
 		console.error('Error in batch update: ', error);
 	}
+}
+
+export async function persistTask(userId: string, routineId: string, task: Task) {
+	const taskRef = doc(db, getTaskPath(userId, routineId), task.id);
+
+	setDoc(taskRef, task);
 }

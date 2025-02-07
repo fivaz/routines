@@ -6,6 +6,8 @@ import { ChevronLeft, ChevronRight, CircleStop, Ellipsis, Play } from 'lucide-re
 import Image from 'next/image';
 import { formatSeconds } from '@/lib/task/task.utils';
 import { Dropdown, DropdownButton, DropdownItem, DropdownMenu } from '@/components/base/dropdown';
+import { useAuth } from '@/lib/auth-context';
+import { persistTask } from '@/lib/task/task.repository';
 
 export default function RoutineFocusMode({
 	routine,
@@ -20,6 +22,7 @@ export default function RoutineFocusMode({
 	const [isRunning, setIsRunning] = useState(false);
 	const [elapsedTime, setElapsedTime] = useState(0);
 	const currentTask = tasks[currentTaskIndex];
+	const { user } = useAuth();
 
 	useEffect(() => {
 		let timer: NodeJS.Timeout | null = null;
@@ -32,6 +35,7 @@ export default function RoutineFocusMode({
 	}, [isRunning]);
 
 	const handleStartStop = () => {
+		if (!user) return;
 		if (!isRunning) {
 			const startTime = new Date().toISOString();
 			currentTask.history.push({ startAt: startTime, endAt: '' });
@@ -40,6 +44,7 @@ export default function RoutineFocusMode({
 			const lastEntry = currentTask.history[currentTask.history.length - 1];
 			if (lastEntry) lastEntry.endAt = endTime;
 		}
+		persistTask(user.uid, routine.id, currentTask);
 		setIsRunning(!isRunning);
 	};
 
