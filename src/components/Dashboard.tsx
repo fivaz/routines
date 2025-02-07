@@ -25,16 +25,7 @@ import {
 	SidebarSection,
 } from '@/components/base/sidebar';
 import { StackedLayout } from '@/components/base/stacked-layout';
-import {
-	ArrowRightStartOnRectangleIcon,
-	ChevronDownIcon,
-	Cog8ToothIcon,
-	LightBulbIcon,
-	PlusIcon,
-	ShieldCheckIcon,
-	UserIcon,
-} from '@heroicons/react/16/solid';
-import { InboxIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid';
+import { ArrowRightStartOnRectangleIcon, UserIcon } from '@heroicons/react/16/solid';
 import { useAuth } from '@/lib/auth-context';
 import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';

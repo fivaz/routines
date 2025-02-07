@@ -73,7 +73,7 @@ export function RoutineFocusBottom({
 		currentTask.history[today].endAt = new Date().toISOString();
 
 		setIsRunning(false);
-		persistTask(user.uid, routineId, currentTask);
+		void persistTask(user.uid, routineId, currentTask);
 		goToNextTask();
 	}
 

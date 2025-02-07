@@ -1,14 +1,8 @@
 import { useEffect } from 'react';
-import { XMarkIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
+import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 
 import { Button } from '@/components/base/button';
-import {
-	Dialog,
-	DialogActions,
-	DialogBody,
-	DialogDescription,
-	DialogTitle,
-} from '@/components/base/dialog';
+import { Dialog, DialogActions, DialogBody, DialogTitle } from '@/components/base/dialog';
 
 type PromptProps = {
 	isOpen: boolean;

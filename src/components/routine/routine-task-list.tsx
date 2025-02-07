@@ -35,13 +35,11 @@ export default function RoutineTaskList({
 	routine,
 	tasks,
 	setTasks,
-	setRoutine,
 	setIsFocusMode,
 }: PropsWithChildren<{
 	routine: Routine;
 	tasks: Task[];
 	setTasks: Dispatch<SetStateAction<Task[]>>;
-	setRoutine: Dispatch<SetStateAction<Routine>>;
 	setIsFocusMode: Dispatch<SetStateAction<boolean>>;
 }>) {
 	const [routineForm, setRoutineForm] = useState<Routine | null>(null);

@@ -46,7 +46,6 @@ export default function Routine() {
 					routine={routine}
 					tasks={tasks}
 					setTasks={setTasks}
-					setRoutine={setRoutine}
 				/>
 			)}
 		</>

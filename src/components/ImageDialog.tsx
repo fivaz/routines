@@ -1,4 +1,4 @@
-import { Dialog, DialogBody } from '@/components/base/dialog';
+import { Dialog } from '@/components/base/dialog';
 import { Dispatch, SetStateAction } from 'react';
 
 export function ImageDialog({

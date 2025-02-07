@@ -22,7 +22,7 @@ export default function RoutineFocusMode({
 
 	useEffect(() => {
 		const today = new Date().toISOString().split('T')[0];
-		const todayHistory = tasks[currentTaskIndex].history?.[today];
+		const todayHistory = currentTask.history?.[today];
 		if (todayHistory) {
 			setElapsedTime(getDuration(todayHistory.startAt, todayHistory.endAt));
 		}
@@ -57,8 +57,8 @@ export default function RoutineFocusMode({
 				{/* Task Image */}
 				<div className="aspect-[1/1]">
 					<img
-						src={tasks[currentTaskIndex].image}
-						alt={tasks[currentTaskIndex].name}
+						src={currentTask.image}
+						alt={currentTask.name}
 						className="w-full object-cover h-full rounded-lg"
 					/>
 				</div>

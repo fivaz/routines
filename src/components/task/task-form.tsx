@@ -8,7 +8,7 @@ import { addTask, editTask } from '@/lib/task/task.repository';
 import { useAuth } from '@/lib/auth-context';
 import { addSeconds, format, parse, startOfDay } from 'date-fns';
 import { TIME } from '@/lib/consts';
-import { Image } from 'lucide-react';
+import { ImageIcon } from 'lucide-react';
 import { ImageDialog } from '@/components/ImageDialog';
 
 export function TaskForm({
@@ -90,7 +90,7 @@ export function TaskForm({
 												<span>Upload Image</span>
 												{taskIn.image && (
 													<button onClick={() => setIsImageOpen(true)}>
-														<Image className="w-5 h-5 text-green-500" />
+														<ImageIcon className="w-5 h-5 text-green-500" />
 													</button>
 												)}
 											</div>

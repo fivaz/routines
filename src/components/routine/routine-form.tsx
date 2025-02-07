@@ -6,7 +6,7 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import { Routine } from '@/lib/routine/routine.type';
 import { addRoutine, editRoutine } from '@/lib/routine/routine.repository';
 import { useAuth } from '@/lib/auth-context';
-import { Image } from 'lucide-react';
+import { ImageIcon } from 'lucide-react';
 import { ImageDialog } from '@/components/ImageDialog';
 
 export function RoutineForm({
@@ -71,7 +71,7 @@ export function RoutineForm({
 												<span>Upload Image</span>
 												{routineIn.image && (
 													<button onClick={() => setIsImageOpen(true)}>
-														<Image className="w-5 h-5 text-green-500" />
+														<ImageIcon className="w-5 h-5 text-green-500" />
 													</button>
 												)}
 											</div>
