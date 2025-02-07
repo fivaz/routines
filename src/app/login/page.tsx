@@ -8,6 +8,7 @@ import { Routes } from '@/lib/consts';
 import { GithubIcon } from '@/components/icons/GithubIcon';
 import { GoogleIcon } from '@/components/icons/GoogleIcon';
 import { Logo } from '@/components/Logo';
+import { InstallPrompt } from '@/components/InstallPrompt';
 
 export default function Login() {
 	const [email, setEmail] = useState('');
@@ -52,6 +53,8 @@ export default function Login() {
 						Sign in to your account
 					</h2>
 				</div>
+
+				<InstallPrompt />
 
 				<div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
 					<div className="dark:bg-zinc-900 bg-white px-6 py-12 shadow-sm sm:rounded-lg sm:px-12">
