@@ -8,6 +8,8 @@ import { formatSeconds } from '@/lib/task/task.utils';
 import { Dropdown, DropdownButton, DropdownItem, DropdownMenu } from '@/components/base/dropdown';
 import { useAuth } from '@/lib/auth-context';
 import { persistTask } from '@/lib/task/task.repository';
+import { format } from 'date-fns';
+import { usePrompt } from '@/lib/prompt-context';
 
 export default function RoutineFocusMode({
 	routine,
@@ -23,6 +25,7 @@ export default function RoutineFocusMode({
 	const [elapsedTime, setElapsedTime] = useState(0);
 	const currentTask = tasks[currentTaskIndex];
 	const { user } = useAuth();
+	const { createPrompt } = usePrompt();
 
 	useEffect(() => {
 		let timer: NodeJS.Timeout | null = null;
@@ -42,24 +45,39 @@ export default function RoutineFocusMode({
 		}
 	}, [currentTaskIndex]);
 
-	const handleStartStop = () => {
+	async function handleStart() {
 		if (!user) return;
+
 		const today = new Date().toISOString().split('T')[0];
 		const hasHistoryToday = currentTask.history.some((entry) => entry.startAt.startsWith(today));
-		if (hasHistoryToday) return;
-
-		if (!isRunning) {
-			const startTime = new Date().toISOString();
-			currentTask.history.push({ startAt: startTime, endAt: '' });
-		} else {
-			const endTime = new Date().toISOString();
-			const lastEntry = currentTask.history[currentTask.history.length - 1];
-			if (lastEntry) lastEntry.endAt = endTime;
-			setCurrentTaskIndex((prev) => (prev < tasks.length - 1 ? prev + 1 : prev));
+		if (hasHistoryToday) {
+			if (
+				!(await createPrompt({
+					title: 'Task already accomplished today',
+					message: 'Are you sure you wanna to override it ?',
+				}))
+			) {
+				return;
+			}
 		}
+
+		const startTime = new Date().toISOString();
+		currentTask.history.push({ startAt: startTime, endAt: '' });
+
 		persistTask(user.uid, routine.id, currentTask);
-		setIsRunning(!isRunning);
-	};
+		setIsRunning(true);
+	}
+
+	function handleStop() {
+		if (!user) return;
+
+		const endTime = new Date().toISOString();
+		const lastEntry = currentTask.history[currentTask.history.length - 1];
+		if (lastEntry) lastEntry.endAt = endTime;
+		setCurrentTaskIndex((prev) => (prev < tasks.length - 1 ? prev + 1 : prev));
+		persistTask(user.uid, routine.id, currentTask);
+		setIsRunning(false);
+	}
 
 	const handleNextTask = () => {
 		if (!isRunning && currentTaskIndex < tasks.length - 1) {
@@ -147,12 +165,21 @@ export default function RoutineFocusMode({
 							)}
 						</div>
 
-						<button
-							onClick={handleStartStop}
-							className="relative bg-transparent z-10 p-3 w-4/6 flex justify-center"
-						>
-							{isRunning ? <CircleStop className="w-7 h-7" /> : <Play className="w-7 h-7" />}
-						</button>
+						{isRunning ? (
+							<button
+								onClick={handleStop}
+								className="relative bg-transparent z-10 p-3 w-4/6 flex justify-center"
+							>
+								<CircleStop className="w-7 h-7" />
+							</button>
+						) : (
+							<button
+								onClick={handleStart}
+								className="relative bg-transparent z-10 p-3 w-4/6 flex justify-center"
+							>
+								<Play className="w-7 h-7" />
+							</button>
+						)}
 
 						<div className="relative bg-transparent z-10 w-1/6 flex">
 							<button

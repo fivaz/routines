@@ -70,51 +70,49 @@ export function TaskForm({
 	}
 
 	return (
-		<>
-			<Dialog open={taskIn !== null} onClose={close}>
-				{taskIn && (
-					<>
-						<DialogTitle>
-							<div className="text-lg text-green-500">{taskIn.id ? 'Edit' : 'Create'} task</div>
-						</DialogTitle>
+		<Dialog open={taskIn !== null} onClose={close}>
+			{taskIn && (
+				<>
+					<DialogTitle>
+						<div className="text-lg text-green-500">{taskIn.id ? 'Edit' : 'Create'} task</div>
+					</DialogTitle>
 
-						<DialogBody>
-							<Fieldset>
-								<FieldGroup>
-									<Field>
-										<Label>Name</Label>
-										<Input name="name" value={taskIn.name} onChange={handleChange} />
+					<DialogBody>
+						<Fieldset>
+							<FieldGroup>
+								<Field>
+									<Label>Name</Label>
+									<Input name="name" value={taskIn.name} onChange={handleChange} />
+								</Field>
+								<div className="grid grid-cols-1 gap-8 sm:grid-cols-3 sm:gap-4">
+									<Field className="sm:col-span-2">
+										<Label>Upload Image</Label>
+										<Input type="file" onChange={handleFileChange} />
 									</Field>
-									<div className="grid grid-cols-1 gap-8 sm:grid-cols-3 sm:gap-4">
-										<Field className="sm:col-span-2">
-											<Label>Upload Image</Label>
-											<Input type="file" onChange={handleFileChange} />
-										</Field>
-										<Field>
-											<Label>Duration (hh:mm)</Label>
-											<Input
-												type="time"
-												value={convertDurationToHHmm(taskIn.durationInSeconds)}
-												name="durationInSeconds"
-												onChange={handleDuration}
-											/>
-										</Field>
-									</div>
-								</FieldGroup>
-							</Fieldset>
-						</DialogBody>
+									<Field>
+										<Label>Duration (hh:mm)</Label>
+										<Input
+											type="time"
+											value={convertDurationToHHmm(taskIn.durationInSeconds)}
+											name="durationInSeconds"
+											onChange={handleDuration}
+										/>
+									</Field>
+								</div>
+							</FieldGroup>
+						</Fieldset>
+					</DialogBody>
 
-						<DialogActions>
-							<Button plain onClick={close}>
-								Cancel
-							</Button>
-							<Button color="green" onClick={handleAddTask}>
-								{taskIn.id ? 'Edit' : 'Create'}
-							</Button>
-						</DialogActions>
-					</>
-				)}
-			</Dialog>
-		</>
+					<DialogActions>
+						<Button plain onClick={close}>
+							Cancel
+						</Button>
+						<Button color="green" onClick={handleAddTask}>
+							{taskIn.id ? 'Edit' : 'Create'}
+						</Button>
+					</DialogActions>
+				</>
+			)}
+		</Dialog>
 	);
 }
