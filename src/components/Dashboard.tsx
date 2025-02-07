@@ -38,7 +38,7 @@ import { InboxIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { useAuth } from '@/lib/auth-context';
 import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
-import { Routes } from '@/lib/consts';
+import { APP_NAME, Routes } from '@/lib/consts';
 import { useRouter } from 'next/navigation';
 import { Logo } from '@/components/Logo';
 
@@ -62,7 +62,7 @@ export function Dashboard({ children }: React.PropsWithChildren) {
 					<Dropdown>
 						<DropdownButton as={NavbarItem} className="max-lg:hidden">
 							<Logo className="text-green-500 w-5 h-5" />
-							<NavbarLabel>Routines</NavbarLabel>
+							<NavbarLabel>{APP_NAME}</NavbarLabel>
 						</DropdownButton>
 					</Dropdown>
 					<NavbarDivider className="max-lg:hidden" />
@@ -100,7 +100,7 @@ export function Dashboard({ children }: React.PropsWithChildren) {
 						<Dropdown>
 							<DropdownButton as={SidebarItem} className="lg:mb-2.5">
 								<Logo className="text-green-500 w-5 h-5" />
-								<SidebarLabel>Routines</SidebarLabel>
+								<SidebarLabel>{APP_NAME}</SidebarLabel>
 							</DropdownButton>
 						</Dropdown>
 					</SidebarHeader>
