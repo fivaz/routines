@@ -9,6 +9,7 @@ import { persistTask } from '@/lib/task/task.repository';
 import { usePrompt } from '@/lib/prompt-context';
 import { format } from 'date-fns';
 import { TIME } from '@/lib/consts';
+import { RoutineTasksSummary } from '@/components/routine/routine-tasks-summary';
 
 export default function RoutineFocusMode({
 	routine,
@@ -121,29 +122,17 @@ export default function RoutineFocusMode({
 					</DropdownMenu>
 				</Dropdown>
 			</div>
-			<div className="flex flex-col flex-1 justify-between items-center pb-3">
+			<div className="flex flex-col flex-1 justify-between items-center gap-5">
 				{/* Task Indicators */}
-				<div className="flex gap-2 mb-4">
-					{tasks.map((task, index) => (
-						<div
-							key={index}
-							className={`w-6 h-2 rounded ${
-								index < currentTaskIndex
-									? 'bg-green-500'
-									: index === currentTaskIndex
-										? 'bg-blue-500'
-										: 'bg-gray-300'
-							}`}
-						/>
-					))}
-				</div>
-
+				<RoutineTasksSummary tasks={tasks} currentTaskIndex={currentTaskIndex} />
 				{/* Task Image */}
-				<img
-					src={currentTask.image}
-					alt={currentTask.name}
-					className="w-72 h-72 object-cover rounded-lg mb-4"
-				/>
+				<div className="aspect-[1/1]">
+					<img
+						src={currentTask.image}
+						alt={currentTask.name}
+						className="w-full object-cover h-full rounded-lg"
+					/>
+				</div>
 
 				<div className="flex flex-col gap-2 w-full">
 					{/* Task Name & Timer */}
@@ -154,7 +143,7 @@ export default function RoutineFocusMode({
 						</p>
 					</div>
 
-					<div className="relative bg-gray-300 border-2 text-white border-white rounded-lg flex overflow-hidden h-14">
+					<div className="relative bg-gray-300 text-white  flex overflow-hidden h-14 -mx-6">
 						{/* Progress Bar */}
 						<div
 							style={{ width: `${(elapsedTime / currentTask.durationInSeconds) * 100}%` }}
