@@ -53,7 +53,7 @@ export async function addTask(
 		newTask = { ...task, image: imageLink };
 	}
 
-	setDoc(newTaskRef, newTask);
+	void setDoc(newTaskRef, newTask);
 }
 
 export async function editTask(
@@ -76,7 +76,7 @@ export async function editTask(
 		newTask = { ...task, image: imageLink };
 	}
 
-	setDoc(taskRef, newTask);
+	void setDoc(taskRef, newTask);
 }
 
 export async function getTask(userId: string, routineId: string, taskId: string) {

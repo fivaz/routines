@@ -23,7 +23,25 @@ export async function addRoutine(userId: string, routine: Routine, imageFile: Fi
 		newRoutine = { ...routine, image: imageLink };
 	}
 
-	setDoc(newRoutineRef, newRoutine);
+	void setDoc(newRoutineRef, newRoutine);
+}
+
+export async function editRoutine(userId: string, routine: Routine, imageFile: File | null) {
+	const routineRef = doc(db, getRoutinePath(userId), routine.id);
+
+	let newRoutine = routine;
+
+	if (imageFile) {
+		const imageRef = ref(storage, `${getRoutinePath(userId)}/${routineRef.id}`);
+
+		await uploadBytes(imageRef, imageFile);
+
+		const imageLink = await getDownloadURL(imageRef);
+
+		newRoutine = { ...routine, image: imageLink };
+	}
+
+	void setDoc(routineRef, newRoutine);
 }
 
 export async function getRoutine(userId: string, routineId: string) {

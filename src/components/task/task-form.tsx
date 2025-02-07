@@ -31,7 +31,7 @@ export function TaskForm({
 		setTaskIn(null);
 	}
 
-	async function handleAddTask() {
+	async function handleSubmit() {
 		if (!user || !taskIn) return;
 		if (taskIn.id) {
 			await editTask(user.uid, routineId, taskIn, imageFile);
@@ -107,7 +107,7 @@ export function TaskForm({
 						<Button plain onClick={close}>
 							Cancel
 						</Button>
-						<Button color="green" onClick={handleAddTask}>
+						<Button color="green" onClick={handleSubmit}>
 							{taskIn.id ? 'Edit' : 'Create'}
 						</Button>
 					</DialogActions>

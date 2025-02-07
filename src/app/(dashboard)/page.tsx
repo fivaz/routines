@@ -4,11 +4,10 @@ import { db } from '@/lib/firebase';
 import { collection, addDoc, getDocs, onSnapshot, type Unsubscribe } from 'firebase/firestore';
 import { Button } from '@/components/base/button';
 import { RoutineForm } from '@/components/routine/routine-form';
-import { type Routine } from '@/lib/routine/routine.type';
+import { emptyRoutine, type Routine } from '@/lib/routine/routine.type';
 import { DB_PATH } from '@/lib/consts';
 import { getRoutinePath, updateRoutines } from '@/lib/routine/routine.repository';
 import { useAuth } from '@/lib/auth-context';
-import { PlusIcon } from '@heroicons/react/16/solid';
 import { RoutineRow } from '@/components/routine/routine-row';
 
 import {
@@ -27,12 +26,13 @@ import {
 	sortableKeyboardCoordinates,
 	verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
+import { PlusIcon } from 'lucide-react';
 
 export default function Routines() {
 	const [loading, setLoading] = useState(true);
 	const [routines, setRoutines] = useState<Routine[]>([]);
 
-	const [isRoutineFormOpen, setIsRoutineFormOpen] = useState(false);
+	const [routineForm, setRoutineForm] = useState<Routine | null>(null);
 
 	const { user } = useAuth();
 
@@ -52,6 +52,10 @@ export default function Routines() {
 		const newIndex = routines.findIndex((routine) => routine.id === String(overId));
 
 		return arrayMove(routines, oldIndex, newIndex);
+	}
+
+	function handleAddRoutine() {
+		setRoutineForm(emptyRoutine);
 	}
 
 	function handleDragEnd(event: DragEndEvent) {
@@ -92,6 +96,7 @@ export default function Routines() {
 	return (
 		<>
 			<h1 className="text-2xl font-bold mb-4 text-green-500">Routines</h1>
+
 			<div className="flex flex-col gap-2">
 				<DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
 					<SortableContext items={routines} strategy={verticalListSortingStrategy}>
@@ -101,19 +106,15 @@ export default function Routines() {
 					</SortableContext>
 				</DndContext>
 			</div>
+
 			<div className="absolute bottom-2 m-auto left-1/2 -translate-x-1/2">
-				<Button
-					className="w-40"
-					color="green"
-					type="button"
-					onClick={() => setIsRoutineFormOpen(true)}
-				>
-					<PlusIcon />
-					New Routine
+				<Button className="w-40" color="green" type="button" onClick={handleAddRoutine}>
+					<PlusIcon className="w-5 h-5" />
+					Routine
 				</Button>
 			</div>
 
-			<RoutineForm isOpen={isRoutineFormOpen} setIsOpen={setIsRoutineFormOpen} />
+			<RoutineForm routineIn={routineForm} setRoutineIn={setRoutineForm} />
 		</>
 	);
 }

@@ -14,8 +14,8 @@ type PromptProps = {
 	isOpen: boolean;
 	title: string;
 	message?: string;
-	confirmText: string;
-	cancelText: string;
+	confirmText?: string;
+	cancelText?: string;
 	resolve?: (value: boolean | null) => void;
 	closePrompt: () => void;
 };
@@ -24,8 +24,8 @@ export function Prompt({
 	isOpen,
 	title,
 	message,
-	confirmText,
-	cancelText,
+	confirmText = 'Confirm',
+	cancelText = 'Cancel',
 	resolve,
 	closePrompt,
 }: PromptProps) {

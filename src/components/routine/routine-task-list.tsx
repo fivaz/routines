@@ -56,7 +56,7 @@ export default function RoutineTaskList({
 	setRoutine: Dispatch<SetStateAction<Routine>>;
 	setIsFocusMode: Dispatch<SetStateAction<boolean>>;
 }>) {
-	const [isRoutineFormOpen, setIsRoutineFormOpen] = useState(false);
+	const [routineForm, setRoutineForm] = useState<Routine | null>(null);
 	const [taskForm, setTaskForm] = useState<Task | null>(null);
 
 	const params = useParams();
@@ -84,6 +84,10 @@ export default function RoutineTaskList({
 		if (!user) return;
 		deleteRoutine(user.uid, routine.id);
 		router.push(Routes.ROOT);
+	}
+
+	function handleEdit() {
+		setRoutineForm(routine);
 	}
 
 	function handleAddTask() {
@@ -130,7 +134,7 @@ export default function RoutineTaskList({
 						<DropdownItem onClick={handleAddTask}>
 							<div className="text-green-500">Add Task</div>
 						</DropdownItem>
-						<DropdownItem onClick={handleDelete}>Edit</DropdownItem>
+						<DropdownItem onClick={handleEdit}>Edit</DropdownItem>
 						<DropdownItem onClick={handleDelete}>
 							<div className="text-red-500">Delete</div>
 						</DropdownItem>
@@ -155,7 +159,7 @@ export default function RoutineTaskList({
 
 			<TaskForm routineId={routine.id} taskIn={taskForm} setTaskIn={setTaskForm} />
 
-			<RoutineForm isOpen={isRoutineFormOpen} setIsOpen={setIsRoutineFormOpen} />
+			<RoutineForm routineIn={routineForm} setRoutineIn={setRoutineForm} />
 		</div>
 	);
 }
