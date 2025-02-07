@@ -43,17 +43,14 @@ import {
 	sortableKeyboardCoordinates,
 	verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
+import RoutineTaskList from '@/components/routine/routine-task-list';
 
 export default function Routine() {
 	const [routine, setRoutine] = useState<Routine>(emptyRoutine);
 	const [tasks, setTasks] = useState<Task[]>([]);
 
-	const [isRoutineFormOpen, setIsRoutineFormOpen] = useState(false);
-	const [taskForm, setTaskForm] = useState<Task | null>(null);
-
 	const params = useParams();
 	const { user } = useAuth();
-	const router = useRouter();
 
 	useEffect(() => {
 		if (!user || !params.routineId) return;
@@ -72,82 +69,9 @@ export default function Routine() {
 		return tasks.toSorted((a, b) => a.order - b.order);
 	}
 
-	function handleDelete() {
-		if (!user) return;
-		deleteRoutine(user.uid, routine.id);
-		router.push(Routes.ROOT);
-	}
-
-	function handleAddTask() {
-		setTaskForm(emptyTask);
-	}
-
-	const sensors = useSensors(
-		useSensor(PointerSensor),
-		useSensor(KeyboardSensor, {
-			coordinateGetter: sortableKeyboardCoordinates,
-		}),
-	);
-
-	function reorderTasks(tasks: Task[], overId: UniqueIdentifier, activeId: UniqueIdentifier) {
-		const oldIndex = tasks.findIndex((task) => task.id === String(activeId));
-		const newIndex = tasks.findIndex((task) => task.id === String(overId));
-
-		return arrayMove(tasks, oldIndex, newIndex);
-	}
-
-	function handleDragEnd(event: DragEndEvent) {
-		const { active, over } = event;
-		if (!user) return;
-
-		if (over && active.id !== over.id) {
-			setTasks((tasks) => reorderTasks(tasks, over.id, active.id));
-
-			updateTasks(user.uid, routine.id, reorderTasks(tasks, over.id, active.id));
-		}
-	}
-
 	if (!user) return;
 
 	return (
-		<div className="flex flex-col gap-5">
-			<div className="flex justify-between">
-				<div className="text-green-500 text-2xl">{routine.name}</div>
-
-				<Dropdown>
-					<DropdownButton outline>
-						<Ellipsis />
-					</DropdownButton>
-					<DropdownMenu>
-						<DropdownItem onClick={handleAddTask}>
-							<div className="text-green-500">Add Task</div>
-						</DropdownItem>
-						<DropdownItem onClick={handleDelete}>Edit</DropdownItem>
-						<DropdownItem onClick={handleDelete}>
-							<div className="text-red-500">Delete</div>
-						</DropdownItem>
-					</DropdownMenu>
-				</Dropdown>
-			</div>
-
-			<DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-				<SortableContext items={tasks} strategy={verticalListSortingStrategy}>
-					{tasks.map((task) => (
-						<TaskRow key={task.id} userId={user.uid} task={task} routine={routine} />
-					))}
-				</SortableContext>
-			</DndContext>
-
-			<div className="absolute bottom-4 left-1/2 -translate-x-1/2">
-				<Button color="green" onClick={() => console.log('start routine')}>
-					<ZapIcon />
-					Start Routine
-				</Button>
-			</div>
-
-			<TaskForm routineId={routine.id} taskIn={taskForm} setTaskIn={setTaskForm} />
-
-			<RoutineForm isOpen={isRoutineFormOpen} setIsOpen={setIsRoutineFormOpen} />
-		</div>
+		<RoutineTaskList routine={routine} tasks={tasks} setTasks={setTasks} setRoutine={setRoutine} />
 	);
 }
