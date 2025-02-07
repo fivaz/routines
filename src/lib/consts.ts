@@ -12,3 +12,5 @@ export const DB_PATH = {
 	TASKS: 'tasks',
 	USERS: 'users',
 };
+
+export const HHmm = 'HH:mm';

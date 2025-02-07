@@ -15,7 +15,7 @@ import {
 import { Ellipsis, ZapIcon } from 'lucide-react';
 import { Routes } from '@/lib/consts';
 import { TaskRow } from '@/components/task/task-row';
-import { Task } from '@/lib/task/task.type';
+import { emptyTask, Task } from '@/lib/task/task.type';
 import { Button } from '@/components/base/button';
 import { RoutineForm } from '@/components/routine/routine-form';
 import { TaskForm } from '@/components/task/task-form';
@@ -28,7 +28,7 @@ export default function Routine() {
 	const [tasks, setTasks] = useState<Task[]>([]);
 
 	const [isRoutineFormOpen, setIsRoutineFormOpen] = useState(false);
-	const [isTaskFormOpen, setIsTaskFormOpen] = useState(false);
+	const [taskForm, setTaskForm] = useState<Task | null>(null);
 
 	const params = useParams();
 	const { user } = useAuth();
@@ -52,7 +52,7 @@ export default function Routine() {
 	}
 
 	function handleAddTask() {
-		setIsTaskFormOpen(true);
+		setTaskForm(emptyTask);
 	}
 
 	if (!user) return;
@@ -89,7 +89,7 @@ export default function Routine() {
 				</Button>
 			</div>
 
-			<TaskForm routineId={routine.id} isOpen={isTaskFormOpen} setIsOpen={setIsTaskFormOpen} />
+			<TaskForm routineId={routine.id} taskIn={taskForm} setTaskIn={setTaskForm} />
 
 			<RoutineForm isOpen={isRoutineFormOpen} setIsOpen={setIsRoutineFormOpen} />
 		</div>

@@ -1,5 +1,13 @@
 import { DB_PATH } from '@/lib/consts';
-import { collection, deleteDoc, doc, getDoc, onSnapshot, setDoc } from 'firebase/firestore';
+import {
+	collection,
+	updateDoc,
+	deleteDoc,
+	doc,
+	getDoc,
+	onSnapshot,
+	setDoc,
+} from 'firebase/firestore';
 import { db, storage } from '@/lib/firebase';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { Task } from '@/lib/task/task.type';
@@ -34,6 +42,29 @@ export async function addTask(
 	imageFile: File | null,
 ) {
 	const newTaskRef = doc(collection(db, getTaskPath(userId, routineId)));
+
+	let newTask = task;
+
+	if (imageFile) {
+		const imageRef = ref(storage, `${getTaskPath(userId, routineId)}/${newTaskRef.id}`);
+
+		await uploadBytes(imageRef, imageFile);
+
+		const imageLink = await getDownloadURL(imageRef);
+
+		newTask = { ...task, image: imageLink };
+	}
+
+	setDoc(newTaskRef, newTask);
+}
+
+export async function editTask(
+	userId: string,
+	routineId: string,
+	task: Task,
+	imageFile: File | null,
+) {
+	const newTaskRef = doc(db, getTaskPath(userId, routineId), task.id);
 
 	let newTask = task;
 

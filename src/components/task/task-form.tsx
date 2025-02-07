@@ -6,82 +6,114 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import { db, storage } from '@/lib/firebase';
 import { emptyTask, Task } from '@/lib/task/task.type';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { addTask, getTaskPath } from '@/lib/task/task.repository';
+import { addTask, editTask, getTaskPath } from '@/lib/task/task.repository';
 import { AuthProvider, useAuth } from '@/lib/auth-context';
 import { collection, doc, setDoc } from 'firebase/firestore';
-export function TaskForm({
-	isOpen,
-	setIsOpen,
-	routineId,
-	task,
-}: React.PropsWithChildren<{
-	isOpen: boolean;
-	setIsOpen: Dispatch<SetStateAction<boolean>>;
-	routineId: string;
-	task?: Task;
-}>) {
-	const [taskIn, setTaskIn] = useState<Task>(task || emptyTask);
+import { parse } from 'date-fns';
+import { format, addSeconds, startOfDay } from 'date-fns';
+import { HHmm } from '@/lib/consts';
 
+export function TaskForm({
+	setTaskIn,
+	routineId,
+	taskIn,
+}: React.PropsWithChildren<{
+	setTaskIn: Dispatch<SetStateAction<Task | null>>;
+	routineId: string;
+	taskIn: Task | null;
+}>) {
 	const [imageFile, setImageFile] = useState<File | null>(null);
 
 	const { user } = useAuth();
 
 	function close() {
 		setImageFile(null);
-		setTaskIn(emptyTask);
-		setIsOpen(false);
+		setTaskIn(null);
 	}
 
 	async function handleAddTask() {
-		if (!user) return;
-		await addTask(user.uid, routineId, taskIn, imageFile);
+		if (!user || !taskIn) return;
+		if (taskIn.id) {
+			await editTask(user.uid, routineId, taskIn, imageFile);
+		} else {
+			await addTask(user.uid, routineId, taskIn, imageFile);
+		}
 		close();
 	}
 
-	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+	function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
 		if (e.target.files) {
 			setImageFile(e.target.files[0]);
 		}
-	};
+	}
 
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+	function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+		if (!taskIn) return;
 		setTaskIn({ ...taskIn, [e.target.name]: e.target.value });
-	};
+	}
+
+	function handleDuration(e: React.ChangeEvent<HTMLInputElement>) {
+		if (!taskIn) return;
+		const durationInSeconds = convertDurationToSeconds(e.target.value);
+
+		setTaskIn({ ...taskIn, durationInSeconds });
+	}
+
+	function convertDurationToSeconds(durationHHmm: string): number {
+		const date = parse(durationHHmm, HHmm, new Date()); // Parse into Date object
+		return date.getHours() * 3600 + date.getMinutes() * 60;
+	}
+
+	function convertDurationToHHmm(durationInSeconds: number): string {
+		const date = addSeconds(startOfDay(new Date()), durationInSeconds); // Start from midnight and add seconds
+		return format(date, HHmm); // Format to HH:mm
+	}
 
 	return (
 		<>
-			<Dialog open={isOpen} onClose={setIsOpen}>
-				<DialogTitle>
-					<div className="text-lg text-green-500">Create task</div>
-				</DialogTitle>
-				<DialogBody>
-					<Fieldset>
-						<FieldGroup>
-							<Field>
-								<Label>Name</Label>
-								<Input name="name" onChange={handleChange} />
-							</Field>
-							<div className="grid grid-cols-1 gap-8 sm:grid-cols-3 sm:gap-4">
-								<Field className="sm:col-span-2">
-									<Label>Upload Image</Label>
-									<Input type="file" onChange={handleFileChange} />
-								</Field>
-								<Field>
-									<Label>Duration (hh:mm)</Label>
-									<Input type="time" name="durationInSeconds" onChange={handleChange} />
-								</Field>
-							</div>
-						</FieldGroup>
-					</Fieldset>
-				</DialogBody>
-				<DialogActions>
-					<Button plain onClick={() => setIsOpen(false)}>
-						Cancel
-					</Button>
-					<Button color="green" onClick={handleAddTask}>
-						Create
-					</Button>
-				</DialogActions>
+			<Dialog open={taskIn !== null} onClose={close}>
+				{taskIn && (
+					<>
+						<DialogTitle>
+							<div className="text-lg text-green-500">{taskIn.id ? 'Edit' : 'Create'} task</div>
+						</DialogTitle>
+
+						<DialogBody>
+							<Fieldset>
+								<FieldGroup>
+									<Field>
+										<Label>Name</Label>
+										<Input name="name" value={taskIn.name} onChange={handleChange} />
+									</Field>
+									<div className="grid grid-cols-1 gap-8 sm:grid-cols-3 sm:gap-4">
+										<Field className="sm:col-span-2">
+											<Label>Upload Image</Label>
+											<Input type="file" onChange={handleFileChange} />
+										</Field>
+										<Field>
+											<Label>Duration (hh:mm)</Label>
+											<Input
+												type="time"
+												value={convertDurationToHHmm(taskIn.durationInSeconds)}
+												name="durationInSeconds"
+												onChange={handleDuration}
+											/>
+										</Field>
+									</div>
+								</FieldGroup>
+							</Fieldset>
+						</DialogBody>
+
+						<DialogActions>
+							<Button plain onClick={close}>
+								Cancel
+							</Button>
+							<Button color="green" onClick={handleAddTask}>
+								{taskIn.id ? 'Edit' : 'Create'}
+							</Button>
+						</DialogActions>
+					</>
+				)}
 			</Dialog>
 		</>
 	);

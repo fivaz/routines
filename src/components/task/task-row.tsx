@@ -3,7 +3,7 @@ import { Routine } from '@/lib/routine/routine.type';
 import { Button } from '../base/button';
 import { Routes } from '@/lib/consts';
 import Link from 'next/link';
-import { Task } from '@/lib/task/task.type';
+import { emptyTask, Task } from '@/lib/task/task.type';
 import { Dropdown, DropdownButton, DropdownItem, DropdownMenu } from '@/components/base/dropdown';
 import { Ellipsis } from 'lucide-react';
 import { deleteTask } from '@/lib/task/task.repository';
@@ -15,7 +15,11 @@ export function TaskRow({
 	task,
 	routine,
 }: PropsWithChildren<{ userId: string; task: Task; routine: Routine }>) {
-	const [isTaskFormOpen, setIsTaskFormOpen] = useState(false);
+	const [taskForm, setTaskForm] = useState<Task | null>(null);
+
+	function handleEdit() {
+		setTaskForm(task);
+	}
 
 	function handleDelete() {
 		deleteTask(userId, routine.id, task.id);
@@ -38,7 +42,6 @@ export function TaskRow({
 			>
 				<div className="flex justify-between items-center">
 					<span className="bg-green-500 bg-opacity-50 p-0.5 text-lg">{task.name}</span>
-
 					<div className="flex gap-3 items-center">
 						<span className="bg-green-500 bg-opacity-50 p-0.5 text-lg">
 							{formatSeconds(task.durationInSeconds)}
@@ -48,7 +51,7 @@ export function TaskRow({
 								<Ellipsis />
 							</DropdownButton>
 							<DropdownMenu>
-								<DropdownItem onClick={handleDelete}>Edit</DropdownItem>
+								<DropdownItem onClick={handleEdit}>Edit</DropdownItem>
 								<DropdownItem onClick={handleDelete}>
 									<div className="text-red-500">Delete</div>
 								</DropdownItem>
@@ -58,12 +61,7 @@ export function TaskRow({
 				</div>
 			</div>
 
-			<TaskForm
-				task={task}
-				routineId={routine.id}
-				isOpen={isTaskFormOpen}
-				setIsOpen={setIsTaskFormOpen}
-			/>
+			<TaskForm routineId={routine.id} taskIn={taskForm} setTaskIn={setTaskForm} />
 		</>
 	);
 }
