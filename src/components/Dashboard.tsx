@@ -40,33 +40,9 @@ import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { Routes } from '@/lib/consts';
 import { useRouter } from 'next/navigation';
+import { Logo } from '@/components/Logo';
 
-const navItems = [{ label: 'Routines', url: '/' }];
-
-function TeamDropdownMenu() {
-	return (
-		<DropdownMenu className="min-w-80 lg:min-w-64" anchor="bottom start">
-			<DropdownItem href="/teams/1/settings">
-				<Cog8ToothIcon />
-				<DropdownLabel>Settings</DropdownLabel>
-			</DropdownItem>
-			<DropdownDivider />
-			<DropdownItem href="/teams/1">
-				<Avatar slot="icon" src="/tailwind-logo.svg" />
-				<DropdownLabel>Tailwind Labs</DropdownLabel>
-			</DropdownItem>
-			<DropdownItem href="/teams/2">
-				<Avatar slot="icon" initials="WC" className="bg-purple-500 text-white" />
-				<DropdownLabel>Workcation</DropdownLabel>
-			</DropdownItem>
-			<DropdownDivider />
-			<DropdownItem href="/teams/create">
-				<PlusIcon />
-				<DropdownLabel>New team&hellip;</DropdownLabel>
-			</DropdownItem>
-		</DropdownMenu>
-	);
-}
+const navItems = [{ label: 'Home', url: '/' }];
 
 export function Dashboard({ children }: React.PropsWithChildren) {
 	const { user } = useAuth();
@@ -85,8 +61,8 @@ export function Dashboard({ children }: React.PropsWithChildren) {
 				<Navbar>
 					<Dropdown>
 						<DropdownButton as={NavbarItem} className="max-lg:hidden">
-							<Avatar src="/tailwind-logo.svg" />
-							<NavbarLabel>Tailwind Labs</NavbarLabel>
+							<Logo className="text-green-500 w-5 h-5" />
+							<NavbarLabel>Routines</NavbarLabel>
 						</DropdownButton>
 					</Dropdown>
 					<NavbarDivider className="max-lg:hidden" />
@@ -123,10 +99,9 @@ export function Dashboard({ children }: React.PropsWithChildren) {
 					<SidebarHeader>
 						<Dropdown>
 							<DropdownButton as={SidebarItem} className="lg:mb-2.5">
-								<Avatar src="/tailwind-logo.svg" />
-								<SidebarLabel>Tailwind Labs</SidebarLabel>
+								<Logo className="text-green-500 w-5 h-5" />
+								<SidebarLabel>Routines</SidebarLabel>
 							</DropdownButton>
-							<TeamDropdownMenu />
 						</Dropdown>
 					</SidebarHeader>
 					<SidebarBody>

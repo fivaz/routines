@@ -72,9 +72,11 @@ export function RoutineForm({
 										<Label>
 											<div className="flex justify-between">
 												<span>Upload Image</span>
-												<button onClick={() => setIsImageOpen(true)}>
-													<Image className="w-5 h-5 text-green-500" />
-												</button>
+												{routineIn.image && (
+													<button onClick={() => setIsImageOpen(true)}>
+														<Image className="w-5 h-5 text-green-500" />
+													</button>
+												)}
 											</div>
 										</Label>
 										<Input
