@@ -19,18 +19,19 @@ export function RoutineRow({ routine }: PropsWithChildren<{ routine: Routine }>)
 	};
 
 	return (
-		<div
-			ref={setNodeRef}
-			{...attributes}
-			className="relative bg-gray-800 text-white p-4 h-40 flex items-end bg-cover bg-center"
-			style={{ backgroundImage: `url('${routine.image}')`, ...style }}
-		>
-			<GripVertical {...listeners}></GripVertical>
-			<Link href={`${Routes.ROUTINE}/${routine.id}`}>
+		<Link href={`${Routes.ROUTINE}/${routine.id}`}>
+			<div
+				ref={setNodeRef}
+				{...attributes}
+				className="relative bg-gray-800 text-white p-4 h-40 flex items-end bg-cover bg-center"
+				style={{ backgroundImage: `url('${routine.image}')`, ...style }}
+			>
+				<GripVertical onClick={(e) => e.stopPropagation()} {...listeners}></GripVertical>
+
 				<p className="bg-green-500 bg-opacity-50 p-0.5 text-lg">
 					{routine.name}-{routine.id}
 				</p>
-			</Link>
-		</div>
+			</div>
+		</Link>
 	);
 }

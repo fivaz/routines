@@ -46,7 +46,6 @@ export default function RoutineFocusMode({
 	useEffect(() => {
 		const today = new Date().toISOString().split('T')[0];
 		const todayHistory = currentTask.history?.[today];
-		console.log('todayHistory', todayHistory);
 		if (todayHistory) {
 			setElapsedTime(getDuration(todayHistory.startAt, todayHistory.endAt));
 		}
