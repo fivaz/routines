@@ -15,13 +15,18 @@ import { Task } from '@/lib/task/task.type';
 import { getRoutinePath } from '@/lib/routine/routine.repository';
 import { Dispatch, SetStateAction } from 'react';
 import { Routine } from '@/lib/routine/routine.type';
+import { sortTasks } from '@/lib/task/task.utils';
 
 export function getTaskPath(userId: string, routineId: string) {
 	return `${DB_PATH.USERS}/${userId}/${DB_PATH.ROUTINES}/${routineId}/${DB_PATH.TASKS}`;
 }
 
-export function fetchTasks(userId: string, routineId: string, setTasks: (tasks: Task[]) => void) {
-	const tasksCollectionRef = collection(db, getTaskPath(userId, routineId));
+export function fetchTasks(
+	userId: string,
+	routineId: string | string[],
+	setTasks: (tasks: Task[]) => void,
+) {
+	const tasksCollectionRef = collection(db, getTaskPath(userId, String(routineId)));
 
 	return onSnapshot(tasksCollectionRef, (snapshot) => {
 		const tasks: Task[] = [];
@@ -29,7 +34,9 @@ export function fetchTasks(userId: string, routineId: string, setTasks: (tasks: 
 			tasks.push({ ...doc.data(), id: doc.id } as Task);
 		});
 
-		setTasks(tasks);
+		const sortedTasks = sortTasks(tasks);
+
+		setTasks(sortedTasks);
 	});
 }
 

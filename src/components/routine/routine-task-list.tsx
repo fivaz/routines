@@ -59,26 +59,8 @@ export default function RoutineTaskList({
 	const [routineForm, setRoutineForm] = useState<Routine | null>(null);
 	const [taskForm, setTaskForm] = useState<Task | null>(null);
 
-	const params = useParams();
 	const { user } = useAuth();
 	const router = useRouter();
-
-	useEffect(() => {
-		if (!user || !params.routineId) return;
-		getRoutine(user.uid, String(params.routineId)).then((routine) => {
-			setRoutine(routine);
-		});
-
-		const unsubscribe = fetchTasks(user.uid, String(params.routineId), (tasks) =>
-			setTasks(sortTasks(tasks)),
-		);
-
-		return () => unsubscribe();
-	}, [params.routineId, routine.id, user]);
-
-	function sortTasks(tasks: Task[]) {
-		return tasks.toSorted((a, b) => a.order - b.order);
-	}
 
 	function handleDelete() {
 		if (!user) return;
@@ -115,7 +97,7 @@ export default function RoutineTaskList({
 		if (over && active.id !== over.id) {
 			setTasks((tasks) => reorderTasks(tasks, over.id, active.id));
 
-			updateTasks(user.uid, routine.id, reorderTasks(tasks, over.id, active.id));
+			void updateTasks(user.uid, routine.id, reorderTasks(tasks, over.id, active.id));
 		}
 	}
 

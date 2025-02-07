@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import { deleteRoutine, getRoutine } from '@/lib/routine/routine.repository';
+import { deleteRoutine, fetchRoutine, getRoutine } from '@/lib/routine/routine.repository';
 import { useAuth } from '@/lib/auth-context';
 import { emptyRoutine, type Routine } from '@/lib/routine/routine.type';
 
@@ -23,20 +23,16 @@ export default function Routine() {
 
 	useEffect(() => {
 		if (!user || !params.routineId) return;
-		getRoutine(user.uid, String(params.routineId)).then((routine) => {
-			setRoutine(routine);
-		});
 
-		const unsubscribe = fetchTasks(user.uid, String(params.routineId), (tasks) =>
-			setTasks(sortTasks(tasks)),
-		);
+		const unsubscribeRoutine = fetchRoutine(user.uid, params.routineId, setRoutine);
 
-		return () => unsubscribe();
+		const unsubscribeTasks = fetchTasks(user.uid, params.routineId, setTasks);
+
+		return () => {
+			unsubscribeRoutine();
+			unsubscribeTasks();
+		};
 	}, [params.routineId, routine.id, user]);
-
-	function sortTasks(tasks: Task[]) {
-		return tasks.toSorted((a, b) => a.order - b.order);
-	}
 
 	if (!user) return;
 

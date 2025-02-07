@@ -6,7 +6,7 @@ import { Button } from '@/components/base/button';
 import { RoutineForm } from '@/components/routine/routine-form';
 import { emptyRoutine, type Routine } from '@/lib/routine/routine.type';
 import { DB_PATH } from '@/lib/consts';
-import { getRoutinePath, updateRoutines } from '@/lib/routine/routine.repository';
+import { fetchRoutines, getRoutinePath, updateRoutines } from '@/lib/routine/routine.repository';
 import { useAuth } from '@/lib/auth-context';
 import { RoutineRow } from '@/components/routine/routine-row';
 
@@ -27,9 +27,9 @@ import {
 	verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { PlusIcon } from 'lucide-react';
+import { reorderRoutines } from '@/lib/routine/routine.utils';
 
 export default function Routines() {
-	const [loading, setLoading] = useState(true);
 	const [routines, setRoutines] = useState<Routine[]>([]);
 
 	const [routineForm, setRoutineForm] = useState<Routine | null>(null);
@@ -43,17 +43,6 @@ export default function Routines() {
 		}),
 	);
 
-	function reorderRoutines(
-		routines: Routine[],
-		overId: UniqueIdentifier,
-		activeId: UniqueIdentifier,
-	) {
-		const oldIndex = routines.findIndex((routine) => routine.id === String(activeId));
-		const newIndex = routines.findIndex((routine) => routine.id === String(overId));
-
-		return arrayMove(routines, oldIndex, newIndex);
-	}
-
 	function handleAddRoutine() {
 		setRoutineForm(emptyRoutine);
 	}
@@ -65,33 +54,17 @@ export default function Routines() {
 		if (over && active.id !== over.id) {
 			setRoutines((routines) => reorderRoutines(routines, over.id, active.id));
 
-			updateRoutines(user.uid, reorderRoutines(routines, over.id, active.id));
+			void updateRoutines(user.uid, reorderRoutines(routines, over.id, active.id));
 		}
-	}
-
-	function sortRoutines(routines: Routine[]) {
-		return routines.toSorted((a, b) => a.order - b.order);
 	}
 
 	useEffect(() => {
 		if (!user) return;
 
-		const routineCollectionRef = collection(db, getRoutinePath(user.uid));
-
-		const unsubscribe = onSnapshot(routineCollectionRef, (snapshot) => {
-			const routineData: Routine[] = [];
-			snapshot.forEach((doc) => {
-				routineData.push({ ...doc.data(), id: doc.id } as Routine);
-			});
-
-			setRoutines(sortRoutines(routineData));
-			setLoading(false);
-		});
+		const unsubscribe = fetchRoutines(user.uid, setRoutines);
 
 		return () => unsubscribe();
 	}, [user]);
-
-	if (loading) return <div>Loading...</div>;
 
 	return (
 		<>

@@ -15,3 +15,7 @@ export function getDuration(startAt: string, endAt: string): number {
 	const endDate = new Date(endAt);
 	return Math.abs((endDate.getTime() - startDate.getTime()) / 1000);
 }
+
+export function sortTasks(tasks: Task[]) {
+	return tasks.toSorted((a, b) => a.order - b.order);
+}
