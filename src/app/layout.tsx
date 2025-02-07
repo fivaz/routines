@@ -8,7 +8,7 @@ import { APP_NAME } from '@/lib/consts';
 
 export default function RootLayout({ children }: { children: ReactNode }) {
 	return (
-		<html lang="en" className="h-full bg-white lg:bg-zinc-100 dark:bg-zinc-900 dark:lg:bg-zinc-950">
+		<html lang="en" className="h-full bg-white lg:bg-zinc-100 dark:bg-zinc-900">
 			<Head>
 				<title>{APP_NAME}</title>
 			</Head>

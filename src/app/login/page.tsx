@@ -7,6 +7,7 @@ import { auth } from '@/lib/firebase';
 import { Routes } from '@/lib/consts';
 import { GithubIcon } from '@/components/icons/GithubIcon';
 import { GoogleIcon } from '@/components/icons/GoogleIcon';
+import { Logo } from '@/components/Logo';
 
 export default function Login() {
 	const [email, setEmail] = useState('');
@@ -46,21 +47,20 @@ export default function Login() {
 		<>
 			<div className="flex min-h-full flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8">
 				<div className="sm:mx-auto sm:w-full sm:max-w-md">
-					<img
-						alt="Your Company"
-						src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=600"
-						className="mx-auto h-10 w-auto"
-					/>
-					<h2 className="mt-6 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
+					<Logo className="mx-auto h-10 w-auto text-green-500" />
+					<h2 className="mt-6 text-center text-2xl/9 font-bold tracking-tight text-gray-900 dark:text-white">
 						Sign in to your account
 					</h2>
 				</div>
 
 				<div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
-					<div className="bg-white px-6 py-12 shadow-sm sm:rounded-lg sm:px-12">
+					<div className="dark:bg-zinc-900 bg-white px-6 py-12 shadow-sm sm:rounded-lg sm:px-12">
 						<form className="space-y-6" onSubmit={onSubmit}>
 							<div>
-								<label htmlFor="email" className="block text-sm/6 font-medium text-gray-900">
+								<label
+									htmlFor="email"
+									className="block text-sm/6 font-medium dark:text-white text-gray-900"
+								>
 									Email address
 								</label>
 								<div className="mt-2">
@@ -71,13 +71,16 @@ export default function Login() {
 										type="email"
 										required
 										autoComplete="email"
-										className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+										className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-green-600 sm:text-sm/6"
 									/>
 								</div>
 							</div>
 
 							<div>
-								<label htmlFor="password" className="block text-sm/6 font-medium text-gray-900">
+								<label
+									htmlFor="password"
+									className="block text-sm/6 font-medium dark:text-white text-gray-900"
+								>
 									Password
 								</label>
 								<div className="mt-2">
@@ -88,7 +91,7 @@ export default function Login() {
 										type="password"
 										required
 										autoComplete="current-password"
-										className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+										className="block w-full rounded-md bg-white px-3 py-1.5 text-base  text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-green-600 sm:text-sm/6"
 									/>
 								</div>
 							</div>
@@ -101,7 +104,7 @@ export default function Login() {
 												id="remember-me"
 												name="remember-me"
 												type="checkbox"
-												className="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
+												className="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-green-600 checked:bg-green-600 indeterminate:border-green-600 indeterminate:bg-green-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
 											/>
 											<svg
 												fill="none"
@@ -125,13 +128,16 @@ export default function Login() {
 											</svg>
 										</div>
 									</div>
-									<label htmlFor="remember-me" className="block text-sm/6 text-gray-900">
+									<label
+										htmlFor="remember-me"
+										className="block text-sm/6 dark:text-white text-gray-900"
+									>
 										Remember me
 									</label>
 								</div>
 
 								<div className="text-sm/6">
-									<a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
+									<a href="#" className="font-semibold text-green-600 hover:text-green-500">
 										Forgot password?
 									</a>
 								</div>
@@ -140,7 +146,7 @@ export default function Login() {
 							<div>
 								<button
 									type="submit"
-									className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+									className="flex w-full justify-center rounded-md bg-green-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-green-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
 								>
 									Sign in
 								</button>
