@@ -82,31 +82,39 @@ export default function RoutineFocusMode({ routine, tasks }: { routine: Routine;
 					</p>
 				</div>
 
-				{/* Progress Bar */}
-				<div className="relative w-full max-w-md h-2 bg-gray-300 rounded-full overflow-hidden mb-4">
+				<div className="relative bg-gray-300 border-2 text-white border-white rounded-lg flex overflow-hidden h-14">
+					{/* Progress Bar */}
 					<div
-						className="h-full bg-green-500 transition-all"
 						style={{ width: `${(elapsedTime / currentTask.durationInSeconds) * 100}%` }}
-					/>
-				</div>
+						className="absolute top-0 left-0 h-full w-0 bg-gradient-to-r from-green-600 to-green-300 transition-all duration-100"
+					></div>
 
-				{/* Controls */}
-				<div className="flex items-center justify-between w-full max-w-md bg-gray-300 h-14">
-					<div className="w-14 flex justify-start">
+					{/* Controls */}
+					<div className="relative bg-transparent z-10 w-1/6 flex">
 						{currentTaskIndex > 0 && (
-							<button className="p-3" onClick={handlePrevTask}>
-								<ChevronLeft />
+							<button
+								className="h-full w-full flex justify-center items-center"
+								onClick={handlePrevTask}
+							>
+								<ChevronLeft className="w-7 h-7" />
 							</button>
 						)}
 					</div>
 
-					<button onClick={handleStartStop} className="p-3 flex-1 flex justify-center">
-						{isRunning ? <CircleStop /> : <Play />}
+					<button
+						onClick={handleStartStop}
+						className="relative bg-transparent z-10 p-3 w-4/6 flex justify-center"
+					>
+						{isRunning ? <CircleStop className="w-7 h-7" /> : <Play className="w-7 h-7" />}
 					</button>
 
-					<div className="w-14 flex justify-end">
-						<button className="p-3" onClick={handleNextTask} disabled={isRunning}>
-							<ChevronRight />
+					<div className="relative bg-transparent z-10 w-1/6 flex">
+						<button
+							className="h-full w-full flex justify-center items-center"
+							onClick={handleNextTask}
+							disabled={isRunning}
+						>
+							<ChevronRight className="w-7 h-7" />
 						</button>
 					</div>
 				</div>

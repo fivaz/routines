@@ -16,7 +16,7 @@ import RoutineFocusMode from '@/components/routine/routine-focus-mode';
 export default function Routine() {
 	const [routine, setRoutine] = useState<Routine>(emptyRoutine);
 	const [tasks, setTasks] = useState<Task[]>([]);
-	const [isFocusMode, setIsFocusMode] = useState(false);
+	const [isFocusMode, setIsFocusMode] = useState(true);
 
 	const params = useParams();
 	const { user } = useAuth();
