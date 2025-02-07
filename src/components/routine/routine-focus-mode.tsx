@@ -1,15 +1,14 @@
-import { useState, useEffect, Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import type { Routine } from '@/lib/routine/routine.type';
 import { Task } from '@/lib/task/task.type';
-import { Button } from '@/components/base/button';
 import { ChevronLeft, ChevronRight, CircleStop, Ellipsis, Play } from 'lucide-react';
-import Image from 'next/image';
-import { formatSeconds } from '@/lib/task/task.utils';
+import { formatSeconds, getDuration } from '@/lib/task/task.utils';
 import { Dropdown, DropdownButton, DropdownItem, DropdownMenu } from '@/components/base/dropdown';
 import { useAuth } from '@/lib/auth-context';
 import { persistTask } from '@/lib/task/task.repository';
-import { format } from 'date-fns';
 import { usePrompt } from '@/lib/prompt-context';
+import { format } from 'date-fns';
+import { TIME } from '@/lib/consts';
 
 export default function RoutineFocusMode({
 	routine,
@@ -30,18 +29,25 @@ export default function RoutineFocusMode({
 	useEffect(() => {
 		let timer: NodeJS.Timeout | null = null;
 		if (isRunning) {
+			setElapsedTime(0);
 			timer = setInterval(() => {
 				setElapsedTime((prev) => prev + 1);
 			}, 1000);
 		}
-		return () => timer && clearInterval(timer);
+
+		return () => {
+			if (timer !== null) {
+				clearInterval(timer);
+			}
+		};
 	}, [isRunning]);
 
 	useEffect(() => {
 		const today = new Date().toISOString().split('T')[0];
-		const hasHistoryToday = currentTask.history.some((entry) => entry.startAt.startsWith(today));
-		if (hasHistoryToday) {
-			setIsRunning(false);
+		const todayHistory = currentTask.history?.[today];
+		console.log('todayHistory', todayHistory);
+		if (todayHistory) {
+			setElapsedTime(getDuration(todayHistory.startAt, todayHistory.endAt));
 		}
 	}, [currentTaskIndex]);
 
@@ -49,8 +55,8 @@ export default function RoutineFocusMode({
 		if (!user) return;
 
 		const today = new Date().toISOString().split('T')[0];
-		const hasHistoryToday = currentTask.history.some((entry) => entry.startAt.startsWith(today));
-		if (hasHistoryToday) {
+
+		if (currentTask.history?.[today]) {
 			if (
 				!(await createPrompt({
 					title: 'Task already accomplished today',
@@ -62,34 +68,36 @@ export default function RoutineFocusMode({
 		}
 
 		const startTime = new Date().toISOString();
-		currentTask.history.push({ startAt: startTime, endAt: '' });
+		currentTask.history[today] = { startAt: startTime, endAt: '' };
 
-		persistTask(user.uid, routine.id, currentTask);
 		setIsRunning(true);
+		void persistTask(user.uid, routine.id, currentTask);
+	}
+
+	function goToNextTask() {
+		setCurrentTaskIndex((prev) => (prev < tasks.length - 1 ? prev + 1 : prev));
 	}
 
 	function handleStop() {
 		if (!user) return;
 
-		const endTime = new Date().toISOString();
-		const lastEntry = currentTask.history[currentTask.history.length - 1];
-		if (lastEntry) lastEntry.endAt = endTime;
-		setCurrentTaskIndex((prev) => (prev < tasks.length - 1 ? prev + 1 : prev));
-		persistTask(user.uid, routine.id, currentTask);
+		const today = new Date().toISOString().split('T')[0];
+		currentTask.history[today].endAt = new Date().toISOString();
+
 		setIsRunning(false);
+		persistTask(user.uid, routine.id, currentTask);
+		goToNextTask();
 	}
 
 	const handleNextTask = () => {
 		if (!isRunning && currentTaskIndex < tasks.length - 1) {
 			setCurrentTaskIndex(currentTaskIndex + 1);
-			setElapsedTime(0);
 		}
 	};
 
 	const handlePrevTask = () => {
-		if (currentTaskIndex > 0) {
+		if (!isRunning && currentTaskIndex > 0) {
 			setCurrentTaskIndex(currentTaskIndex - 1);
-			setElapsedTime(0);
 		}
 	};
 

@@ -11,7 +11,7 @@ import { AuthProvider, useAuth } from '@/lib/auth-context';
 import { collection, doc, setDoc } from 'firebase/firestore';
 import { parse } from 'date-fns';
 import { format, addSeconds, startOfDay } from 'date-fns';
-import { HHmm } from '@/lib/consts';
+import { TIME } from '@/lib/consts';
 
 export function TaskForm({
 	setTaskIn,
@@ -60,13 +60,13 @@ export function TaskForm({
 	}
 
 	function convertDurationToSeconds(durationHHmm: string): number {
-		const date = parse(durationHHmm, HHmm, new Date()); // Parse into Date object
+		const date = parse(durationHHmm, TIME, new Date()); // Parse into Date object
 		return date.getHours() * 3600 + date.getMinutes() * 60;
 	}
 
 	function convertDurationToHHmm(durationInSeconds: number): string {
 		const date = addSeconds(startOfDay(new Date()), durationInSeconds); // Start from midnight and add seconds
-		return format(date, HHmm); // Format to HH:mm
+		return format(date, TIME); // Format to HH:mm
 	}
 
 	return (

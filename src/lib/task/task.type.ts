@@ -5,10 +5,13 @@ export type Task = {
 	durationInSeconds: number;
 	order: number;
 	createdAt: string;
-	history: {
-		startAt: string;
-		endAt: string;
-	}[];
+	history: Record<
+		string,
+		{
+			startAt: string;
+			endAt: string;
+		}
+	>;
 };
 
 export const emptyTask: Task = {
@@ -18,5 +21,5 @@ export const emptyTask: Task = {
 	image: '',
 	durationInSeconds: 5 * 60,
 	createdAt: new Date().toISOString(),
-	history: [],
+	history: {},
 };

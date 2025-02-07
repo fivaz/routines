@@ -13,4 +13,5 @@ export const DB_PATH = {
 	USERS: 'users',
 };
 
-export const HHmm = 'HH:mm';
+export const DATE = 'yyyy-MM-dd';
+export const TIME = 'HH:mm';
