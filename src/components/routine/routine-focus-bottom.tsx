@@ -102,11 +102,11 @@ export function RoutineFocusBottom({
 				</p>
 			</div>
 
-			<div className="relative dark:text-green-600 dark:bg-gray-100 bg-gray-300 text-white flex overflow-hidden h-14 -mx-6">
+			<div className="relative dark:text-green-600 dark:bg-gray-200 bg-gray-300 text-white flex overflow-hidden h-14 -mx-6">
 				{/* Progress Bar */}
 				<div
 					style={{ width: `${(elapsedTime / currentTask.durationInSeconds) * 100}%` }}
-					className="absolute top-0 left-0 h-full w-0 bg-gradient-to-r from-green-600 to-green-300 transition-all duration-100"
+					className="absolute top-0 left-0 h-full w-0 bg-gradient-to-r from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500 to-90% transition-all duration-100"
 				/>
 
 				{/* Controls */}

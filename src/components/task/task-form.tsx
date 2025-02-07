@@ -12,6 +12,8 @@ import { collection, doc, setDoc } from 'firebase/firestore';
 import { parse } from 'date-fns';
 import { format, addSeconds, startOfDay } from 'date-fns';
 import { TIME } from '@/lib/consts';
+import { Image } from 'lucide-react';
+import { ImageDialog } from '@/components/ImageDialog';
 
 export function TaskForm({
 	setTaskIn,
@@ -23,6 +25,7 @@ export function TaskForm({
 	taskIn: Task | null;
 }>) {
 	const [imageFile, setImageFile] = useState<File | null>(null);
+	const [isImageOpen, setIsImageOpen] = useState(false);
 
 	const { user } = useAuth();
 
@@ -86,8 +89,20 @@ export function TaskForm({
 								</Field>
 								<div className="grid grid-cols-1 gap-8 sm:grid-cols-3 sm:gap-4">
 									<Field className="sm:col-span-2">
-										<Label>Upload Image</Label>
-										<Input type="file" onChange={handleFileChange} />
+										<Label>
+											<div className="flex justify-between">
+												<span>Upload Image</span>
+												<button onClick={() => setIsImageOpen(true)}>
+													<Image className="w-5 h-5 text-green-500" />
+												</button>
+											</div>
+										</Label>
+										<Input
+											type="file"
+											onChange={handleFileChange}
+											innerClassName="bg-cover bg-center"
+											style={{ backgroundImage: `url(${taskIn.image})` }}
+										/>
 									</Field>
 									<Field>
 										<Label>Duration (hh:mm)</Label>
@@ -111,6 +126,7 @@ export function TaskForm({
 							{taskIn.id ? 'Edit' : 'Create'}
 						</Button>
 					</DialogActions>
+					<ImageDialog image={taskIn.image} isOpen={isImageOpen} setIsOpen={setIsImageOpen} />
 				</>
 			)}
 		</Dialog>

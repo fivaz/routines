@@ -10,6 +10,8 @@ import { addRoutine, editRoutine, getRoutinePath } from '@/lib/routine/routine.r
 import { AuthProvider, useAuth } from '@/lib/auth-context';
 import { collection, doc, setDoc } from 'firebase/firestore';
 import { addTask, editTask } from '@/lib/task/task.repository';
+import { Image } from 'lucide-react';
+import { ImageDialog } from '@/components/ImageDialog';
 export function RoutineForm({
 	routineIn,
 	setRoutineIn,
@@ -18,6 +20,7 @@ export function RoutineForm({
 	setRoutineIn: Dispatch<SetStateAction<Routine | null>>;
 }) {
 	const [imageFile, setImageFile] = useState<File | null>(null);
+	const [isImageOpen, setIsImageOpen] = useState(false);
 
 	const { user } = useAuth();
 
@@ -66,8 +69,20 @@ export function RoutineForm({
 										<Input value={routineIn.name} name="name" onChange={handleChange} />
 									</Field>
 									<Field>
-										<Label>Upload Image</Label>
-										<Input type="file" onChange={handleFileChange} />
+										<Label>
+											<div className="flex justify-between">
+												<span>Upload Image</span>
+												<button onClick={() => setIsImageOpen(true)}>
+													<Image className="w-5 h-5 text-green-500" />
+												</button>
+											</div>
+										</Label>
+										<Input
+											type="file"
+											onChange={handleFileChange}
+											innerClassName="bg-cover bg-center"
+											style={{ backgroundImage: `url(${routineIn.image})` }}
+										/>
 									</Field>
 								</FieldGroup>
 							</Fieldset>
@@ -81,6 +96,7 @@ export function RoutineForm({
 								{routineIn.id ? 'Edit' : 'Create'}
 							</Button>
 						</DialogActions>
+						<ImageDialog image={routineIn.image} isOpen={isImageOpen} setIsOpen={setIsImageOpen} />
 					</>
 				)}
 			</Dialog>
