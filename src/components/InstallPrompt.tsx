@@ -1,11 +1,15 @@
 import { useEffect, useState } from 'react';
+import { Dialog, DialogBody, DialogDescription, DialogTitle } from './base/dialog';
 
 export function InstallPrompt() {
 	const [isIOS, setIsIOS] = useState(false);
 	const [isStandalone, setIsStandalone] = useState(false);
 
 	useEffect(() => {
-		setIsIOS(/iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream);
+		setIsIOS(
+			/iPad|iPhone|iPod/.test(navigator.userAgent) &&
+				!(window as unknown as { MSStream: boolean }).MSStream,
+		);
 
 		setIsStandalone(window.matchMedia('(display-mode: standalone)').matches);
 	}, []);
@@ -15,24 +19,28 @@ export function InstallPrompt() {
 	}
 
 	return (
-		<div>
-			<h3>Install App</h3>
-			<button>Add to Home Screen</button>
+		<Dialog open={!isStandalone} onClose={() => setIsStandalone(true)}>
+			<DialogTitle>Install App</DialogTitle>
+			<DialogDescription>
+				<button>Add to Home Screen</button>
+			</DialogDescription>
 			{isIOS && (
-				<p>
-					To install this app on your iOS device, tap the share button
-					<span role="img" aria-label="share icon">
-						{' '}
-						⎋{' '}
-					</span>
-					and then &#34;Add to Home Screen&#34;
-					<span role="img" aria-label="plus icon">
-						{' '}
-						➕{' '}
-					</span>
-					.
-				</p>
+				<DialogBody>
+					<p className="dark:text-white">
+						To install this app on your iOS device, tap the share button
+						<span role="img" aria-label="share icon">
+							{' '}
+							⎋{' '}
+						</span>
+						and then &#34;Add to Home Screen&#34;
+						<span role="img" aria-label="plus icon">
+							{' '}
+							➕{' '}
+						</span>
+						.
+					</p>
+				</DialogBody>
 			)}
-		</div>
+		</Dialog>
 	);
 }
