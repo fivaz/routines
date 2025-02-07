@@ -3,11 +3,13 @@ export type Routine = {
 	name: string;
 	createdAt: string;
 	image: string;
+	order: number;
 };
 
 export const emptyRoutine = {
 	id: '',
 	name: '',
 	image: '',
+	order: 0,
 	createdAt: new Date().toISOString(),
 };
