@@ -90,36 +90,30 @@ export default function Routines() {
 	if (loading) return <div>Loading...</div>;
 
 	return (
-		<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-			<div className="mx-auto max-w-3xl">
-				<h1 className="text-2xl font-bold mb-4 text-green-500">Routines</h1>
-				<div className="flex flex-col gap-2">
-					<DndContext
-						sensors={sensors}
-						collisionDetection={closestCenter}
-						onDragEnd={handleDragEnd}
-					>
-						<SortableContext items={routines} strategy={verticalListSortingStrategy}>
-							{routines.map((routine) => (
-								<RoutineRow routine={routine} key={routine.id} />
-							))}
-						</SortableContext>
-					</DndContext>
-				</div>
-				<div className="absolute bottom-2 m-auto left-1/2 -translate-x-1/2">
-					<Button
-						className="w-40"
-						color="green"
-						type="button"
-						onClick={() => setIsRoutineFormOpen(true)}
-					>
-						<PlusIcon />
-						New Routine
-					</Button>
-				</div>
-
-				<RoutineForm isOpen={isRoutineFormOpen} setIsOpen={setIsRoutineFormOpen} />
+		<>
+			<h1 className="text-2xl font-bold mb-4 text-green-500">Routines</h1>
+			<div className="flex flex-col gap-2">
+				<DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+					<SortableContext items={routines} strategy={verticalListSortingStrategy}>
+						{routines.map((routine) => (
+							<RoutineRow routine={routine} key={routine.id} />
+						))}
+					</SortableContext>
+				</DndContext>
 			</div>
-		</div>
+			<div className="absolute bottom-2 m-auto left-1/2 -translate-x-1/2">
+				<Button
+					className="w-40"
+					color="green"
+					type="button"
+					onClick={() => setIsRoutineFormOpen(true)}
+				>
+					<PlusIcon />
+					New Routine
+				</Button>
+			</div>
+
+			<RoutineForm isOpen={isRoutineFormOpen} setIsOpen={setIsRoutineFormOpen} />
+		</>
 	);
 }

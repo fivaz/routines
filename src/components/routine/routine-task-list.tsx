@@ -48,11 +48,13 @@ export default function RoutineTaskList({
 	tasks,
 	setTasks,
 	setRoutine,
+	setIsRunning,
 }: PropsWithChildren<{
 	routine: Routine;
 	tasks: Task[];
 	setTasks: Dispatch<SetStateAction<Task[]>>;
 	setRoutine: Dispatch<SetStateAction<Routine>>;
+	setIsRunning: Dispatch<SetStateAction<boolean>>;
 }>) {
 	const [isRoutineFormOpen, setIsRoutineFormOpen] = useState(false);
 	const [taskForm, setTaskForm] = useState<Task | null>(null);
@@ -145,7 +147,7 @@ export default function RoutineTaskList({
 			</DndContext>
 
 			<div className="absolute bottom-4 left-1/2 -translate-x-1/2">
-				<Button color="green" onClick={() => console.log('start routine')}>
+				<Button color="green" onClick={() => setIsRunning(true)}>
 					<ZapIcon />
 					Start Routine
 				</Button>
