@@ -41,11 +41,11 @@ export function TaskRow({
 		<div
 			ref={setNodeRef}
 			{...attributes}
-			className="relative bg-gray-800 text-white p-4 h-40 bg-cover bg-center flex flex-col justify-between"
+			className="relative rounded-lg bg-gray-800 text-white p-4 h-40 bg-cover bg-center flex flex-col justify-between"
 			style={{ backgroundImage: `url('${task.image}')`, ...style }}
 		>
-			<div className="flex justify-between items-center">
-				<GripVertical className="bg-green-500" {...listeners}></GripVertical>
+			<div className="z-10 flex justify-between items-center">
+				<GripVertical className="" {...listeners}></GripVertical>
 				<div className="flex gap-3 items-center">
 					<Dropdown>
 						<DropdownButton outline>
@@ -60,12 +60,13 @@ export function TaskRow({
 					</Dropdown>
 				</div>
 			</div>
-			<div className="flex justify-between items-center">
-				<span className="bg-green-500 bg-opacity-50 p-0.5 text-lg">{task.name}</span>
-				<span className="bg-green-500 bg-opacity-50 p-0.5 text-lg">
-					{formatSeconds(task.durationInSeconds)}
-				</span>
+
+			<div className="z-10 flex justify-between items-center">
+				<span className="p-0.5 text-lg">{task.name}</span>
+				<span className="p-0.5 text-lg">{formatSeconds(task.durationInSeconds)}</span>
 			</div>
+
+			<div className="absolute inset-0 bg-black/25 rounded-lg"></div>
 
 			<TaskForm routineId={routine.id} taskIn={taskForm} setTaskIn={setTaskForm} />
 		</div>

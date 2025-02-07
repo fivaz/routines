@@ -23,14 +23,20 @@ export function RoutineRow({ routine }: PropsWithChildren<{ routine: Routine }>)
 			<div
 				ref={setNodeRef}
 				{...attributes}
-				className="relative bg-gray-800 text-white p-4 h-40 flex items-end bg-cover bg-center"
+				className="relative bg-green-500 p-4 h-40 flex items-end bg-cover bg-center rounded-lg"
 				style={{ backgroundImage: `url('${routine.image}')`, ...style }}
 			>
-				<GripVertical onClick={(e) => e.stopPropagation()} {...listeners}></GripVertical>
+				<div className="flex gap-2 items-center z-10">
+					<GripVertical
+						className="text-white"
+						onClick={(e) => e.stopPropagation()}
+						{...listeners}
+					/>
 
-				<p className="bg-green-500 bg-opacity-50 p-0.5 text-lg">
-					{routine.name}-{routine.id}
-				</p>
+					<p className="text-white p-0.5 text-lg">{routine.name}</p>
+				</div>
+
+				<div className="absolute inset-0 bg-black/25 rounded-lg"></div>
 			</div>
 		</Link>
 	);
