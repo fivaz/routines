@@ -34,8 +34,20 @@ export default function RoutineFocusMode({
 		return () => timer && clearInterval(timer);
 	}, [isRunning]);
 
+	useEffect(() => {
+		const today = new Date().toISOString().split('T')[0];
+		const hasHistoryToday = currentTask.history.some((entry) => entry.startAt.startsWith(today));
+		if (hasHistoryToday) {
+			setIsRunning(false);
+		}
+	}, [currentTaskIndex]);
+
 	const handleStartStop = () => {
 		if (!user) return;
+		const today = new Date().toISOString().split('T')[0];
+		const hasHistoryToday = currentTask.history.some((entry) => entry.startAt.startsWith(today));
+		if (hasHistoryToday) return;
+
 		if (!isRunning) {
 			const startTime = new Date().toISOString();
 			currentTask.history.push({ startAt: startTime, endAt: '' });
@@ -43,6 +55,7 @@ export default function RoutineFocusMode({
 			const endTime = new Date().toISOString();
 			const lastEntry = currentTask.history[currentTask.history.length - 1];
 			if (lastEntry) lastEntry.endAt = endTime;
+			setCurrentTaskIndex((prev) => (prev < tasks.length - 1 ? prev + 1 : prev));
 		}
 		persistTask(user.uid, routine.id, currentTask);
 		setIsRunning(!isRunning);
