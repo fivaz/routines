@@ -3,6 +3,7 @@ export type Task = {
 	name: string;
 	image: string;
 	durationInSeconds: number;
+	order: number;
 	createdAt: string;
 	history: {
 		startAt: string;
@@ -13,6 +14,7 @@ export type Task = {
 export const emptyTask: Task = {
 	id: '',
 	name: '',
+	order: 0,
 	image: '',
 	durationInSeconds: 5 * 60,
 	createdAt: new Date().toISOString(),

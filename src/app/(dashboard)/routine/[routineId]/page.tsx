@@ -2,7 +2,12 @@
 import { useEffect, useState } from 'react';
 
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import { deleteRoutine, getRoutine, getRoutinePath } from '@/lib/routine/routine.repository';
+import {
+	deleteRoutine,
+	getRoutine,
+	getRoutinePath,
+	updateRoutines,
+} from '@/lib/routine/routine.repository';
 import { useAuth } from '@/lib/auth-context';
 import { emptyRoutine, type Routine } from '@/lib/routine/routine.type';
 import {
@@ -21,7 +26,23 @@ import { RoutineForm } from '@/components/routine/routine-form';
 import { TaskForm } from '@/components/task/task-form';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import { fetchTasks } from '@/lib/task/task.repository';
+import { fetchTasks, updateTasks } from '@/lib/task/task.repository';
+import {
+	closestCenter,
+	DndContext,
+	DragEndEvent,
+	KeyboardSensor,
+	PointerSensor,
+	UniqueIdentifier,
+	useSensor,
+	useSensors,
+} from '@dnd-kit/core';
+import {
+	arrayMove,
+	SortableContext,
+	sortableKeyboardCoordinates,
+	verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
 
 export default function Routine() {
 	const [routine, setRoutine] = useState<Routine>(emptyRoutine);
@@ -40,10 +61,16 @@ export default function Routine() {
 			setRoutine(routine);
 		});
 
-		const unsubscribe = fetchTasks(user.uid, String(params.routineId), setTasks);
+		const unsubscribe = fetchTasks(user.uid, String(params.routineId), (tasks) =>
+			setTasks(sortTasks(tasks)),
+		);
 
 		return () => unsubscribe();
 	}, [params.routineId, routine.id, user]);
+
+	function sortTasks(tasks: Task[]) {
+		return tasks.toSorted((a, b) => a.order - b.order);
+	}
 
 	function handleDelete() {
 		if (!user) return;
@@ -53,6 +80,31 @@ export default function Routine() {
 
 	function handleAddTask() {
 		setTaskForm(emptyTask);
+	}
+
+	const sensors = useSensors(
+		useSensor(PointerSensor),
+		useSensor(KeyboardSensor, {
+			coordinateGetter: sortableKeyboardCoordinates,
+		}),
+	);
+
+	function reorderTasks(tasks: Task[], overId: UniqueIdentifier, activeId: UniqueIdentifier) {
+		const oldIndex = tasks.findIndex((task) => task.id === String(activeId));
+		const newIndex = tasks.findIndex((task) => task.id === String(overId));
+
+		return arrayMove(tasks, oldIndex, newIndex);
+	}
+
+	function handleDragEnd(event: DragEndEvent) {
+		const { active, over } = event;
+		if (!user) return;
+
+		if (over && active.id !== over.id) {
+			setTasks((tasks) => reorderTasks(tasks, over.id, active.id));
+
+			updateTasks(user.uid, routine.id, reorderTasks(tasks, over.id, active.id));
+		}
 	}
 
 	if (!user) return;
@@ -78,9 +130,13 @@ export default function Routine() {
 				</Dropdown>
 			</div>
 
-			{tasks.map((task) => (
-				<TaskRow key={task.id} userId={user.uid} task={task} routine={routine} />
-			))}
+			<DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+				<SortableContext items={tasks} strategy={verticalListSortingStrategy}>
+					{tasks.map((task) => (
+						<TaskRow key={task.id} userId={user.uid} task={task} routine={routine} />
+					))}
+				</SortableContext>
+			</DndContext>
 
 			<div className="absolute bottom-4 left-1/2 -translate-x-1/2">
 				<Button color="green" onClick={() => console.log('start routine')}>

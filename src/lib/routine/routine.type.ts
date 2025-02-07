@@ -6,7 +6,7 @@ export type Routine = {
 	order: number;
 };
 
-export const emptyRoutine = {
+export const emptyRoutine: Routine = {
 	id: '',
 	name: '',
 	image: '',

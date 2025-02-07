@@ -7,22 +7,20 @@ import {
 	getDoc,
 	onSnapshot,
 	setDoc,
+	writeBatch,
 } from 'firebase/firestore';
 import { db, storage } from '@/lib/firebase';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { Task } from '@/lib/task/task.type';
 import { getRoutinePath } from '@/lib/routine/routine.repository';
 import { Dispatch, SetStateAction } from 'react';
+import { Routine } from '@/lib/routine/routine.type';
 
 export function getTaskPath(userId: string, routineId: string) {
 	return `${DB_PATH.USERS}/${userId}/${DB_PATH.ROUTINES}/${routineId}/${DB_PATH.TASKS}`;
 }
 
-export function fetchTasks(
-	userId: string,
-	routineId: string,
-	setTasks: Dispatch<SetStateAction<Task[]>>,
-) {
+export function fetchTasks(userId: string, routineId: string, setTasks: (tasks: Task[]) => void) {
 	const tasksCollectionRef = collection(db, getTaskPath(userId, routineId));
 
 	return onSnapshot(tasksCollectionRef, (snapshot) => {
@@ -88,4 +86,19 @@ export async function getTask(userId: string, routineId: string, taskId: string)
 
 export function deleteTask(userId: string, routineId: string, taskId: string) {
 	deleteDoc(doc(db, getTaskPath(userId, routineId), taskId));
+}
+
+export async function updateTasks(userId: string, routineId: string, tasks: Task[]) {
+	const batch = writeBatch(db);
+
+	tasks.forEach((task, index) => {
+		const taskRef = doc(db, getTaskPath(userId, routineId), task.id);
+		batch.update(taskRef, { order: index });
+	});
+
+	try {
+		await batch.commit();
+	} catch (error) {
+		console.error('Error in batch update: ', error);
+	}
 }
