@@ -4,6 +4,7 @@ import { Task } from '@/lib/task/task.type';
 import { Button } from '@/components/base/button';
 import { ChevronLeft, ChevronRight, CircleStop, Play } from 'lucide-react';
 import Image from 'next/image';
+import { formatSeconds } from '@/lib/task/task.utils';
 
 export default function RoutineFocusMode({ routine, tasks }: { routine: Routine; tasks: Task[] }) {
 	const [currentTaskIndex, setCurrentTaskIndex] = useState(0);
@@ -69,15 +70,15 @@ export default function RoutineFocusMode({ routine, tasks }: { routine: Routine;
 			<img
 				src={currentTask.image}
 				alt={currentTask.name}
-				className="w-48 h-48 object-cover rounded-lg mb-4"
+				className="w-72 h-72 object-cover rounded-lg mb-4"
 			/>
 
-			<div>
+			<div className="flex flex-col gap-2 w-full">
 				{/* Task Name & Timer */}
-				<div className="text-center mb-2">
-					<h2 className="text-xl font-bold">{currentTask.name}</h2>
+				<div className="mb-2">
+					<h2 className="text-xl font-bold text-green-600">{currentTask.name}</h2>
 					<p className="text-lg">
-						{elapsedTime}s / {currentTask.durationInSeconds}s
+						{formatSeconds(elapsedTime) || '0s'} / {formatSeconds(currentTask.durationInSeconds)}
 					</p>
 				</div>
 
@@ -90,20 +91,24 @@ export default function RoutineFocusMode({ routine, tasks }: { routine: Routine;
 				</div>
 
 				{/* Controls */}
-				<div className="flex items-center justify-between w-full max-w-md">
-					{currentTaskIndex > 0 && (
-						<Button plain onClick={handlePrevTask}>
-							<ChevronLeft />
-						</Button>
-					)}
+				<div className="flex items-center justify-between w-full max-w-md bg-gray-300 h-14">
+					<div className="w-14 flex justify-start">
+						{currentTaskIndex > 0 && (
+							<button className="p-3" onClick={handlePrevTask}>
+								<ChevronLeft />
+							</button>
+						)}
+					</div>
 
-					<Button plain onClick={handleStartStop} className="flex-1">
+					<button onClick={handleStartStop} className="p-3 flex-1 flex justify-center">
 						{isRunning ? <CircleStop /> : <Play />}
-					</Button>
+					</button>
 
-					<Button plain onClick={handleNextTask} disabled={isRunning}>
-						<ChevronRight />
-					</Button>
+					<div className="w-14 flex justify-end">
+						<button className="p-3" onClick={handleNextTask} disabled={isRunning}>
+							<ChevronRight />
+						</button>
+					</div>
 				</div>
 			</div>
 		</div>

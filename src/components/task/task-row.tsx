@@ -11,6 +11,7 @@ import { intervalToDuration, formatDuration } from 'date-fns';
 import { TaskForm } from '@/components/task/task-form';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { formatSeconds } from '@/lib/task/task.utils';
 
 export function TaskRow({
 	userId,
@@ -34,15 +35,6 @@ export function TaskRow({
 
 	function handleDelete() {
 		deleteTask(userId, routine.id, task.id);
-	}
-
-	function formatSeconds(seconds: number) {
-		const duration = intervalToDuration({ start: 0, end: seconds * 1000 });
-
-		return formatDuration(duration, {
-			format: ['hours', 'minutes', 'seconds'], // Only include needed units
-			delimiter: ' ', // Separate with space
-		}).replace(/hour|minute|second/g, (match) => match[0] + ''); // Convert to "h m s"
 	}
 
 	return (
