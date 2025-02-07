@@ -1,14 +1,9 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import type { Routine } from '@/lib/routine/routine.type';
 import { Task } from '@/lib/task/task.type';
-import { ChevronLeft, ChevronRight, CircleStop, Ellipsis, Play } from 'lucide-react';
-import { formatSeconds, getDuration } from '@/lib/task/task.utils';
+import { Ellipsis } from 'lucide-react';
+import { getDuration } from '@/lib/task/task.utils';
 import { Dropdown, DropdownButton, DropdownItem, DropdownMenu } from '@/components/base/dropdown';
-import { useAuth } from '@/lib/auth-context';
-import { persistTask } from '@/lib/task/task.repository';
-import { usePrompt } from '@/lib/prompt-context';
-import { format } from 'date-fns';
-import { TIME } from '@/lib/consts';
 import { RoutineTasksSummary } from '@/components/routine/routine-tasks-summary';
 import { RoutineFocusBottom } from '@/components/routine/routine-focus-bottom';
 

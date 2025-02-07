@@ -1,5 +1,5 @@
 'use client';
-import { FormEventHandler, useState } from 'react';
+import { useState } from 'react';
 import { parseErrors, validateFields } from './service';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useRouter } from 'next/navigation';

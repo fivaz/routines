@@ -1,10 +1,6 @@
 'use client';
-import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
 import { Dashboard } from '@/components/Dashboard';
-import { onAuthStateChanged } from 'firebase/auth';
 import { useEffect } from 'react';
-import { auth } from '@/lib/firebase';
 import { Routes } from '@/lib/consts';
 import { useAuth } from '@/lib/auth-context';
 import { useRouter } from 'next/navigation';

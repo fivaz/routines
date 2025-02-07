@@ -1,6 +1,5 @@
 import { PropsWithChildren } from 'react';
 import { Routine } from '@/lib/routine/routine.type';
-import { Button } from '../base/button';
 import { Routes } from '@/lib/consts';
 import Link from 'next/link';
 

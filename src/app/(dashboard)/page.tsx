@@ -1,27 +1,22 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { db } from '@/lib/firebase';
-import { collection, addDoc, getDocs, onSnapshot, type Unsubscribe } from 'firebase/firestore';
 import { Button } from '@/components/base/button';
 import { RoutineForm } from '@/components/routine/routine-form';
 import { emptyRoutine, type Routine } from '@/lib/routine/routine.type';
-import { DB_PATH } from '@/lib/consts';
-import { fetchRoutines, getRoutinePath, updateRoutines } from '@/lib/routine/routine.repository';
+import { fetchRoutines, updateRoutines } from '@/lib/routine/routine.repository';
 import { useAuth } from '@/lib/auth-context';
 import { RoutineRow } from '@/components/routine/routine-row';
 
 import {
-	DndContext,
 	closestCenter,
+	DndContext,
+	DragEndEvent,
 	KeyboardSensor,
 	PointerSensor,
 	useSensor,
 	useSensors,
-	DragEndEvent,
-	UniqueIdentifier,
 } from '@dnd-kit/core';
 import {
-	arrayMove,
 	SortableContext,
 	sortableKeyboardCoordinates,
 	verticalListSortingStrategy,

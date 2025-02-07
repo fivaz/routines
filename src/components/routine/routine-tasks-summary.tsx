@@ -1,4 +1,3 @@
-import { PropsWithChildren } from 'react';
 import { Task } from '@/lib/task/task.type';
 
 export function RoutineTasksSummary({

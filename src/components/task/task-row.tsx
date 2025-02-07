@@ -1,13 +1,9 @@
 import { PropsWithChildren, useState } from 'react';
 import { type Task } from '@/lib/task/task.type';
-import { Button } from '../base/button';
-import { Routes } from '@/lib/consts';
-import Link from 'next/link';
 import { type Routine } from '@/lib/routine/routine.type';
 import { Dropdown, DropdownButton, DropdownItem, DropdownMenu } from '@/components/base/dropdown';
 import { Ellipsis, GripVertical } from 'lucide-react';
 import { deleteTask } from '@/lib/task/task.repository';
-import { intervalToDuration, formatDuration } from 'date-fns';
 import { TaskForm } from '@/components/task/task-form';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';

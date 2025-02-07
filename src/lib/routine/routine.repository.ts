@@ -12,8 +12,6 @@ import { db, storage } from '@/lib/firebase';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { Routine } from '@/lib/routine/routine.type';
 import { Task } from '@/lib/task/task.type';
-import { getTaskPath } from '@/lib/task/task.repository';
-import { sortTasks } from '@/lib/task/task.utils';
 import { sortRoutines } from '@/lib/routine/routine.utils';
 
 export function getRoutinePath(userId: string) {

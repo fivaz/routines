@@ -1,21 +1,10 @@
-import { Dispatch, PropsWithChildren, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, PropsWithChildren, SetStateAction, useState } from 'react';
 
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import {
-	deleteRoutine,
-	getRoutine,
-	getRoutinePath,
-	updateRoutines,
-} from '@/lib/routine/routine.repository';
+import { useRouter } from 'next/navigation';
+import { deleteRoutine } from '@/lib/routine/routine.repository';
 import { useAuth } from '@/lib/auth-context';
-import { emptyRoutine, type Routine } from '@/lib/routine/routine.type';
-import {
-	Dropdown,
-	DropdownButton,
-	DropdownDivider,
-	DropdownItem,
-	DropdownMenu,
-} from '@/components/base/dropdown';
+import { type Routine } from '@/lib/routine/routine.type';
+import { Dropdown, DropdownButton, DropdownItem, DropdownMenu } from '@/components/base/dropdown';
 import { Ellipsis, ZapIcon } from 'lucide-react';
 import { Routes } from '@/lib/consts';
 import { TaskRow } from '@/components/task/task-row';
@@ -23,9 +12,7 @@ import { emptyTask, Task } from '@/lib/task/task.type';
 import { Button } from '@/components/base/button';
 import { RoutineForm } from '@/components/routine/routine-form';
 import { TaskForm } from '@/components/task/task-form';
-import { collection, onSnapshot } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
-import { fetchTasks, updateTasks } from '@/lib/task/task.repository';
+import { updateTasks } from '@/lib/task/task.repository';
 import {
 	closestCenter,
 	DndContext,

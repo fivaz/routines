@@ -3,14 +3,10 @@ import { Dialog, DialogActions, DialogBody, DialogTitle } from '@/components/bas
 import { Field, FieldGroup, Fieldset, Label } from '@/components/base/fieldset';
 import { Input } from '@/components/base/input';
 import { Dispatch, SetStateAction, useState } from 'react';
-import { db, storage } from '@/lib/firebase';
-import { emptyTask, Task } from '@/lib/task/task.type';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { addTask, editTask, getTaskPath } from '@/lib/task/task.repository';
-import { AuthProvider, useAuth } from '@/lib/auth-context';
-import { collection, doc, setDoc } from 'firebase/firestore';
-import { parse } from 'date-fns';
-import { format, addSeconds, startOfDay } from 'date-fns';
+import { Task } from '@/lib/task/task.type';
+import { addTask, editTask } from '@/lib/task/task.repository';
+import { useAuth } from '@/lib/auth-context';
+import { addSeconds, format, parse, startOfDay } from 'date-fns';
 import { TIME } from '@/lib/consts';
 import { Image } from 'lucide-react';
 import { ImageDialog } from '@/components/ImageDialog';

@@ -1,14 +1,14 @@
 'use client';
 import { useEffect, useState } from 'react';
 
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import { deleteRoutine, fetchRoutine, getRoutine } from '@/lib/routine/routine.repository';
+import { useParams } from 'next/navigation';
+import { fetchRoutine } from '@/lib/routine/routine.repository';
 import { useAuth } from '@/lib/auth-context';
 import { emptyRoutine, type Routine } from '@/lib/routine/routine.type';
 
-import { emptyTask, Task } from '@/lib/task/task.type';
+import { Task } from '@/lib/task/task.type';
 
-import { fetchTasks, updateTasks } from '@/lib/task/task.repository';
+import { fetchTasks } from '@/lib/task/task.repository';
 
 import RoutineTaskList from '@/components/routine/routine-task-list';
 import RoutineFocusMode from '@/components/routine/routine-focus-mode';

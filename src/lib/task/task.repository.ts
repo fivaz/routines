@@ -1,7 +1,6 @@
 import { DB_PATH } from '@/lib/consts';
 import {
 	collection,
-	updateDoc,
 	deleteDoc,
 	doc,
 	getDoc,
@@ -12,9 +11,6 @@ import {
 import { db, storage } from '@/lib/firebase';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { Task } from '@/lib/task/task.type';
-import { getRoutinePath } from '@/lib/routine/routine.repository';
-import { Dispatch, SetStateAction } from 'react';
-import { Routine } from '@/lib/routine/routine.type';
 import { sortTasks } from '@/lib/task/task.utils';
 
 export function getTaskPath(userId: string, routineId: string) {

@@ -3,15 +3,12 @@ import { Dialog, DialogActions, DialogBody, DialogTitle } from '@/components/bas
 import { Field, FieldGroup, Fieldset, Label } from '@/components/base/fieldset';
 import { Input } from '@/components/base/input';
 import { Dispatch, SetStateAction, useState } from 'react';
-import { db, storage } from '@/lib/firebase';
-import { emptyRoutine, Routine } from '@/lib/routine/routine.type';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { addRoutine, editRoutine, getRoutinePath } from '@/lib/routine/routine.repository';
-import { AuthProvider, useAuth } from '@/lib/auth-context';
-import { collection, doc, setDoc } from 'firebase/firestore';
-import { addTask, editTask } from '@/lib/task/task.repository';
+import { Routine } from '@/lib/routine/routine.type';
+import { addRoutine, editRoutine } from '@/lib/routine/routine.repository';
+import { useAuth } from '@/lib/auth-context';
 import { Image } from 'lucide-react';
 import { ImageDialog } from '@/components/ImageDialog';
+
 export function RoutineForm({
 	routineIn,
 	setRoutineIn,
