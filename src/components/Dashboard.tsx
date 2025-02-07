@@ -87,9 +87,7 @@ export function Dashboard({ children }: React.PropsWithChildren) {
 						<DropdownButton as={NavbarItem} className="max-lg:hidden">
 							<Avatar src="/tailwind-logo.svg" />
 							<NavbarLabel>Tailwind Labs</NavbarLabel>
-							<ChevronDownIcon />
 						</DropdownButton>
-						<TeamDropdownMenu />
 					</Dropdown>
 					<NavbarDivider className="max-lg:hidden" />
 					<NavbarSection className="max-lg:hidden">
@@ -101,12 +99,6 @@ export function Dashboard({ children }: React.PropsWithChildren) {
 					</NavbarSection>
 					<NavbarSpacer />
 					<NavbarSection>
-						<NavbarItem href="/search" aria-label="Search">
-							<MagnifyingGlassIcon />
-						</NavbarItem>
-						<NavbarItem href="/inbox" aria-label="Inbox">
-							<InboxIcon />
-						</NavbarItem>
 						<Dropdown>
 							<DropdownButton as={NavbarItem}>
 								<Avatar src={user.photoURL} square />
@@ -133,7 +125,6 @@ export function Dashboard({ children }: React.PropsWithChildren) {
 							<DropdownButton as={SidebarItem} className="lg:mb-2.5">
 								<Avatar src="/tailwind-logo.svg" />
 								<SidebarLabel>Tailwind Labs</SidebarLabel>
-								<ChevronDownIcon />
 							</DropdownButton>
 							<TeamDropdownMenu />
 						</Dropdown>

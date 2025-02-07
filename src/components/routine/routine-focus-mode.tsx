@@ -135,7 +135,6 @@ export default function RoutineFocusMode({
 				</div>
 
 				<div className="flex flex-col gap-2 w-full">
-					{/* Task Name & Timer */}
 					<div className="mb-2">
 						<h2 className="text-xl font-bold text-green-600">{currentTask.name}</h2>
 						<p className="text-lg">
@@ -148,7 +147,7 @@ export default function RoutineFocusMode({
 						<div
 							style={{ width: `${(elapsedTime / currentTask.durationInSeconds) * 100}%` }}
 							className="absolute top-0 left-0 h-full w-0 bg-gradient-to-r from-green-600 to-green-300 transition-all duration-100"
-						></div>
+						/>
 
 						{/* Controls */}
 						<div className="relative bg-transparent z-10 w-1/6 flex">
