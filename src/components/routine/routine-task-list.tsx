@@ -42,6 +42,7 @@ import {
 	sortableKeyboardCoordinates,
 	verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
+import { usePrompt } from '@/lib/prompt-context';
 
 export default function RoutineTaskList({
 	routine,
@@ -61,11 +62,19 @@ export default function RoutineTaskList({
 
 	const { user } = useAuth();
 	const router = useRouter();
+	const { createPrompt } = usePrompt();
 
-	function handleDelete() {
+	async function handleDelete() {
 		if (!user) return;
-		deleteRoutine(user.uid, routine.id);
-		router.push(Routes.ROOT);
+		if (
+			await createPrompt({
+				title: 'Delete Routine',
+				message: 'Are you sure you want to delete this routine?',
+			})
+		) {
+			deleteRoutine(user.uid, routine.id);
+			router.push(Routes.ROOT);
+		}
 	}
 
 	function handleEdit() {

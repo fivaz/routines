@@ -12,6 +12,7 @@ import { TaskForm } from '@/components/task/task-form';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { formatSeconds } from '@/lib/task/task.utils';
+import { usePrompt } from '@/lib/prompt-context';
 
 export function TaskRow({
 	userId,
@@ -19,6 +20,7 @@ export function TaskRow({
 	routine,
 }: PropsWithChildren<{ userId: string; task: Task; routine: Routine }>) {
 	const [taskForm, setTaskForm] = useState<Task | null>(null);
+	const { createPrompt } = usePrompt();
 
 	const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
 		id: task.id,
@@ -33,8 +35,15 @@ export function TaskRow({
 		setTaskForm(task);
 	}
 
-	function handleDelete() {
-		deleteTask(userId, routine.id, task.id);
+	async function handleDelete() {
+		if (
+			await createPrompt({
+				title: 'Delete Task',
+				message: 'Are you sure you want to delete this task?',
+			})
+		) {
+			deleteTask(userId, routine.id, task.id);
+		}
 	}
 
 	return (
