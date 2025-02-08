@@ -36,7 +36,6 @@ export default function Login() {
 	}, [isLoading.email, isLoading.github, isLoading.google]);
 
 	async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
-		console.log('x');
 		event.preventDefault();
 		setIsLoading({ ...isLoading, email: true });
 
@@ -65,7 +64,7 @@ export default function Login() {
 					</h2>
 				</div>
 
-				<InstallPrompt />
+				{/*<InstallPrompt />*/}
 
 				<div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
 					<div className="dark:bg-zinc-900 bg-white px-6  shadow-sm sm:rounded-lg sm:px-12">

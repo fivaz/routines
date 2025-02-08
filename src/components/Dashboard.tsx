@@ -76,7 +76,7 @@ export function Dashboard({ children }: React.PropsWithChildren) {
 									<DropdownLabel>Profile</DropdownLabel>
 								</DropdownItem>
 								<DropdownDivider />
-								<DropdownItem href="/logout">
+								<DropdownItem>
 									<ArrowRightStartOnRectangleIcon />
 									<DropdownLabel onClick={handleSignOut}>Sign out</DropdownLabel>
 								</DropdownItem>
