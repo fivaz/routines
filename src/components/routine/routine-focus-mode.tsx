@@ -55,11 +55,15 @@ export default function RoutineFocusMode({
 			</div>
 
 			<div className="flex overflow-hidden aspect-square items-center justify-center">
-				<img
-					src={tasks[currentTaskIndex].image}
-					alt={tasks[currentTaskIndex].name}
-					className="h-full w-full object-cover rounded-lg"
-				/>
+				{tasks[currentTaskIndex].image ? (
+					<img
+						src={tasks[currentTaskIndex].image}
+						alt={tasks[currentTaskIndex].name}
+						className="h-full w-full object-cover rounded-lg"
+					/>
+				) : (
+					<div className="rounded-lg h-72 w-72 md:h-[550px] md:w-[550px] bg-linear-to-r/shorter from-indigo-500 to-teal-400"></div>
+				)}
 			</div>
 
 			<RoutineFocusBottom
