@@ -12,8 +12,6 @@ export function formatSeconds(seconds: number) {
 
 export function getDuration(startAt: string, endAt: string): number {
 	try {
-		console.log(startAt);
-		console.log(endAt);
 		const startDate = new Date(startAt);
 		const endDate = new Date(endAt);
 		return Math.abs((endDate.getTime() - startDate.getTime()) / 1000);
