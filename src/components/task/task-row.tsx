@@ -2,13 +2,14 @@ import { PropsWithChildren, useState } from 'react';
 import { type Task } from '@/lib/task/task.type';
 import { type Routine } from '@/lib/routine/routine.type';
 import { Dropdown, DropdownButton, DropdownItem, DropdownMenu } from '@/components/base/dropdown';
-import { Ellipsis, GripVertical } from 'lucide-react';
+import { Ellipsis, GripVertical, GripVerticalIcon } from 'lucide-react';
 import { deleteTask } from '@/lib/task/task.repository';
 import { TaskForm } from '@/components/task/task-form';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { formatSeconds, latestTime } from '@/lib/task/task.utils';
 import { usePrompt } from '@/lib/prompt-context';
+import { Button } from '@/components/base/button';
 
 export function TaskRow({
 	userId,
@@ -50,7 +51,9 @@ export function TaskRow({
 			style={{ backgroundImage: `url('${task.image}')`, ...style }}
 		>
 			<div className="z-10 flex justify-between items-center">
-				<GripVertical className="" {...listeners}></GripVertical>
+				<Button outline {...listeners} className="dark cursor-grab">
+					<GripVerticalIcon className="size-6" />
+				</Button>
 				<div className="flex gap-3 items-center">
 					<Dropdown>
 						<DropdownButton outline className="dark">

@@ -1,4 +1,4 @@
-import { PropsWithChildren } from 'react';
+import { MouseEventHandler, PropsWithChildren } from 'react';
 import { Routine } from '@/lib/routine/routine.type';
 import { Routes } from '@/lib/consts';
 import Link from 'next/link';
@@ -22,17 +22,24 @@ export function RoutineRow({ routine }: PropsWithChildren<{ routine: Routine }>)
 		<div
 			ref={setNodeRef}
 			{...attributes}
-			className="relative bg-green-500 p-4 h-40 flex flex-col bg-cover bg-center rounded-lg"
+			className="relative bg-green-500 h-40 flex flex-col bg-cover bg-center rounded-lg"
 			style={{ backgroundImage: `url('${routine.image}')`, ...style }}
 		>
-			<div className="flex">
-				<Button outline {...listeners} className="z-10 dark">
-					<GripVerticalIcon />
+			<div className="z-20 absolute top-4 left-4">
+				<Button
+					{...listeners}
+					outline
+					className="dark cursor-grab"
+					onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+						e.stopPropagation(); // Prevent link click when button is clicked
+						console.log('Button clicked');
+					}}
+				>
+					<GripVerticalIcon className="size-6" />
 				</Button>
-				<Link className="h-full w-full  z-10" href={`${Routes.ROUTINE}/${routine.id}`}></Link>
 			</div>
 
-			<Link href={`${Routes.ROUTINE}/${routine.id}`} className="h-full w-full items-end flex z-10">
+			<Link href={`${Routes.ROUTINE}/${routine.id}`} className="p-4 h-full w-full z-10 flex">
 				<div className="text-white p-0.5 text-lg self-end">{routine.name}</div>
 			</Link>
 
