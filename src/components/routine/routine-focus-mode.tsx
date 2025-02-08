@@ -33,42 +33,42 @@ export default function RoutineFocusMode({
 	}
 
 	return (
-		<div className="flex flex-col h-full gap-7">
-			<RoutineTasksSummary tasks={tasks} currentTaskIndex={currentTaskIndex} />
+		<div className="flex flex-col justify-between overflow-hidden h-full md:h-[calc(100vh-136px)] items-center">
+			<div className="flex flex-col gap-4 w-full">
+				<RoutineTasksSummary tasks={tasks} currentTaskIndex={currentTaskIndex} />
 
-			<div className="flex justify-between">
-				<div className="text-green-500 text-2xl">{routine.name}</div>
+				<div className="flex justify-between items-center">
+					<div className="text-green-500 text-2xl">{routine.name}</div>
 
-				<Dropdown>
-					<DropdownButton outline>
-						<Ellipsis />
-					</DropdownButton>
-					<DropdownMenu>
-						<DropdownItem onClick={handleEndFocus}>
-							<div className="text-red-500">Leave focus</div>
-						</DropdownItem>
-					</DropdownMenu>
-				</Dropdown>
+					<Dropdown>
+						<DropdownButton outline>
+							<Ellipsis />
+						</DropdownButton>
+						<DropdownMenu>
+							<DropdownItem onClick={handleEndFocus}>
+								<div className="text-red-500">Leave focus</div>
+							</DropdownItem>
+						</DropdownMenu>
+					</Dropdown>
+				</div>
 			</div>
 
-			<div className="flex flex-col justify-between h-full">
-				<div className="aspect-[1/1]">
-					<img
-						src={currentTask.image}
-						alt={currentTask.name}
-						className="w-full object-cover h-full rounded-lg"
-					/>
-				</div>
-
-				<RoutineFocusBottom
-					tasks={tasks}
-					routineId={routine.id}
-					currentTaskIndex={currentTaskIndex}
-					elapsedTime={elapsedTime}
-					setElapsedTime={setElapsedTime}
-					setCurrentTaskIndex={setCurrentTaskIndex}
+			<div className="flex overflow-hidden aspect-square items-center justify-center">
+				<img
+					src={currentTask.image}
+					alt={currentTask.name}
+					className="h-full w-full object-cover rounded-lg"
 				/>
 			</div>
+
+			<RoutineFocusBottom
+				tasks={tasks}
+				routineId={routine.id}
+				currentTaskIndex={currentTaskIndex}
+				elapsedTime={elapsedTime}
+				setElapsedTime={setElapsedTime}
+				setCurrentTaskIndex={setCurrentTaskIndex}
+			/>
 		</div>
 	);
 }

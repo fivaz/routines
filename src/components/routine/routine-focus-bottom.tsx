@@ -94,15 +94,15 @@ export function RoutineFocusBottom({
 	};
 
 	return (
-		<div className="flex flex-col gap-2 w-full">
-			<div className="mb-2">
+		<div className="flex flex-col gap-4 w-full">
+			<div className="gap-2">
 				<h2 className="text-xl font-bold text-green-600 dark:text-green-500">{currentTask.name}</h2>
 				<p className="text-lg text-gray-800 dark:text-gray-300">
 					{formatSeconds(elapsedTime) || '0s'} / {formatSeconds(currentTask.durationInSeconds)}
 				</p>
 			</div>
 
-			<div className="relative dark:text-green-600 dark:bg-gray-200 bg-gray-300 text-white flex overflow-hidden h-14 -mx-6">
+			<div className="relative dark:text-green-600 dark:bg-gray-200 bg-gray-300 text-white flex overflow-hidden h-14 md:mx-0 -mx-6">
 				{/* Progress Bar */}
 				<div
 					style={{ width: `${(elapsedTime / currentTask.durationInSeconds) * 100}%` }}
