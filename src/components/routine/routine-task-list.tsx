@@ -68,7 +68,7 @@ export default function RoutineTaskList({
 	}
 
 	function handleAddTask() {
-		setTaskForm(emptyTask);
+		setTaskForm({ ...emptyTask, order: tasks.length });
 	}
 
 	const sensors = useSensors(
@@ -103,20 +103,23 @@ export default function RoutineTaskList({
 			<div className="flex justify-between">
 				<div className="text-green-500 text-2xl">{routine.name}</div>
 
-				<Dropdown>
-					<DropdownButton outline>
-						<Ellipsis />
-					</DropdownButton>
-					<DropdownMenu>
-						<DropdownItem onClick={handleAddTask}>
-							<div className="text-green-500">Add Task</div>
-						</DropdownItem>
-						<DropdownItem onClick={handleEdit}>Edit</DropdownItem>
-						<DropdownItem onClick={handleDelete}>
-							<div className="text-red-500">Delete</div>
-						</DropdownItem>
-					</DropdownMenu>
-				</Dropdown>
+				<div className="flex gap-3">
+					<Button outline onClick={handleAddTask}>
+						<PlusIcon className="size-5" />
+						Add Task
+					</Button>
+					<Dropdown>
+						<DropdownButton outline>
+							<Ellipsis />
+						</DropdownButton>
+						<DropdownMenu>
+							<DropdownItem onClick={handleEdit}>Edit</DropdownItem>
+							<DropdownItem onClick={handleDelete}>
+								<div className="text-red-500">Delete</div>
+							</DropdownItem>
+						</DropdownMenu>
+					</Dropdown>
+				</div>
 			</div>
 
 			{tasks.length === 0 && (

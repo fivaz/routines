@@ -40,7 +40,9 @@ export function RoutineRow({ routine }: PropsWithChildren<{ routine: Routine }>)
 			</div>
 
 			<Link href={`${Routes.ROUTINE}/${routine.id}`} className="p-4 h-full w-full z-10 flex">
-				<div className="text-white p-0.5 text-lg self-end">{routine.name}</div>
+				<div className="text-white p-0.5 text-lg self-end first-letter:uppercase">
+					{routine.name}
+				</div>
 			</Link>
 
 			<div className="absolute inset-0 bg-black/25 rounded-lg"></div>

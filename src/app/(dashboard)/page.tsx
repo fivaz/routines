@@ -39,7 +39,7 @@ export default function Routines() {
 	);
 
 	function handleAddRoutine() {
-		setRoutineForm(emptyRoutine);
+		setRoutineForm({ ...emptyRoutine, order: routines.length });
 	}
 
 	function handleDragEnd(event: DragEndEvent) {
