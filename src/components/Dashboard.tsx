@@ -32,6 +32,7 @@ import { auth } from '@/lib/firebase';
 import { APP_NAME, Routes } from '@/lib/consts';
 import { useRouter } from 'next/navigation';
 import { Logo } from '@/components/Logo';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 const navItems = [{ label: 'Home', url: '/' }];
 
@@ -66,6 +67,7 @@ export function Dashboard({ children }: React.PropsWithChildren) {
 					</NavbarSection>
 					<NavbarSpacer />
 					<NavbarSection>
+						<ThemeToggle />
 						<Dropdown>
 							<DropdownButton as={NavbarItem}>
 								<Avatar src={user.photoURL} square />
