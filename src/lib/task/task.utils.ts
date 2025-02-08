@@ -36,15 +36,17 @@ export function sortTasks(tasks: Task[]) {
 export function latestTime(task: Task) {
 	const histories = Object.keys(task.history);
 	if (!histories.length) {
-		return null;
+		return '-';
 	}
 	const latestKey = histories.sort().pop();
 	if (!latestKey) {
-		return null;
+		console.error("this shouldn't happen");
+		return '-';
 	}
 	const history = getHistory(task, latestKey);
 	if (!history) {
-		return null;
+		console.error("this shouldn't happen");
+		return '-';
 	}
 	return formatSeconds(getDuration(history.startAt, history.endAt));
 }

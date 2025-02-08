@@ -69,7 +69,7 @@ export function TaskRow({
 			<div className="z-10 flex justify-between items-center">
 				<span className="p-0.5 text-lg">{task.name}</span>
 				<span className="p-0.5 text-lg">
-					{`${latestTime(task)}` || '-'} / {formatSeconds(task.durationInSeconds)}
+					{latestTime(task)} / {formatSeconds(task.durationInSeconds)}
 				</span>
 			</div>
 

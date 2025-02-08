@@ -8,7 +8,7 @@ import { addTask, editTask } from '@/lib/task/task.repository';
 import { useAuth } from '@/lib/auth-context';
 import { addSeconds, format, parse, startOfDay } from 'date-fns';
 import { TIME } from '@/lib/consts';
-import { ImageIcon } from 'lucide-react';
+import { ImageIcon, ImageUpscaleIcon } from 'lucide-react';
 import { ImageDialog } from '@/components/ImageDialog';
 
 export function TaskForm({
@@ -68,6 +68,10 @@ export function TaskForm({
 		return format(date, TIME); // Format to HH:mm
 	}
 
+	function handleImageGeneration() {
+		console.log('image generation will be implemented soon...');
+	}
+
 	return (
 		<Dialog open={taskIn !== null} onClose={close}>
 			{taskIn && (
@@ -88,8 +92,12 @@ export function TaskForm({
 										<Label>
 											<div className="flex justify-between">
 												<span>Upload Image</span>
-												{taskIn.image && (
+												{taskIn.image ? (
 													<button onClick={() => setIsImageOpen(true)}>
+														<ImageUpscaleIcon className="w-5 h-5 text-green-500" />
+													</button>
+												) : (
+													<button onClick={handleImageGeneration}>
 														<ImageIcon className="w-5 h-5 text-green-500" />
 													</button>
 												)}
