@@ -18,22 +18,23 @@ export default function RoutineFocusMode({
 }) {
 	const [currentTaskIndex, setCurrentTaskIndex] = useState(0);
 	const [elapsedTime, setElapsedTime] = useState(0);
-	const currentTask = tasks[currentTaskIndex];
 
 	useEffect(() => {
 		const today = new Date().toISOString().split('T')[0];
-		const todayHistory = currentTask.history?.[today];
+		const todayHistory = tasks[currentTaskIndex].history?.[today];
 		if (todayHistory) {
 			setElapsedTime(getDuration(todayHistory.startAt, todayHistory.endAt));
+		} else {
+			setElapsedTime(0);
 		}
-	}, [currentTaskIndex]);
+	}, [currentTaskIndex, tasks]);
 
 	function handleEndFocus() {
 		setIsFocusMode(false);
 	}
 
 	return (
-		<div className="flex flex-col justify-between overflow-hidden h-full md:h-[calc(100vh-136px)] items-center">
+		<div className="flex flex-col justify-between overflow-hidden h-full md:h-[calc(100vh-136px)] items-center gap-4">
 			<div className="flex flex-col gap-4 w-full">
 				<RoutineTasksSummary tasks={tasks} currentTaskIndex={currentTaskIndex} />
 
@@ -55,8 +56,8 @@ export default function RoutineFocusMode({
 
 			<div className="flex overflow-hidden aspect-square items-center justify-center">
 				<img
-					src={currentTask.image}
-					alt={currentTask.name}
+					src={tasks[currentTaskIndex].image}
+					alt={tasks[currentTaskIndex].name}
 					className="h-full w-full object-cover rounded-lg"
 				/>
 			</div>
