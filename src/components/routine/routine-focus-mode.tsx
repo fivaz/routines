@@ -52,9 +52,6 @@ export default function RoutineFocusMode({
 			</div>
 
 			<div className="flex flex-col justify-between h-full">
-				{/* Task Indicators */}
-
-				{/* Task Image */}
 				<div className="aspect-[1/1]">
 					<img
 						src={currentTask.image}

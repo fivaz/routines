@@ -126,7 +126,7 @@ export default function RoutineTaskList({
 				</SortableContext>
 			</DndContext>
 
-			<div className="absolute bottom-4 left-1/2 -translate-x-1/2">
+			<div className="fixed bottom-4 left-1/2 -translate-x-1/2">
 				<Button color="green" onClick={() => setIsFocusMode(true)}>
 					<ZapIcon />
 					Enter Focus
