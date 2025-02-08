@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import type { Routine } from '@/lib/routine/routine.type';
 import { Task } from '@/lib/task/task.type';
 import { Ellipsis } from 'lucide-react';
-import { getDuration } from '@/lib/task/task.utils';
+import { getDuration, getHistory } from '@/lib/task/task.utils';
 import { Dropdown, DropdownButton, DropdownItem, DropdownMenu } from '@/components/base/dropdown';
 import { RoutineTasksSummary } from '@/components/routine/routine-tasks-summary';
 import { RoutineFocusBottom } from '@/components/routine/routine-focus-bottom';
@@ -21,7 +21,7 @@ export default function RoutineFocusMode({
 
 	useEffect(() => {
 		const today = new Date().toISOString().split('T')[0];
-		const todayHistory = tasks[currentTaskIndex].history?.[today];
+		const todayHistory = getHistory(tasks[currentTaskIndex], today);
 		if (todayHistory) {
 			setElapsedTime(getDuration(todayHistory.startAt, todayHistory.endAt));
 		} else {
@@ -62,7 +62,9 @@ export default function RoutineFocusMode({
 						className="h-full w-full object-cover rounded-lg"
 					/>
 				) : (
-					<div className="rounded-lg h-72 w-72 md:h-[550px] md:w-[550px] bg-linear-to-r/shorter from-indigo-500 to-teal-400"></div>
+					<div className="text-4xl text-white flex justify-center items-center rounded-lg h-72 w-72 md:h-[550px] md:w-[550px] bg-linear-to-r/shorter from-indigo-500 to-teal-400">
+						{currentTaskIndex + 1}
+					</div>
 				)}
 			</div>
 

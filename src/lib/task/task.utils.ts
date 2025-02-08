@@ -11,9 +11,24 @@ export function formatSeconds(seconds: number) {
 }
 
 export function getDuration(startAt: string, endAt: string): number {
-	const startDate = new Date(startAt);
-	const endDate = new Date(endAt);
-	return Math.abs((endDate.getTime() - startDate.getTime()) / 1000);
+	try {
+		console.log(startAt);
+		console.log(endAt);
+		const startDate = new Date(startAt);
+		const endDate = new Date(endAt);
+		return Math.abs((endDate.getTime() - startDate.getTime()) / 1000);
+	} catch {
+		return 0;
+	}
+}
+
+export function getHistory(task: Task, date: string) {
+	const history = task.history?.[date];
+	if (history?.endAt && history?.startAt) {
+		return history;
+	} else {
+		return undefined;
+	}
 }
 
 export function sortTasks(tasks: Task[]) {

@@ -22,7 +22,6 @@ export function RoutineFocusBottom({
 	routineId: string;
 }) {
 	const [isRunning, setIsRunning] = useState(false);
-	const currentTask = tasks[currentTaskIndex];
 
 	const { user } = useAuth();
 	const { createPrompt } = usePrompt();
@@ -41,14 +40,14 @@ export function RoutineFocusBottom({
 				clearInterval(timer);
 			}
 		};
-	}, [isRunning]);
+	}, [isRunning, setElapsedTime]);
 
 	async function handleStart() {
 		if (!user) return;
 
 		const today = new Date().toISOString().split('T')[0];
 
-		if (currentTask.history?.[today]) {
+		if (tasks[currentTaskIndex].history?.[today]) {
 			if (
 				!(await createPrompt({
 					title: 'Task already accomplished today',
@@ -60,20 +59,20 @@ export function RoutineFocusBottom({
 		}
 
 		const startTime = new Date().toISOString();
-		currentTask.history[today] = { startAt: startTime, endAt: '' };
+		tasks[currentTaskIndex].history[today] = { startAt: startTime, endAt: '' };
 
 		setIsRunning(true);
-		void persistTask(user.uid, routineId, currentTask);
+		void persistTask(user.uid, routineId, tasks[currentTaskIndex]);
 	}
 
 	function handleStop() {
 		if (!user) return;
 
 		const today = new Date().toISOString().split('T')[0];
-		currentTask.history[today].endAt = new Date().toISOString();
+		tasks[currentTaskIndex].history[today].endAt = new Date().toISOString();
 
 		setIsRunning(false);
-		void persistTask(user.uid, routineId, currentTask);
+		void persistTask(user.uid, routineId, tasks[currentTaskIndex]);
 		goToNextTask();
 	}
 
@@ -96,16 +95,19 @@ export function RoutineFocusBottom({
 	return (
 		<div className="flex flex-col gap-4 w-full">
 			<div className="gap-2">
-				<h2 className="text-xl font-bold text-green-600 dark:text-green-500">{currentTask.name}</h2>
+				<h2 className="text-xl font-bold text-green-600 dark:text-green-500">
+					{tasks[currentTaskIndex].name}
+				</h2>
 				<p className="text-lg text-gray-800 dark:text-gray-300">
-					{formatSeconds(elapsedTime) || '0s'} / {formatSeconds(currentTask.durationInSeconds)}
+					{formatSeconds(elapsedTime) || '0s'} /{' '}
+					{formatSeconds(tasks[currentTaskIndex].durationInSeconds)}
 				</p>
 			</div>
 
 			<div className="relative dark:text-green-600 dark:bg-gray-200 bg-gray-300 text-white flex overflow-hidden h-14 md:mx-0 -mx-6">
 				{/* Progress Bar */}
 				<div
-					style={{ width: `${(elapsedTime / currentTask.durationInSeconds) * 100}%` }}
+					style={{ width: `${(elapsedTime / tasks[currentTaskIndex].durationInSeconds) * 100}%` }}
 					className="absolute top-0 left-0 h-full w-0 bg-gradient-to-r from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500 to-90% transition-all duration-100"
 				/>
 

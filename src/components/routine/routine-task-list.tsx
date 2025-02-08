@@ -36,11 +36,15 @@ export default function RoutineTaskList({
 	tasks,
 	setTasks,
 	setIsFocusMode,
+	setIsFastMode,
+	isFastMode,
 }: PropsWithChildren<{
 	routine: Routine;
 	tasks: Task[];
+	isFastMode: boolean;
 	setTasks: Dispatch<SetStateAction<Task[]>>;
 	setIsFocusMode: Dispatch<SetStateAction<boolean>>;
+	setIsFastMode: Dispatch<SetStateAction<boolean>>;
 }>) {
 	const [routineForm, setRoutineForm] = useState<Routine | null>(null);
 	const [taskForm, setTaskForm] = useState<Task | null>(null);
@@ -95,6 +99,10 @@ export default function RoutineTaskList({
 		}
 	}
 
+	function toggleFastMode() {
+		setIsFastMode(!isFastMode);
+	}
+
 	if (!user) return;
 
 	return (
@@ -107,6 +115,9 @@ export default function RoutineTaskList({
 						<Ellipsis />
 					</DropdownButton>
 					<DropdownMenu>
+						<DropdownItem onClick={toggleFastMode}>
+							<div>{isFastMode ? 'Enable' : 'Disable'} fast mode</div>
+						</DropdownItem>
 						<DropdownItem onClick={handleAddTask}>
 							<div className="text-green-500">Add Task</div>
 						</DropdownItem>
@@ -127,7 +138,7 @@ export default function RoutineTaskList({
 			</DndContext>
 
 			<div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-20">
-				<Button color="green" onClick={() => setIsFocusMode(true)}>
+				<Button disabled={tasks.length === 0} color="green" onClick={() => setIsFocusMode(true)}>
 					<ZapIcon />
 					Enter Focus
 				</Button>
