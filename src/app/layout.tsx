@@ -1,9 +1,7 @@
-// app/layout.jsx
 import { AuthProvider } from '@/lib/auth-context';
 import './globals.css';
 import { type ReactNode } from 'react';
 import { PromptProvider } from '@/lib/prompt-context';
-import Head from 'next/head';
 import { APP_NAME } from '@/lib/consts';
 import { Metadata } from 'next';
 

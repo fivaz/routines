@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
 		name: 'Routines',
 		short_name: 'Routines',
 		description: 'An app to track your routine',
-		start_url: '/',
+		start_url: '/login',
 		display: 'standalone',
 		background_color: '#ffffff',
 		theme_color: '#00c951',

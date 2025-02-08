@@ -8,7 +8,7 @@ import { Routes } from '@/lib/consts';
 import { GithubIcon } from '@/components/icons/GithubIcon';
 import { GoogleIcon } from '@/components/icons/GoogleIcon';
 import { Logo } from '@/components/Logo';
-import { InstallPrompt } from '@/components/InstallPrompt';
+// import { InstallPrompt } from '@/components/InstallPrompt';
 import { Button } from '@/components/base/button';
 import { LoaderCircle } from 'lucide-react';
 import { Banner } from '@/components/base/banner';
