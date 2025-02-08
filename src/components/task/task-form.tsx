@@ -33,9 +33,9 @@ export function TaskForm({
 	async function handleSubmit() {
 		if (!user || !taskIn) return;
 		if (taskIn.id) {
-			await editTask(user.uid, routineId, taskIn, imageFile);
+			void editTask(user.uid, routineId, taskIn, imageFile);
 		} else {
-			await addTask(user.uid, routineId, taskIn, imageFile);
+			void addTask(user.uid, routineId, taskIn, imageFile);
 		}
 		close();
 	}

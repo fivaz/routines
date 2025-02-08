@@ -10,7 +10,6 @@ import { GoogleIcon } from '@/components/icons/GoogleIcon';
 import { Logo } from '@/components/Logo';
 import { InstallPrompt } from '@/components/InstallPrompt';
 import { Button } from '@/components/base/button';
-import { LoaderCircle } from 'lucide-react';
 import { Banner } from '@/components/base/banner';
 
 export default function Login() {
@@ -159,8 +158,13 @@ export default function Login() {
 								</div>
 
 								<div>
-									<Button disabled={isDisabled} type="submit" color="green" className="w-full">
-										{isLoading.email && <LoaderCircle className="animate-spin text-green-500" />}
+									<Button
+										isLoading={isLoading.email}
+										disabled={isDisabled}
+										type="submit"
+										color="green"
+										className="w-full"
+									>
 										Sign in
 									</Button>
 								</div>
