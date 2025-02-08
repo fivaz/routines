@@ -32,3 +32,19 @@ export function getHistory(task: Task, date: string) {
 export function sortTasks(tasks: Task[]) {
 	return tasks.toSorted((a, b) => a.order - b.order);
 }
+
+export function latestTime(task: Task) {
+	const histories = Object.keys(task.history);
+	if (!histories.length) {
+		return null;
+	}
+	const latestKey = histories.sort().pop();
+	if (!latestKey) {
+		return null;
+	}
+	const history = getHistory(task, latestKey);
+	if (!history) {
+		return null;
+	}
+	return formatSeconds(getDuration(history.startAt, history.endAt));
+}

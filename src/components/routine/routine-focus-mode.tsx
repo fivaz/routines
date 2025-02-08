@@ -70,6 +70,7 @@ export default function RoutineFocusMode({
 
 			<RoutineFocusBottom
 				tasks={tasks}
+				setIsFocusMode={setIsFocusMode}
 				routineId={routine.id}
 				currentTaskIndex={currentTaskIndex}
 				elapsedTime={elapsedTime}

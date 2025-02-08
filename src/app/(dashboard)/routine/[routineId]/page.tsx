@@ -40,12 +40,7 @@ export default function Routine() {
 	return (
 		<>
 			{isFocusMode && tasks.length ? (
-				<RoutineFocusMode
-					isFastMode={isFastMode}
-					setIsFocusMode={setIsFocusMode}
-					routine={routine}
-					tasks={tasks}
-				/>
+				<RoutineFocusMode setIsFocusMode={setIsFocusMode} routine={routine} tasks={tasks} />
 			) : (
 				<RoutineTaskList
 					isFastMode={isFastMode}

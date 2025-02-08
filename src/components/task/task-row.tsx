@@ -7,7 +7,7 @@ import { deleteTask } from '@/lib/task/task.repository';
 import { TaskForm } from '@/components/task/task-form';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { formatSeconds } from '@/lib/task/task.utils';
+import { formatSeconds, latestTime } from '@/lib/task/task.utils';
 import { usePrompt } from '@/lib/prompt-context';
 
 export function TaskRow({
@@ -51,9 +51,9 @@ export function TaskRow({
 		>
 			<div className="z-10 flex justify-between items-center">
 				<GripVertical className="" {...listeners}></GripVertical>
-				<div className="flex gap-3 items-center">
+				<div className="border border-white rounded-md flex gap-3 items-center">
 					<Dropdown>
-						<DropdownButton outline>
+						<DropdownButton style={{ color: 'white' }} outline>
 							<Ellipsis />
 						</DropdownButton>
 						<DropdownMenu>
@@ -68,7 +68,9 @@ export function TaskRow({
 
 			<div className="z-10 flex justify-between items-center">
 				<span className="p-0.5 text-lg">{task.name}</span>
-				<span className="p-0.5 text-lg">{formatSeconds(task.durationInSeconds)}</span>
+				<span className="p-0.5 text-lg">
+					{`${latestTime(task)}` || '-'} / {formatSeconds(task.durationInSeconds)}
+				</span>
 			</div>
 
 			<div className="absolute inset-0 bg-black/25 rounded-lg"></div>

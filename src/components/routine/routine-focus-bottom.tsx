@@ -13,8 +13,10 @@ export function RoutineFocusBottom({
 	tasks,
 	currentTaskIndex,
 	routineId,
+	setIsFocusMode,
 }: {
 	setCurrentTaskIndex: Dispatch<SetStateAction<number>>;
+	setIsFocusMode: Dispatch<SetStateAction<boolean>>;
 	elapsedTime: number;
 	currentTaskIndex: number;
 	tasks: Task[];
@@ -73,7 +75,11 @@ export function RoutineFocusBottom({
 
 		setIsRunning(false);
 		void persistTask(user.uid, routineId, tasks[currentTaskIndex]);
-		goToNextTask();
+		if (currentTaskIndex > tasks.length - 1) {
+			goToNextTask();
+		} else {
+			setIsFocusMode(false);
+		}
 	}
 
 	function handlePrevTask() {
