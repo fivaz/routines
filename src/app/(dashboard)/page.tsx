@@ -75,7 +75,7 @@ export default function Routines() {
 				</DndContext>
 			</div>
 
-			<div className="absolute bottom-2 m-auto left-1/2 -translate-x-1/2">
+			<div className="fixed bottom-2 m-auto left-1/2 -translate-x-1/2">
 				<Button className="w-40" color="green" type="button" onClick={handleAddRoutine}>
 					<PlusIcon className="w-5 h-5" />
 					Routine

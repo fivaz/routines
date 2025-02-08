@@ -17,7 +17,6 @@ export default function Routine() {
 	const [routine, setRoutine] = useState<Routine>(emptyRoutine);
 	const [tasks, setTasks] = useState<Task[]>([]);
 	const [isFocusMode, setIsFocusMode] = useState(false);
-	const [isFastMode, setIsFastMode] = useState(true);
 
 	const params = useParams();
 	const { user } = useAuth();
@@ -43,8 +42,6 @@ export default function Routine() {
 				<RoutineFocusMode setIsFocusMode={setIsFocusMode} routine={routine} tasks={tasks} />
 			) : (
 				<RoutineTaskList
-					isFastMode={isFastMode}
-					setIsFastMode={setIsFastMode}
 					setIsFocusMode={setIsFocusMode}
 					routine={routine}
 					tasks={tasks}

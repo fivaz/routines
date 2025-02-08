@@ -51,9 +51,9 @@ export function TaskRow({
 		>
 			<div className="z-10 flex justify-between items-center">
 				<GripVertical className="" {...listeners}></GripVertical>
-				<div className="border border-white rounded-md flex gap-3 items-center">
+				<div className="flex gap-3 items-center">
 					<Dropdown>
-						<DropdownButton style={{ color: 'white' }} outline>
+						<DropdownButton outline className="dark">
 							<Ellipsis />
 						</DropdownButton>
 						<DropdownMenu>

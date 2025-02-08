@@ -5,7 +5,7 @@ import { deleteRoutine } from '@/lib/routine/routine.repository';
 import { useAuth } from '@/lib/auth-context';
 import { type Routine } from '@/lib/routine/routine.type';
 import { Dropdown, DropdownButton, DropdownItem, DropdownMenu } from '@/components/base/dropdown';
-import { Ellipsis, ZapIcon } from 'lucide-react';
+import { Ellipsis, PlusIcon, ZapIcon } from 'lucide-react';
 import { Routes } from '@/lib/consts';
 import { TaskRow } from '@/components/task/task-row';
 import { emptyTask, Task } from '@/lib/task/task.type';
@@ -30,21 +30,18 @@ import {
 	verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { usePrompt } from '@/lib/prompt-context';
+import { ListIcon } from '@/components/icons/ListIcon';
 
 export default function RoutineTaskList({
 	routine,
 	tasks,
 	setTasks,
 	setIsFocusMode,
-	setIsFastMode,
-	isFastMode,
 }: PropsWithChildren<{
 	routine: Routine;
 	tasks: Task[];
-	isFastMode: boolean;
 	setTasks: Dispatch<SetStateAction<Task[]>>;
 	setIsFocusMode: Dispatch<SetStateAction<boolean>>;
-	setIsFastMode: Dispatch<SetStateAction<boolean>>;
 }>) {
 	const [routineForm, setRoutineForm] = useState<Routine | null>(null);
 	const [taskForm, setTaskForm] = useState<Task | null>(null);
@@ -99,10 +96,6 @@ export default function RoutineTaskList({
 		}
 	}
 
-	function toggleFastMode() {
-		setIsFastMode(!isFastMode);
-	}
-
 	if (!user) return;
 
 	return (
@@ -115,9 +108,6 @@ export default function RoutineTaskList({
 						<Ellipsis />
 					</DropdownButton>
 					<DropdownMenu>
-						<DropdownItem onClick={toggleFastMode}>
-							<div>{isFastMode ? 'Enable' : 'Disable'} fast mode</div>
-						</DropdownItem>
 						<DropdownItem onClick={handleAddTask}>
 							<div className="text-green-500">Add Task</div>
 						</DropdownItem>
@@ -128,6 +118,20 @@ export default function RoutineTaskList({
 					</DropdownMenu>
 				</Dropdown>
 			</div>
+
+			{tasks.length === 0 && (
+				<div className="md:pt-28 pt-32 flex justify-center items-center flex-col">
+					<ListIcon className="size-12 text-gray-400" />
+					<h2 className="mt-2 text-base font-semibold dark:text-white text-gray-900">Add tasks</h2>
+					<p className="mt-1 text-sm text-gray-500">
+						You haven’t added any task to your routine yet.
+					</p>
+					<Button onClick={handleAddTask} color="green" className="mt-2">
+						<PlusIcon className="size-5" />
+						Add Task
+					</Button>
+				</div>
+			)}
 
 			<DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
 				<SortableContext items={tasks} strategy={verticalListSortingStrategy}>
