@@ -75,7 +75,7 @@ export function RoutineFocusBottom({
 
 		setIsRunning(false);
 		void persistTask(user.uid, routineId, tasks[currentTaskIndex]);
-		if (currentTaskIndex > tasks.length - 1) {
+		if (currentTaskIndex < tasks.length - 1) {
 			goToNextTask();
 		} else {
 			setIsFocusMode(false);
