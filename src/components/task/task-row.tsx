@@ -2,7 +2,7 @@ import { PropsWithChildren, useState } from 'react';
 import { type Task } from '@/lib/task/task.type';
 import { type Routine } from '@/lib/routine/routine.type';
 import { Dropdown, DropdownButton, DropdownItem, DropdownMenu } from '@/components/base/dropdown';
-import { Ellipsis, GripVertical, GripVerticalIcon } from 'lucide-react';
+import { Ellipsis, GripVerticalIcon } from 'lucide-react';
 import { deleteTask } from '@/lib/task/task.repository';
 import { TaskForm } from '@/components/task/task-form';
 import { useSortable } from '@dnd-kit/sortable';

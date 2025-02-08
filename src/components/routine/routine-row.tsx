@@ -1,4 +1,4 @@
-import { MouseEventHandler, PropsWithChildren } from 'react';
+import { PropsWithChildren } from 'react';
 import { Routine } from '@/lib/routine/routine.type';
 import { Routes } from '@/lib/consts';
 import Link from 'next/link';
