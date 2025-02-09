@@ -7,7 +7,7 @@ import { Task } from '@/lib/task/task.type';
 import { addTask, editTask } from '@/lib/task/task.repository';
 import { useAuth } from '@/lib/auth-context';
 import { addSeconds, format, parse, startOfDay } from 'date-fns';
-import { TIME } from '@/lib/consts';
+import { HHmmss } from '@/lib/consts';
 import { ImageIcon, ImageUpscaleIcon } from 'lucide-react';
 import { ImageDialog } from '@/components/ImageDialog';
 
@@ -58,14 +58,14 @@ export function TaskForm({
 		setTaskIn({ ...taskIn, durationInSeconds });
 	}
 
-	function convertDurationToSeconds(durationHHmm: string): number {
-		const date = parse(durationHHmm, TIME, new Date()); // Parse into Date object
-		return date.getHours() * 3600 + date.getMinutes() * 60;
+	function convertDurationToSeconds(durationHHmmss: string): number {
+		const date = parse(durationHHmmss, HHmmss, new Date()); // Parse into Date object
+		return date.getHours() * 3600 + date.getMinutes() * 60 + date.getSeconds();
 	}
 
-	function convertDurationToHHmm(durationInSeconds: number): string {
+	function convertDurationToHHmmss(durationInSeconds: number): string {
 		const date = addSeconds(startOfDay(new Date()), durationInSeconds); // Start from midnight and add seconds
-		return format(date, TIME); // Format to HH:mm
+		return format(date, HHmmss); // Format to HH:mm
 	}
 
 	function handleImageGeneration() {
@@ -111,11 +111,12 @@ export function TaskForm({
 										/>
 									</Field>
 									<Field>
-										<Label>Duration (hh:mm)</Label>
+										<Label>Duration</Label>
 										<Input
 											type="time"
-											value={convertDurationToHHmm(taskIn.durationInSeconds)}
+											value={convertDurationToHHmmss(taskIn.durationInSeconds)}
 											name="durationInSeconds"
+											step="1"
 											onChange={handleDuration}
 										/>
 									</Field>

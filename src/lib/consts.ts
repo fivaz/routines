@@ -13,6 +13,6 @@ export const DB_PATH = {
 	USERS: 'users',
 };
 
-export const DATE = 'yyyy-MM-dd';
-export const TIME = 'HH:mm';
+export const yyyyMMdd = 'yyyy-MM-dd';
+export const HHmmss = 'HH:mm:ss';
 export const APP_NAME = 'Routines';

@@ -47,7 +47,7 @@ export function TaskRow({
 		<div
 			ref={setNodeRef}
 			{...attributes}
-			className="relative rounded-lg bg-gray-800 text-white p-4 h-40 bg-cover bg-center flex flex-col justify-between"
+			className="relative rounded-lg bg-green-400 text-white p-4 h-40 bg-cover bg-center flex flex-col justify-between"
 			style={{ backgroundImage: `url('${task.image}')`, ...style }}
 		>
 			<div className="z-10 flex justify-between items-center">

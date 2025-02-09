@@ -22,7 +22,7 @@ export function RoutineRow({ routine }: PropsWithChildren<{ routine: Routine }>)
 		<div
 			ref={setNodeRef}
 			{...attributes}
-			className="relative bg-green-500 h-40 flex flex-col bg-cover bg-center rounded-lg"
+			className="relative bg-sky-400 h-40 flex flex-col bg-cover bg-center rounded-lg"
 			style={{ backgroundImage: `url('${routine.image}')`, ...style }}
 		>
 			<div className="z-20 absolute top-4 left-4">
