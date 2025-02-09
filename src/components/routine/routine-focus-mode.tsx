@@ -34,12 +34,12 @@ export default function RoutineFocusMode({
 	}
 
 	return (
-		<div className="flex flex-col justify-between overflow-hidden h-full md:h-[calc(100vh-136px)] items-center gap-4">
+		<div className="flex flex-col justify-between h-full md:h-[calc(100vh-136px)] items-center gap-4">
 			<div className="flex flex-col gap-4 w-full">
 				<RoutineTasksSummary tasks={tasks} currentTaskIndex={currentTaskIndex} />
 
 				<div className="flex justify-between items-center">
-					<div className="text-green-500 text-2xl">{routine.name}</div>
+					<div className="first-letter:capitalize text-green-500 text-2xl">{routine.name}</div>
 
 					<Dropdown>
 						<DropdownButton outline>

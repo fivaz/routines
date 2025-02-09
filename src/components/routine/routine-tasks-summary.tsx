@@ -14,11 +14,11 @@ export function RoutineTasksSummary({
 	}
 
 	return (
-		<div className="flex gap-2 w-full justify-center">
+		<div className="flex w-full md:gap-2 gap-1">
 			{tasks.map((_, index) => (
 				<div
 					key={index}
-					className={`grow min-w-6 h-2 rounded ${index === currentTaskIndex ? 'bg-blue-500' : hasHistory(index) ? 'bg-green-500' : 'bg-gray-300'}`}
+					className={`grow h-2 rounded ${index === currentTaskIndex ? 'bg-blue-500' : hasHistory(index) ? 'bg-green-500' : 'bg-gray-300'}`}
 				/>
 			))}
 		</div>

@@ -101,7 +101,7 @@ export function RoutineFocusBottom({
 	return (
 		<div className="flex flex-col gap-4 w-full">
 			<div className="gap-2">
-				<h2 className="text-xl font-bold text-green-600 dark:text-green-500">
+				<h2 className="first-letter:capitalize text-xl font-bold text-green-600 dark:text-green-500">
 					{tasks[currentTaskIndex].name}
 				</h2>
 				<p className="text-lg text-gray-800 dark:text-gray-300">
@@ -110,7 +110,7 @@ export function RoutineFocusBottom({
 				</p>
 			</div>
 
-			<div className="relative dark:text-green-600 dark:bg-gray-200 bg-gray-300 text-white flex overflow-hidden h-14 md:mx-0 -mx-6">
+			<div className="relative dark:text-green-600 dark:bg-gray-200 bg-gray-300 text-white flex h-14 md:mx-0 md:rounded-lg -mx-6">
 				{/* Progress Bar */}
 				<div
 					style={{ width: `${(elapsedTime / tasks[currentTaskIndex].durationInSeconds) * 100}%` }}
@@ -132,20 +132,20 @@ export function RoutineFocusBottom({
 				{isRunning ? (
 					<button
 						onClick={handleStop}
-						className="relative bg-transparent z-10 p-3 w-4/6 flex justify-center"
+						className="bg-transparent z-10 p-3 w-4/6 flex justify-center"
 					>
 						<CircleStop className="w-7 h-7" />
 					</button>
 				) : (
 					<button
 						onClick={handleStart}
-						className="relative bg-transparent z-10 p-3 w-4/6 flex justify-center"
+						className="bg-transparent z-10 p-3 w-4/6 flex justify-center"
 					>
 						<Play className="w-7 h-7" />
 					</button>
 				)}
 
-				<div className="relative bg-transparent z-10 w-1/6 flex">
+				<div className="bg-transparent z-10 w-1/6 flex">
 					<button
 						className="h-full w-full flex justify-center items-center"
 						onClick={handleNextTask}
