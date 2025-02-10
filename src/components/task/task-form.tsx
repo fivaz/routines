@@ -8,8 +8,10 @@ import { addTask, editTask } from '@/lib/task/task.repository';
 import { useAuth } from '@/lib/auth-context';
 import { addSeconds, format, parse, startOfDay } from 'date-fns';
 import { HHmmss } from '@/lib/consts';
-import { ImageIcon, ImageUpscaleIcon } from 'lucide-react';
+import { ImageIcon, ImageUpscaleIcon, Loader2 } from 'lucide-react';
 import { ImageDialog } from '@/components/ImageDialog';
+import { Textarea } from '@/components/base/textarea';
+import { generateImage } from '@/app/(dashboard)/routine/[routineId]/actions';
 
 export function TaskForm({
 	setTaskIn,
@@ -22,6 +24,8 @@ export function TaskForm({
 }>) {
 	const [imageFile, setImageFile] = useState<File | null>(null);
 	const [isImageOpen, setIsImageOpen] = useState(false);
+	const [error, setError] = useState('');
+	const [loading, setLoading] = useState(false);
 
 	const { user } = useAuth();
 
@@ -46,7 +50,7 @@ export function TaskForm({
 		}
 	}
 
-	function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+	function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
 		if (!taskIn) return;
 		setTaskIn({ ...taskIn, [e.target.name]: e.target.value });
 	}
@@ -68,8 +72,20 @@ export function TaskForm({
 		return format(date, HHmmss); // Format to HH:mm
 	}
 
-	function handleImageGeneration() {
+	async function handleImageGeneration() {
 		console.log('image generation will be implemented soon...');
+		if (!taskIn) return;
+		setLoading(true);
+
+		try {
+			const result = await generateImage(taskIn.description);
+			setTaskIn({ ...taskIn, image: result.imageUrl });
+		} catch (err) {
+			setError('Failed to generate image. Please try again.');
+			console.error('Error:', err);
+		} finally {
+			setLoading(false);
+		}
 	}
 
 	return (
@@ -87,6 +103,10 @@ export function TaskForm({
 									<Label>Name</Label>
 									<Input name="name" value={taskIn.name} onChange={handleChange} />
 								</Field>
+								<Field>
+									<Label>Name</Label>
+									<Textarea name="description" value={taskIn.description} onChange={handleChange} />
+								</Field>
 								<div className="grid grid-cols-1 gap-8 sm:grid-cols-3 sm:gap-4">
 									<Field className="sm:col-span-2">
 										<Label>
@@ -97,8 +117,12 @@ export function TaskForm({
 														<ImageUpscaleIcon className="w-5 h-5 text-green-500" />
 													</button>
 												) : (
-													<button onClick={handleImageGeneration}>
-														<ImageIcon className="w-5 h-5 text-green-500" />
+													<button onClick={handleImageGeneration} disabled={loading}>
+														{loading ? (
+															<Loader2 className="mr-2 h-4 w-4 animate-spin" />
+														) : (
+															<ImageIcon className="w-5 h-5 text-green-500" />
+														)}
 													</button>
 												)}
 											</div>
