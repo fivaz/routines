@@ -38,8 +38,6 @@ export async function generateImage(taskName: string) {
 	try {
 		const prompt = await generatePromptFromTaskName(taskName);
 
-		// return { imageUrl: '/mock.png' };
-
 		const response = await recraftAi.images.generate({
 			prompt,
 			style_id: process.env.RECRAFT_API_STYLE,
