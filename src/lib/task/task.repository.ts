@@ -76,9 +76,9 @@ export async function addTask(
 
 	const image = await getImageUrl(userId, routineId, newTaskRef.id, blob);
 
-	task = { ...task, image };
+	const newTask = { ...task, image };
 
-	void setDoc(newTaskRef, task);
+	void setDoc(newTaskRef, newTask);
 }
 
 export async function editTask(
@@ -92,13 +92,10 @@ export async function editTask(
 	let newTask = task;
 
 	if (imageFile) {
-		const imageRef = ref(storage, `${getTaskPath(userId, routineId)}/${taskRef.id}`);
+		// TODO remove current image
+		const image = await getImageUrl(userId, routineId, taskRef.id, imageFile);
 
-		await uploadBytes(imageRef, imageFile);
-
-		const imageLink = await getDownloadURL(imageRef);
-
-		newTask = { ...task, image: imageLink };
+		newTask = { ...task, image };
 	}
 
 	void setDoc(taskRef, newTask);

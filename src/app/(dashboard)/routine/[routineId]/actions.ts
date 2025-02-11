@@ -14,8 +14,8 @@ const recraftAi = new OpenAI({
 });
 
 async function generatePromptFromTaskName(taskName: string): Promise<string> {
-	await wait(3);
-	return 'sauhsauhsau shau shau hau shau shau shuas ';
+	// await wait(3);
+	// return 'sauhsauhsau shau shau hau shau shau shuas ';
 
 	const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_TOKEN!);
 	const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
@@ -45,8 +45,8 @@ export async function generateImage(taskName: string): Promise<string> {
 	try {
 		const prompt = await generatePromptFromTaskName(taskName);
 
-		await wait(3);
-		return 'https://img.recraft.ai/k8a4Wj13sGTY_nsKrMaYwkvbqP-vrKvaOss0wAPCWaM/rs:fit:1024:1024:0/raw:1/plain/abs://external/images/383a110d-2afa-45d3-971a-63f5b8151b26';
+		// await wait(3);
+		// return 'https://img.recraft.ai/k8a4Wj13sGTY_nsKrMaYwkvbqP-vrKvaOss0wAPCWaM/rs:fit:1024:1024:0/raw:1/plain/abs://external/images/383a110d-2afa-45d3-971a-63f5b8151b26';
 
 		const response = await recraftAi.images.generate({
 			prompt,
