@@ -1,11 +1,9 @@
 import { Dispatch, SetStateAction, useState } from 'react';
 import { Task } from '@/lib/task/task.type';
-import { TaskRow } from '@/components/task/task-row';
 import { Heading } from '@/components/base/heading';
 import { Text } from '@/components/base/text';
 import { formatSeconds, getDuration, getDurationFromDate, getHistory } from '@/lib/task/task.utils';
 import { TaskHistoryCarousel } from '@/components/routine/routine-recap-page/task-history-carousel';
-import { Divider } from '@/components/base/divider';
 import { UndoIcon } from 'lucide-react';
 
 export function Index({

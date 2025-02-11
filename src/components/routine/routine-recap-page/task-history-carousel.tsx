@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from 'react';
 import { Button } from '@/components/base/button';
 import { Text } from '@/components/base/text';
-import { ChevronLeft, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
+import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { addDays, format, subDays } from 'date-fns';
 import { yyyyMMdd } from '@/lib/consts';
 
