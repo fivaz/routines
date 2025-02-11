@@ -43,10 +43,19 @@ export function latestTime(task: Task) {
 		console.error("this shouldn't happen");
 		return '-';
 	}
-	const history = getHistory(task, latestKey);
-	if (!history) {
+	const duration = getDurationFromDate(task, latestKey);
+	if (!duration) {
 		console.error("this shouldn't happen");
 		return '-';
 	}
-	return formatSeconds(getDuration(history.startAt, history.endAt));
+	return formatSeconds(duration);
+}
+
+export function getDurationFromDate(task: Task, date: string) {
+	const history = getHistory(task, date);
+	if (!history) {
+		return 0;
+	} else {
+		return getDuration(history.startAt, history.endAt);
+	}
 }

@@ -10,13 +10,14 @@ import { Task } from '@/lib/task/task.type';
 
 import { fetchTasks } from '@/lib/task/task.repository';
 
-import RoutineTaskList from '@/components/routine/routine-task-list';
-import RoutineFocusMode from '@/components/routine/routine-focus-mode';
+import RoutineTaskListPage from '@/components/routine/routine-task-list-page';
+import RoutineFocusPage from '@/components/routine/routine-focus-page/index';
+import { Index } from '@/components/routine/routine-recap-page';
 
 export default function Routine() {
 	const [routine, setRoutine] = useState<Routine>(emptyRoutine);
 	const [tasks, setTasks] = useState<Task[]>([]);
-	const [isFocusMode, setIsFocusMode] = useState(false);
+	const [page, setPage] = useState<'focus' | 'recap' | 'list'>('recap');
 
 	const params = useParams();
 	const { user } = useAuth();
@@ -38,16 +39,18 @@ export default function Routine() {
 
 	return (
 		<>
-			{isFocusMode && tasks.length ? (
-				<RoutineFocusMode setIsFocusMode={setIsFocusMode} routine={routine} tasks={tasks} />
-			) : (
-				<RoutineTaskList
-					setIsFocusMode={setIsFocusMode}
+			{page === 'list' && (
+				<RoutineTaskListPage
+					setPage={setPage}
 					routine={routine}
 					tasks={tasks}
 					setTasks={setTasks}
 				/>
 			)}
+
+			{page === 'focus' && <RoutineFocusPage setPage={setPage} routine={routine} tasks={tasks} />}
+
+			{page === 'recap' && <Index setPage={setPage} tasks={tasks} />}
 		</>
 	);
 }

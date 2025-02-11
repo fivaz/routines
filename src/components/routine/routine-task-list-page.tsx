@@ -32,16 +32,16 @@ import {
 import { usePrompt } from '@/lib/prompt-context';
 import { ListIcon } from '@/components/icons/ListIcon';
 
-export default function RoutineTaskList({
+export default function RoutineTaskListPage({
 	routine,
 	tasks,
 	setTasks,
-	setIsFocusMode,
+	setPage,
 }: PropsWithChildren<{
 	routine: Routine;
 	tasks: Task[];
 	setTasks: Dispatch<SetStateAction<Task[]>>;
-	setIsFocusMode: Dispatch<SetStateAction<boolean>>;
+	setPage: Dispatch<SetStateAction<'focus' | 'recap' | 'list'>>;
 }>) {
 	const [routineForm, setRoutineForm] = useState<Routine | null>(null);
 	const [taskForm, setTaskForm] = useState<Task | null>(null);
@@ -49,6 +49,18 @@ export default function RoutineTaskList({
 	const { user } = useAuth();
 	const router = useRouter();
 	const { createPrompt } = usePrompt();
+
+	function handleGoToRecap() {
+		setPage('recap');
+	}
+
+	function handleEdit() {
+		setRoutineForm(routine);
+	}
+
+	function handleAddTask() {
+		setTaskForm({ ...emptyTask, order: tasks.length });
+	}
 
 	async function handleDelete() {
 		if (!user) return;
@@ -61,14 +73,6 @@ export default function RoutineTaskList({
 			deleteRoutine(user.uid, routine.id);
 			router.push(Routes.ROOT);
 		}
-	}
-
-	function handleEdit() {
-		setRoutineForm(routine);
-	}
-
-	function handleAddTask() {
-		setTaskForm({ ...emptyTask, order: tasks.length });
 	}
 
 	const sensors = useSensors(
@@ -113,6 +117,7 @@ export default function RoutineTaskList({
 							<Ellipsis />
 						</DropdownButton>
 						<DropdownMenu>
+							<DropdownItem onClick={handleGoToRecap}>Go to recap</DropdownItem>
 							<DropdownItem onClick={handleEdit}>Edit</DropdownItem>
 							<DropdownItem onClick={handleDelete}>
 								<div className="text-red-500">Delete</div>
@@ -145,7 +150,7 @@ export default function RoutineTaskList({
 			</DndContext>
 
 			<div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-20">
-				<Button disabled={tasks.length === 0} color="green" onClick={() => setIsFocusMode(true)}>
+				<Button disabled={tasks.length === 0} color="green" onClick={() => setPage('focus')}>
 					<ZapIcon />
 					Enter Focus
 				</Button>

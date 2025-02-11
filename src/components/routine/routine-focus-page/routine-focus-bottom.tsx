@@ -13,10 +13,10 @@ export function RoutineFocusBottom({
 	tasks,
 	currentTaskIndex,
 	routineId,
-	setIsFocusMode,
+	setPage,
 }: {
 	setCurrentTaskIndex: Dispatch<SetStateAction<number>>;
-	setIsFocusMode: Dispatch<SetStateAction<boolean>>;
+	setPage: Dispatch<SetStateAction<'focus' | 'recap' | 'list'>>;
 	elapsedTime: number;
 	currentTaskIndex: number;
 	tasks: Task[];
@@ -78,7 +78,7 @@ export function RoutineFocusBottom({
 		if (currentTaskIndex < tasks.length - 1) {
 			goToNextTask();
 		} else {
-			setIsFocusMode(false);
+			setPage('list');
 		}
 	}
 

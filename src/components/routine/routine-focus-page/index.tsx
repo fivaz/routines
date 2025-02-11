@@ -4,17 +4,17 @@ import { Task } from '@/lib/task/task.type';
 import { Ellipsis } from 'lucide-react';
 import { getDuration, getHistory } from '@/lib/task/task.utils';
 import { Dropdown, DropdownButton, DropdownItem, DropdownMenu } from '@/components/base/dropdown';
-import { RoutineTasksSummary } from '@/components/routine/routine-tasks-summary';
-import { RoutineFocusBottom } from '@/components/routine/routine-focus-bottom';
+import { RoutineTasksSummary } from '@/components/routine/routine-focus-page/routine-tasks-summary';
+import { RoutineFocusBottom } from '@/components/routine/routine-focus-page/routine-focus-bottom';
 
-export default function RoutineFocusMode({
+export default function RoutineFocusPage({
 	routine,
 	tasks,
-	setIsFocusMode,
+	setPage,
 }: {
 	routine: Routine;
 	tasks: Task[];
-	setIsFocusMode: Dispatch<SetStateAction<boolean>>;
+	setPage: Dispatch<SetStateAction<'focus' | 'recap' | 'list'>>;
 }) {
 	const [currentTaskIndex, setCurrentTaskIndex] = useState(0);
 	const [elapsedTime, setElapsedTime] = useState(0);
@@ -30,7 +30,7 @@ export default function RoutineFocusMode({
 	}, [currentTaskIndex, tasks]);
 
 	function handleEndFocus() {
-		setIsFocusMode(false);
+		setPage('list');
 	}
 
 	return (
@@ -70,7 +70,7 @@ export default function RoutineFocusMode({
 
 			<RoutineFocusBottom
 				tasks={tasks}
-				setIsFocusMode={setIsFocusMode}
+				setPage={setPage}
 				routineId={routine.id}
 				currentTaskIndex={currentTaskIndex}
 				elapsedTime={elapsedTime}
