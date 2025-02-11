@@ -8,7 +8,7 @@ import { Routes } from '@/lib/consts';
 import { GithubIcon } from '@/components/icons/GithubIcon';
 import { GoogleIcon } from '@/components/icons/GoogleIcon';
 import { Logo } from '@/components/Logo';
-import { InstallPrompt } from '@/components/InstallPrompt';
+// import { InstallPrompt } from '@/components/InstallPrompt';
 import { Button } from '@/components/base/button';
 import { Banner } from '@/components/base/banner';
 
@@ -63,7 +63,7 @@ export default function Login() {
 					</h2>
 				</div>
 
-				<InstallPrompt />
+				{/*<InstallPrompt />*/}
 
 				<div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
 					<div className="dark:bg-zinc-900 bg-white px-6  shadow-sm sm:rounded-lg sm:px-12">

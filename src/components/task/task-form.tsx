@@ -10,7 +10,6 @@ import { addSeconds, format, parse, startOfDay } from 'date-fns';
 import { HHmmss } from '@/lib/consts';
 import { ImageIcon, ImageUpscaleIcon, Loader2 } from 'lucide-react';
 import { ImageDialog } from '@/components/ImageDialog';
-import { Textarea } from '@/components/base/textarea';
 import { generateImage } from '@/app/(dashboard)/routine/[routineId]/actions';
 
 export function TaskForm({
@@ -24,7 +23,7 @@ export function TaskForm({
 }>) {
 	const [imageFile, setImageFile] = useState<File | null>(null);
 	const [isImageOpen, setIsImageOpen] = useState(false);
-	const [error, setError] = useState('');
+	// const [error, setError] = useState('');
 	const [loading, setLoading] = useState(false);
 
 	const { user } = useAuth();
@@ -80,7 +79,7 @@ export function TaskForm({
 			const image = await generateImage(taskIn.name);
 			setTaskIn({ ...taskIn, image });
 		} catch (err) {
-			setError('Failed to generate image. Please try again.');
+			// setError('Failed to generate image. Please try again.');
 			console.error('Error:', err);
 		} finally {
 			setLoading(false);

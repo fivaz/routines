@@ -2,11 +2,21 @@
 
 import OpenAI from 'openai';
 
+/* eslint-disable @typescript-eslint/no-namespace */
+declare module 'openai' {
+	namespace OpenAI.Images {
+		interface ImageGenerateParams {
+			style_id: string;
+		}
+	}
+}
+/* eslint-enable @typescript-eslint/no-namespace */
+
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-function wait(seconds) {
-	return new Promise((resolve) => setTimeout(resolve, seconds * 1000));
-}
+// function wait(seconds) {
+// 	return new Promise((resolve) => setTimeout(resolve, seconds * 1000));
+// }
 
 const recraftAi = new OpenAI({
 	apiKey: process.env.RECRAFT_API_TOKEN,
@@ -50,7 +60,7 @@ export async function generateImage(taskName: string): Promise<string> {
 
 		const response = await recraftAi.images.generate({
 			prompt,
-			style_id: process.env.RECRAFT_API_STYLE,
+			style_id: process.env.RECRAFT_API_STYLE!,
 		});
 
 		return response.data[0].url || '';

@@ -9,7 +9,7 @@ import {
 	writeBatch,
 } from 'firebase/firestore';
 import { db, storage } from '@/lib/firebase';
-import { getDownloadURL, ref, uploadBytes, uploadString } from 'firebase/storage';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { Task } from '@/lib/task/task.type';
 import { sortTasks } from '@/lib/task/task.utils';
 import { generateImage } from '@/app/(dashboard)/routine/[routineId]/actions';
