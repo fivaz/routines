@@ -5,6 +5,7 @@ import { Text } from '@/components/base/text';
 import { formatSeconds, getDuration, getDurationFromDate, getHistory } from '@/lib/task/task.utils';
 import { TaskHistoryCarousel } from '@/components/routine/routine-recap-page/task-history-carousel';
 import { UndoIcon } from 'lucide-react';
+import { Button } from '@/components/base/button';
 
 export function Index({
 	tasks,
@@ -39,9 +40,9 @@ export function Index({
 		<div className="flex flex-col">
 			<div className="flex justify-between">
 				<Heading className="pb-4">Recap</Heading>
-				<div onClick={() => setPage('list')}>
+				<Button plain onClick={() => setPage('list')}>
 					<UndoIcon />
-				</div>
+				</Button>
 			</div>
 			<TaskHistoryCarousel date={date} setDate={setDate} />
 
