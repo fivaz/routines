@@ -17,7 +17,7 @@ import { Index } from '@/components/routine/routine-recap-page';
 export default function Routine() {
 	const [routine, setRoutine] = useState<Routine>(emptyRoutine);
 	const [tasks, setTasks] = useState<Task[]>([]);
-	const [page, setPage] = useState<'focus' | 'recap' | 'list'>('recap');
+	const [page, setPage] = useState<'focus' | 'recap' | 'list'>('list');
 
 	const params = useParams();
 	const { user } = useAuth();
