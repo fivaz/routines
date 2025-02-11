@@ -73,13 +73,12 @@ export function TaskForm({
 	}
 
 	async function handleImageGeneration() {
-		console.log('image generation will be implemented soon...');
 		if (!taskIn) return;
 		setLoading(true);
 
 		try {
-			const result = await generateImage(taskIn.name);
-			setTaskIn({ ...taskIn, image: result.imageUrl });
+			const image = await generateImage(taskIn.name);
+			setTaskIn({ ...taskIn, image });
 		} catch (err) {
 			setError('Failed to generate image. Please try again.');
 			console.error('Error:', err);

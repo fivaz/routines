@@ -9,9 +9,10 @@ import {
 	writeBatch,
 } from 'firebase/firestore';
 import { db, storage } from '@/lib/firebase';
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { getDownloadURL, ref, uploadBytes, uploadString } from 'firebase/storage';
 import { Task } from '@/lib/task/task.type';
 import { sortTasks } from '@/lib/task/task.utils';
+import { generateImage } from '@/app/(dashboard)/routine/[routineId]/actions';
 
 export function getTaskPath(userId: string, routineId: string) {
 	return `${DB_PATH.USERS}/${userId}/${DB_PATH.ROUTINES}/${routineId}/${DB_PATH.TASKS}`;
@@ -36,6 +37,29 @@ export function fetchTasks(
 	});
 }
 
+function getImageRef(userId: string, routineId: string, taskId: string) {
+	return ref(storage, `${getTaskPath(userId, routineId)}/${taskId}`);
+}
+
+async function getImageUrl(userId: string, routineId: string, taskId: string, imageBlob: Blob) {
+	const imageRef = getImageRef(userId, routineId, taskId);
+
+	await uploadBytes(imageRef, imageBlob);
+
+	return await getDownloadURL(imageRef);
+}
+
+async function convertImageUrlToBlob(imageUrl: string) {
+	const response = await fetch(imageUrl);
+	return await response.blob();
+}
+
+async function getGeneratedImageFile(taskName: string) {
+	const temporaryImageUrl = await generateImage(taskName);
+
+	return convertImageUrlToBlob(temporaryImageUrl);
+}
+
 export async function addTask(
 	userId: string,
 	routineId: string,
@@ -44,19 +68,17 @@ export async function addTask(
 ) {
 	const newTaskRef = doc(collection(db, getTaskPath(userId, routineId)));
 
-	let newTask = task;
+	let blob: Blob | null = imageFile;
 
-	if (imageFile) {
-		const imageRef = ref(storage, `${getTaskPath(userId, routineId)}/${newTaskRef.id}`);
-
-		await uploadBytes(imageRef, imageFile);
-
-		const imageLink = await getDownloadURL(imageRef);
-
-		newTask = { ...task, image: imageLink };
+	if (!blob) {
+		blob = await getGeneratedImageFile(task.name);
 	}
 
-	void setDoc(newTaskRef, newTask);
+	const image = await getImageUrl(userId, routineId, newTaskRef.id, blob);
+
+	task = { ...task, image };
+
+	void setDoc(newTaskRef, task);
 }
 
 export async function editTask(

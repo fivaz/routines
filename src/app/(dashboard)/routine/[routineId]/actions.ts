@@ -4,12 +4,19 @@ import OpenAI from 'openai';
 
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
+function wait(seconds) {
+	return new Promise((resolve) => setTimeout(resolve, seconds * 1000));
+}
+
 const recraftAi = new OpenAI({
 	apiKey: process.env.RECRAFT_API_TOKEN,
 	baseURL: 'https://external.api.recraft.ai/v1',
 });
 
 async function generatePromptFromTaskName(taskName: string): Promise<string> {
+	await wait(3);
+	return 'sauhsauhsau shau shau hau shau shau shuas ';
+
 	const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_TOKEN!);
 	const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
@@ -33,18 +40,20 @@ async function generatePromptFromTaskName(taskName: string): Promise<string> {
 	return result.response.text();
 }
 
-export async function generateImage(taskName: string) {
+export async function generateImage(taskName: string): Promise<string> {
 	// // Return a mock image URL
 	try {
 		const prompt = await generatePromptFromTaskName(taskName);
+
+		await wait(3);
+		return 'https://img.recraft.ai/k8a4Wj13sGTY_nsKrMaYwkvbqP-vrKvaOss0wAPCWaM/rs:fit:1024:1024:0/raw:1/plain/abs://external/images/383a110d-2afa-45d3-971a-63f5b8151b26';
 
 		const response = await recraftAi.images.generate({
 			prompt,
 			style_id: process.env.RECRAFT_API_STYLE,
 		});
 
-		const imageUrl = response.data[0].url;
-		return { imageUrl };
+		return response.data[0].url || '';
 	} catch (error) {
 		console.error('Error:', error);
 		throw new Error('Failed to generate image');
