@@ -2,20 +2,45 @@
 
 import OpenAI from 'openai';
 
-const client = new OpenAI({
+import { GoogleGenerativeAI } from '@google/generative-ai';
+
+const recraftAi = new OpenAI({
 	apiKey: process.env.RECRAFT_API_TOKEN,
 	baseURL: 'https://external.api.recraft.ai/v1',
 });
 
-export async function generateImage(prompt: string) {
-	console.log('prompt', prompt);
-	console.log('process.env.RECRAFT_API_STYLE:', process.env.RECRAFT_API_STYLE);
-	// await new Promise((resolve) => setTimeout(resolve, 1000));
-	//
+async function generatePromptFromTaskName(taskName: string): Promise<string> {
+	const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_TOKEN!);
+	const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+
+	const prompt = `
+	You are an expert in crafting vivid, engaging image prompts. Your task is to transform a simple task name into 
+    a rich, immersive image description that illustrates a person performing the task in an enjoyable and inviting way.
+    
+    - Clearly depict a person actively engaged in the task.
+    - Unless the task explicitly specifies a different gender, assume the person is a man.
+    - Emphasize body language and facial expressions that convey enjoyment, focus, or relaxation.
+    - Describe the environment in a way that makes the scene feel pleasant, warm, or inspiring.
+    - Include details about lighting, surroundings, and small elements that enhance the mood.
+    - Keep the description under 1000 characters.
+    
+    Task: "${taskName}"
+    
+    Image Description:
+    `;
+
+	const result = await model.generateContent(prompt);
+	return result.response.text();
+}
+
+export async function generateImage(taskName: string) {
 	// // Return a mock image URL
-	// return { imageUrl: '/mock.png' };
 	try {
-		const response = await client.images.generate({
+		const prompt = await generatePromptFromTaskName(taskName);
+
+		// return { imageUrl: '/mock.png' };
+
+		const response = await recraftAi.images.generate({
 			prompt,
 			style_id: process.env.RECRAFT_API_STYLE,
 		});

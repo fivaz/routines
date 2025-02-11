@@ -78,7 +78,7 @@ export function TaskForm({
 		setLoading(true);
 
 		try {
-			const result = await generateImage(taskIn.description);
+			const result = await generateImage(taskIn.name);
 			setTaskIn({ ...taskIn, image: result.imageUrl });
 		} catch (err) {
 			setError('Failed to generate image. Please try again.');
