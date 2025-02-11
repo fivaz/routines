@@ -1,7 +1,6 @@
 export type Task = {
 	id: string;
 	name: string;
-	description: string;
 	image: string;
 	durationInSeconds: number;
 	order: number;
@@ -18,7 +17,6 @@ export type Task = {
 export const emptyTask: Task = {
 	id: '',
 	name: '',
-	description: '',
 	order: 0,
 	image: '',
 	durationInSeconds: 5 * 60,

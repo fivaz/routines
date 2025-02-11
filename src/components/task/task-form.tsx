@@ -103,10 +103,6 @@ export function TaskForm({
 									<Label>Name</Label>
 									<Input name="name" value={taskIn.name} onChange={handleChange} />
 								</Field>
-								<Field>
-									<Label>Name</Label>
-									<Textarea name="description" value={taskIn.description} onChange={handleChange} />
-								</Field>
 								<div className="grid grid-cols-1 gap-8 sm:grid-cols-3 sm:gap-4">
 									<Field className="sm:col-span-2">
 										<Label>
