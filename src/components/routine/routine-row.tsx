@@ -7,6 +7,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { GripVerticalIcon } from 'lucide-react';
 import { Button } from '@/components/base/button';
+import { formatSeconds } from '@/lib/task/task.utils';
 
 export function RoutineRow({ routine }: PropsWithChildren<{ routine: Routine }>) {
 	const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
@@ -39,9 +40,18 @@ export function RoutineRow({ routine }: PropsWithChildren<{ routine: Routine }>)
 				</Button>
 			</div>
 
-			<Link href={`${Routes.ROUTINE}/${routine.id}`} className="p-4 h-full w-full z-10 flex">
-				<div className="text-white p-0.5 text-lg self-end first-letter:uppercase group-hover:underline">
+			<Link
+				href={`${Routes.ROUTINE}/${routine.id}`}
+				className="p-4 h-full w-full z-10 grid grid-cols-2 grid-rows-2"
+			>
+				<div className="text-white justify-self-end p-0.5 text-lg col-start-2 col-span-1 row-start-1 row-span-1 first-letter:uppercase group-hover:underline">
+					{formatSeconds(routine.totalDuration || 0) || '0 s'}
+				</div>
+				<div className="text-white self-end p-0.5 text-lg col-start-1 col-span-1 row-start-2 row-span-1 first-letter:uppercase group-hover:underline">
 					{routine.name}
+				</div>
+				<div className="text-white self-end justify-self-end p-0.5 text-lg col-start-2 col-span-1 row-start-2 row-span-1 first-letter:uppercase group-hover:underline">
+					{routine.taskCount || 0} tasks
 				</div>
 			</Link>
 
