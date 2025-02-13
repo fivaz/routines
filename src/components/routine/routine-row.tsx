@@ -22,7 +22,7 @@ export function RoutineRow({ routine }: PropsWithChildren<{ routine: Routine }>)
 		<div
 			ref={setNodeRef}
 			{...attributes}
-			className="relative bg-sky-400 h-40 flex flex-col bg-cover bg-center rounded-lg"
+			className="group hover:border border-green-400 relative bg-sky-400 h-40 flex flex-col bg-cover bg-center rounded-lg"
 			style={{ backgroundImage: `url('${routine.image}')`, ...style }}
 		>
 			<div className="z-20 absolute top-4 left-4">
@@ -40,12 +40,12 @@ export function RoutineRow({ routine }: PropsWithChildren<{ routine: Routine }>)
 			</div>
 
 			<Link href={`${Routes.ROUTINE}/${routine.id}`} className="p-4 h-full w-full z-10 flex">
-				<div className="text-white p-0.5 text-lg self-end first-letter:uppercase">
+				<div className="text-white p-0.5 text-lg self-end first-letter:uppercase group-hover:underline">
 					{routine.name}
 				</div>
 			</Link>
 
-			<div className="absolute inset-0 bg-black/25 rounded-lg"></div>
+			<div className="absolute inset-0 group-hover:bg-black/25 bg-black/10  rounded-lg"></div>
 		</div>
 	);
 }
