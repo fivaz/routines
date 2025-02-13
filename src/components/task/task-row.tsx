@@ -47,31 +47,45 @@ export function TaskRow({
 		<div
 			ref={setNodeRef}
 			{...attributes}
-			className="relative rounded-lg bg-green-400 text-white p-4 h-40 bg-cover bg-center flex flex-col justify-between"
+			className="group hover:border border-green-400 relative rounded-lg bg-green-400 text-white p-4 h-40 bg-cover bg-center flex flex-col justify-between"
 			style={{ backgroundImage: `url('${task.image}')`, ...style }}
 		>
-			<div className="z-10 flex justify-between items-center">
-				<Button outline {...listeners} className="dark cursor-grab">
+			<div className="z-20 absolute top-4 left-4">
+				<Button
+					{...listeners}
+					outline
+					className="dark cursor-grab"
+					onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+						e.stopPropagation(); // Prevent link click when button is clicked
+					}}
+				>
 					<GripVerticalIcon className="size-6" />
 				</Button>
-				<div className="flex gap-3 items-center">
-					<Dropdown>
-						<DropdownButton outline className="dark">
-							<Ellipsis />
-						</DropdownButton>
-						<DropdownMenu>
-							<DropdownItem onClick={handleEdit}>Edit</DropdownItem>
-							<DropdownItem onClick={handleDelete}>
-								<div className="text-red-500">Delete</div>
-							</DropdownItem>
-						</DropdownMenu>
-					</Dropdown>
-				</div>
 			</div>
 
-			<div className="z-10 flex justify-between items-center">
-				<span className="first-letter:uppercase p-0.5 text-lg">{task.name}</span>
-				<span className="p-0.5 text-lg">
+			<div className="z-20 absolute top-4 right-4">
+				<Dropdown>
+					<DropdownButton outline className="dark">
+						<Ellipsis />
+					</DropdownButton>
+					<DropdownMenu>
+						<DropdownItem onClick={handleEdit}>Edit</DropdownItem>
+						<DropdownItem onClick={handleDelete}>
+							<div className="text-red-500">Delete</div>
+						</DropdownItem>
+					</DropdownMenu>
+				</Dropdown>
+			</div>
+
+			<div
+				onClick={handleEdit}
+				className="cursor-pointer z-10 w-full h-full flex items-end justify-between"
+			>
+				<span className="first-letter:uppercase p-0.5 text-lg group-hover:underline">
+					{task.name}
+				</span>
+
+				<span className="p-0.5 text-lg group-hover:underline">
 					{latestTime(task)} / {formatSeconds(task.durationInSeconds)}
 				</span>
 			</div>

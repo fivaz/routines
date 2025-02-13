@@ -33,7 +33,6 @@ export function RoutineRow({ routine }: PropsWithChildren<{ routine: Routine }>)
 					className="dark cursor-grab"
 					onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
 						e.stopPropagation(); // Prevent link click when button is clicked
-						console.log('Button clicked');
 					}}
 				>
 					<GripVerticalIcon className="size-6" />
@@ -44,13 +43,13 @@ export function RoutineRow({ routine }: PropsWithChildren<{ routine: Routine }>)
 				href={`${Routes.ROUTINE}/${routine.id}`}
 				className="p-4 h-full w-full z-10 grid grid-cols-2 grid-rows-2"
 			>
-				<div className="text-white justify-self-end p-0.5 text-lg col-start-2 col-span-1 row-start-1 row-span-1 first-letter:uppercase group-hover:underline">
+				<div className="justify-self-end col-start-2 col-span-1 row-start-1 row-span-1 text-white p-0.5 text-lg first-letter:uppercase group-hover:underline">
 					{formatSeconds(routine.totalDuration || 0) || '0 s'}
 				</div>
-				<div className="text-white self-end p-0.5 text-lg col-start-1 col-span-1 row-start-2 row-span-1 first-letter:uppercase group-hover:underline">
+				<div className="self-end col-start-1 col-span-1 row-start-2 row-span-1 text-white p-0.5 text-lg first-letter:uppercase group-hover:underline">
 					{routine.name}
 				</div>
-				<div className="text-white self-end justify-self-end p-0.5 text-lg col-start-2 col-span-1 row-start-2 row-span-1 first-letter:uppercase group-hover:underline">
+				<div className="self-end justify-self-end col-start-2 col-span-1 row-start-2 row-span-1 text-white p-0.5 text-lg first-letter:uppercase group-hover:underline">
 					{routine.taskCount || 0} tasks
 				</div>
 			</Link>
