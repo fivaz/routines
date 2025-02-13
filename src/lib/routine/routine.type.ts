@@ -4,10 +4,14 @@ export type Routine = {
 	createdAt: string;
 	image: string;
 	order: number;
+	totalDuration: number;
+	taskCount: number;
 };
 
 export const emptyRoutine: Routine = {
 	id: '',
+	taskCount: 0,
+	totalDuration: 0,
 	name: '',
 	image: '',
 	order: 0,

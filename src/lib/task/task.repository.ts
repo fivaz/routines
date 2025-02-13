@@ -1,12 +1,12 @@
 import { DB_PATH } from '@/lib/consts';
 import {
 	collection,
-	deleteDoc,
 	doc,
-	getDoc,
 	onSnapshot,
 	orderBy,
 	query,
+	runTransaction,
+	serverTimestamp,
 	setDoc,
 	writeBatch,
 } from 'firebase/firestore';
@@ -14,6 +14,7 @@ import { db, storage } from '@/lib/firebase';
 import { deleteObject, getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { Task } from '@/lib/task/task.type';
 import { generateImage } from '@/app/(dashboard)/routine/[routineId]/actions';
+import { Routine } from '@/lib/routine/routine.type';
 
 export function getTaskPath(userId: string, routineId: string) {
 	return `${DB_PATH.USERS}/${userId}/${DB_PATH.ROUTINES}/${routineId}/${DB_PATH.TASKS}`;
@@ -59,25 +60,72 @@ async function getGeneratedImageFile(taskName: string) {
 	return convertImageUrlToBlob(temporaryImageUrl);
 }
 
+async function handleTaskImage(
+	userId: string,
+	routineId: string,
+	taskId: string,
+	imageFile: File | null,
+	task: Task,
+): Promise<string> {
+	try {
+		if (imageFile) {
+			return await getImageUrl(userId, routineId, taskId, imageFile);
+		} else {
+			const blob = await getGeneratedImageFile(task.name);
+			return await getImageUrl(userId, routineId, taskId, blob);
+		}
+	} catch (error) {
+		console.error('Error handling task image:', error);
+		throw error;
+	}
+}
+
+interface TaskOperationResult {
+	success: boolean;
+	error?: Error;
+	task?: Task;
+}
+
 export async function addTask(
 	userId: string,
 	routineId: string,
 	task: Task,
 	imageFile: File | null,
-) {
-	const newTaskRef = doc(collection(db, getTaskPath(userId, routineId)));
+): Promise<TaskOperationResult> {
+	try {
+		const newTaskRef = doc(collection(db, getTaskPath(userId, routineId)));
+		const taskId = newTaskRef.id;
 
-	let blob: Blob | null = imageFile;
+		// Handle image
+		const image = await handleTaskImage(userId, routineId, taskId, imageFile, task);
+		const newTask = { ...task, id: taskId, image };
 
-	if (!blob) {
-		blob = await getGeneratedImageFile(task.name);
+		// Update task and routine summary in a transaction
+		await runTransaction(db, async (transaction) => {
+			// Add the task
+			transaction.set(newTaskRef, newTask);
+
+			// Update routine summary
+			const routineRef = doc(db, getTaskPath(userId, routineId));
+			const routineDoc = await transaction.get(routineRef);
+
+			if (routineDoc.exists()) {
+				const currentTaskCount = (routineDoc.data() as Routine).taskCount || 0;
+				const currentDuration = (routineDoc.data() as Routine).totalDuration || 0;
+
+				transaction.update(routineRef, {
+					taskCount: currentTaskCount + 1,
+					totalDuration: currentDuration + (task.durationInSeconds || 0),
+					lastUpdated: serverTimestamp(),
+				});
+			}
+		});
+
+		return { success: true, task: newTask };
+	} catch (error) {
+		console.error('Error adding task:', error);
+		return { success: false, error: error as Error };
 	}
-
-	const image = await getImageUrl(userId, routineId, newTaskRef.id, blob);
-
-	const newTask = { ...task, image };
-
-	void setDoc(newTaskRef, newTask);
 }
 
 export async function editTask(
@@ -86,37 +134,141 @@ export async function editTask(
 	task: Task,
 	imageFile: File | null,
 	newRoutineId: string,
-) {
+): Promise<TaskOperationResult> {
 	try {
-		let newTask = task;
+		let updatedTask = task;
 
+		// Handle image if needed
 		if (imageFile) {
-			deleteImage(userId, routineId, task.id);
-			const image = await getImageUrl(userId, routineId, task.id, imageFile);
-
-			newTask = { ...task, image };
+			await deleteImage(userId, routineId, task.id);
+			const image = await handleTaskImage(userId, routineId, task.id, imageFile, task);
+			updatedTask = { ...task, image };
 		}
 
-		// If routine ID is different, move the task
+		// If moving to a different routine
 		if (routineId !== newRoutineId) {
-			// Delete from old routine
-			const oldTaskRef = doc(db, getTaskPath(userId, routineId), task.id);
-			await deleteDoc(oldTaskRef);
+			await runTransaction(db, async (transaction) => {
+				// Update old routine summary
+				const oldRoutineRef = doc(db, getTaskPath(userId, routineId));
+				const oldRoutineDoc = await transaction.get(oldRoutineRef);
 
-			// Create in new routine
-			const newTaskRef = doc(db, getTaskPath(userId, newRoutineId), task.id);
-			await setDoc(newTaskRef, newTask);
+				if (oldRoutineDoc.exists()) {
+					const oldTaskCount = (oldRoutineDoc.data() as Routine).taskCount || 0;
+					const oldDuration = (oldRoutineDoc.data() as Routine).totalDuration || 0;
 
-			// If there was an image, you might need to move it in storage as well
-			// This depends on how your storage paths are structured
+					transaction.update(oldRoutineRef, {
+						taskCount: Math.max(0, oldTaskCount - 1),
+						totalDuration: Math.max(0, oldDuration - (task.durationInSeconds || 0)),
+						lastUpdated: serverTimestamp(),
+					});
+				}
+
+				// Update new routine summary
+				const newRoutineRef = doc(db, getTaskPath(userId, newRoutineId));
+				const newRoutineDoc = await transaction.get(newRoutineRef);
+
+				if (newRoutineDoc.exists()) {
+					const newTaskCount = (oldRoutineDoc.data() as Routine).taskCount || 0;
+					const newDuration = (oldRoutineDoc.data() as Routine).totalDuration || 0;
+
+					transaction.update(newRoutineRef, {
+						taskCount: newTaskCount + 1,
+						totalDuration: newDuration + (task.durationInSeconds || 0),
+						lastUpdated: serverTimestamp(),
+					});
+				}
+
+				// Move the task
+				const oldTaskRef = doc(db, getTaskPath(userId, routineId), task.id);
+				const newTaskRef = doc(db, getTaskPath(userId, newRoutineId), task.id);
+
+				transaction.delete(oldTaskRef);
+				transaction.set(newTaskRef, updatedTask);
+			});
 		} else {
-			// Just update the existing task
-			const taskRef = doc(db, getTaskPath(userId, routineId), task.id);
-			await setDoc(taskRef, newTask);
+			// Same routine, but need to check if duration changed
+			await runTransaction(db, async (transaction) => {
+				// Get the existing task to compare duration
+				const taskRef = doc(db, getTaskPath(userId, routineId), task.id);
+				const taskDoc = await transaction.get(taskRef);
+
+				if (taskDoc.exists()) {
+					const oldTask = taskDoc.data() as Task;
+					const oldDuration = oldTask.durationInSeconds || 0;
+					const newDuration = updatedTask.durationInSeconds || 0;
+
+					// If duration changed, update routine summary
+					if (oldDuration !== newDuration) {
+						const routineRef = doc(db, getTaskPath(userId, routineId));
+						const routineDoc = await transaction.get(routineRef);
+
+						if (routineDoc.exists()) {
+							const currentTotalDuration = (routineDoc.data() as Routine).totalDuration || 0;
+							const durationDiff = newDuration - oldDuration;
+
+							transaction.update(routineRef, {
+								totalDuration: currentTotalDuration + durationDiff,
+								lastUpdated: serverTimestamp(),
+							});
+						}
+					}
+				}
+
+				// Update the task
+				transaction.set(taskRef, updatedTask);
+			});
 		}
+
+		return { success: true, task: updatedTask };
 	} catch (error) {
-		console.error('Error editing/moving task:', error);
-		throw error;
+		console.error('Error editing task:', error);
+		return { success: false, error: error as Error };
+	}
+}
+
+export async function deleteTask(
+	userId: string,
+	routineId: string,
+	taskId: string,
+): Promise<TaskOperationResult> {
+	try {
+		await runTransaction(db, async (transaction) => {
+			// Get the task to know its duration
+			const taskRef = doc(db, getTaskPath(userId, routineId), taskId);
+			const taskDoc = await transaction.get(taskRef);
+
+			if (!taskDoc.exists()) {
+				throw new Error('Task not found');
+			}
+
+			const taskData = taskDoc.data() as Task;
+
+			// Update routine summary
+			const routineRef = doc(db, getTaskPath(userId, routineId));
+			const routineDoc = await transaction.get(routineRef);
+
+			if (routineDoc.exists()) {
+				const currentTaskCount = (routineDoc.data() as Routine).taskCount || 0;
+				const currentDuration = (routineDoc.data() as Routine).totalDuration || 0;
+
+				transaction.update(routineRef, {
+					taskCount: Math.max(0, currentTaskCount - 1),
+					totalDuration: Math.max(0, currentDuration - (taskData.durationInSeconds || 0)),
+					lastUpdated: serverTimestamp(),
+				});
+			}
+
+			// Delete the task
+			transaction.delete(taskRef);
+
+			// Delete the image
+			await deleteImage(userId, routineId, taskId);
+		});
+
+		return { success: true };
+	} catch (error) {
+		console.error('Error deleting task:', error);
+		return { success: false, error: error as Error };
 	}
 }
 
@@ -124,15 +276,6 @@ function deleteImage(userId: string, routineId: string, taskId: string) {
 	const imageRef = getImageRef(userId, routineId, taskId);
 
 	return deleteObject(imageRef);
-}
-
-export async function getTask(userId: string, routineId: string, taskId: string) {
-	const data = await getDoc(doc(db, getTaskPath(userId, routineId), taskId));
-	return { ...data.data(), id: data.id } as Task;
-}
-
-export function deleteTask(userId: string, routineId: string, taskId: string) {
-	deleteDoc(doc(db, getTaskPath(userId, routineId), taskId));
 }
 
 export async function reorderTasks(userId: string, routineId: string, tasks: Task[]) {
