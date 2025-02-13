@@ -11,6 +11,7 @@ import {
 	DragEndEvent,
 	KeyboardSensor,
 	PointerSensor,
+	TouchSensor,
 	useSensor,
 	useSensors,
 } from '@dnd-kit/core';
@@ -28,6 +29,12 @@ export default function Routines() {
 
 	const sensors = useSensors(
 		useSensor(PointerSensor),
+		useSensor(TouchSensor, {
+			activationConstraint: {
+				delay: 250, // Optional: Adds a delay before dragging starts (in ms)
+				tolerance: 5, // Optional: Defines how much movement is needed to start dragging
+			},
+		}),
 		useSensor(KeyboardSensor, {
 			coordinateGetter: sortableKeyboardCoordinates,
 		}),

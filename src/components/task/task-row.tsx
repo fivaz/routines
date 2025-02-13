@@ -39,7 +39,7 @@ export function TaskRow({
 				message: 'Are you sure you want to delete this task?',
 			})
 		) {
-			deleteTask(userId, routine.id, task.id);
+			void deleteTask(userId, routine.id, task.id);
 		}
 	}
 

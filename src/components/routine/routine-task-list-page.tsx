@@ -18,6 +18,7 @@ import {
 	DragEndEvent,
 	KeyboardSensor,
 	PointerSensor,
+	TouchSensor,
 	useSensor,
 	useSensors,
 } from '@dnd-kit/core';
@@ -46,7 +47,17 @@ export default function RoutineTaskListPage({
 	const { createPrompt } = usePrompt();
 
 	const sensors = useSensors(
-		useSensor(PointerSensor),
+		useSensor(PointerSensor, {
+			activationConstraint: {
+				distance: 8, // 8px of movement required before drag starts
+			},
+		}),
+		useSensor(TouchSensor, {
+			activationConstraint: {
+				delay: 250, // Optional: Adds a delay before dragging starts (in ms)
+				tolerance: 5, // Optional: Defines how much movement is needed to start dragging
+			},
+		}),
 		useSensor(KeyboardSensor, {
 			coordinateGetter: sortableKeyboardCoordinates,
 		}),
