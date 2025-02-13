@@ -11,6 +11,7 @@ import { Logo } from '@/components/Logo';
 // import { InstallPrompt } from '@/components/InstallPrompt';
 import { Button } from '@/components/base/button';
 import { Banner } from '@/components/base/banner';
+import Link from 'next/link';
 
 export default function Login() {
 	const [email, setEmail] = useState('');
@@ -200,6 +201,12 @@ export default function Login() {
 							</div>
 						</div>
 					</div>
+					<p className="mt-10 text-center text-sm/6 text-gray-500">
+						Not a member?{' '}
+						<Link href="/register" className="font-semibold text-indigo-600 hover:text-indigo-500">
+							Sign up
+						</Link>
+					</p>
 				</div>
 			</div>
 		</>
