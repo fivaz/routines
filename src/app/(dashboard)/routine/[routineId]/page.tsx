@@ -40,12 +40,7 @@ export default function Routine() {
 	return (
 		<>
 			{page === 'list' && (
-				<RoutineTaskListPage
-					setPage={setPage}
-					routine={routine}
-					tasks={tasks}
-					setTasks={setTasks}
-				/>
+				<RoutineTaskListPage setPage={setPage} routine={routine} setTasks={setTasks} />
 			)}
 
 			{page === 'focus' && <RoutineFocusPage setPage={setPage} routine={routine} tasks={tasks} />}

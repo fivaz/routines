@@ -12,7 +12,6 @@ import { emptyTask, Task } from '@/lib/task/task.type';
 import { Button } from '@/components/base/button';
 import { RoutineForm } from '@/components/routine/routine-form';
 import { TaskForm } from '@/components/task/task-form';
-import { updateTasks } from '@/lib/task/task.repository';
 import {
 	closestCenter,
 	DndContext,
@@ -31,20 +30,19 @@ import {
 } from '@dnd-kit/sortable';
 import { usePrompt } from '@/lib/prompt-context';
 import { ListIcon } from '@/components/icons/ListIcon';
+import { useTasks } from '@/lib/task/task.context';
 
 export default function RoutineTaskListPage({
 	routine,
-	tasks,
-	setTasks,
 	setPage,
 }: PropsWithChildren<{
 	routine: Routine;
-	tasks: Task[];
 	setTasks: Dispatch<SetStateAction<Task[]>>;
 	setPage: Dispatch<SetStateAction<'focus' | 'recap' | 'list'>>;
 }>) {
 	const [routineForm, setRoutineForm] = useState<Routine | null>(null);
 	const [taskForm, setTaskForm] = useState<Task | null>(null);
+	const { handleReorder, tasks } = useTasks();
 
 	const { user } = useAuth();
 	const router = useRouter();
@@ -89,17 +87,13 @@ export default function RoutineTaskListPage({
 		return arrayMove(tasks, oldIndex, newIndex);
 	}
 
-	function handleDragEnd(event: DragEndEvent) {
-		const { active, over } = event;
-		if (!user) return;
-
+	function handleDragEnd({ active, over }: DragEndEvent) {
 		if (over && active.id !== over.id) {
-			setTasks((tasks) => reorderTasks(tasks, over.id, active.id));
-
-			void updateTasks(user.uid, routine.id, reorderTasks(tasks, over.id, active.id));
+			const oldIndex = tasks.findIndex((r) => r.id === active.id);
+			const newIndex = tasks.findIndex((r) => r.id === over.id);
+			handleReorder(oldIndex, newIndex);
 		}
 	}
-
 	if (!user) return;
 
 	return (

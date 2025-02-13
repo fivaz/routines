@@ -5,6 +5,8 @@ import { Routes } from '@/lib/consts';
 import { useAuth } from '@/lib/auth-context';
 import { useRouter } from 'next/navigation';
 import { LoaderCircle } from 'lucide-react';
+import { RoutineProvider } from '@/lib/routine/routine.context';
+import { TaskProvider } from '@/lib/task/task.context';
 
 export default function Layout({
 	children,
@@ -33,5 +35,11 @@ export default function Layout({
 		return null; // Don't render anything if user is not authenticated
 	}
 
-	return <Dashboard>{children}</Dashboard>;
+	return (
+		<RoutineProvider>
+			<TaskProvider>
+				<Dashboard>{children}</Dashboard>
+			</TaskProvider>
+		</RoutineProvider>
+	);
 }

@@ -5,25 +5,25 @@ import {
 	doc,
 	getDoc,
 	onSnapshot,
+	orderBy,
+	query,
 	setDoc,
 	writeBatch,
 } from 'firebase/firestore';
 import { db, storage } from '@/lib/firebase';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { Task } from '@/lib/task/task.type';
-import { sortTasks } from '@/lib/task/task.utils';
 import { generateImage } from '@/app/(dashboard)/routine/[routineId]/actions';
 
 export function getTaskPath(userId: string, routineId: string) {
 	return `${DB_PATH.USERS}/${userId}/${DB_PATH.ROUTINES}/${routineId}/${DB_PATH.TASKS}`;
 }
 
-export function fetchTasks(
-	userId: string,
-	routineId: string | string[],
-	setTasks: (tasks: Task[]) => void,
-) {
-	const tasksCollectionRef = collection(db, getTaskPath(userId, String(routineId)));
+export function fetchTasks(userId: string, routineId: string, setTasks: (tasks: Task[]) => void) {
+	const tasksCollectionRef = query(
+		collection(db, getTaskPath(userId, routineId)),
+		orderBy('order'),
+	);
 
 	return onSnapshot(tasksCollectionRef, (snapshot) => {
 		const tasks: Task[] = [];
@@ -31,9 +31,7 @@ export function fetchTasks(
 			tasks.push({ ...doc.data(), id: doc.id } as Task);
 		});
 
-		const sortedTasks = sortTasks(tasks);
-
-		setTasks(sortedTasks);
+		setTasks(tasks);
 	});
 }
 
@@ -110,7 +108,7 @@ export function deleteTask(userId: string, routineId: string, taskId: string) {
 	deleteDoc(doc(db, getTaskPath(userId, routineId), taskId));
 }
 
-export async function updateTasks(userId: string, routineId: string, tasks: Task[]) {
+export async function reorderTasks(userId: string, routineId: string, tasks: Task[]) {
 	const batch = writeBatch(db);
 
 	tasks.forEach((task, index) => {

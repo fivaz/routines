@@ -1,10 +1,8 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/base/button';
 import { RoutineForm } from '@/components/routine/routine-form';
 import { emptyRoutine, type Routine } from '@/lib/routine/routine.type';
-import { fetchRoutines, updateRoutines } from '@/lib/routine/routine.repository';
-import { useAuth } from '@/lib/auth-context';
 import { RoutineRow } from '@/components/routine/routine-row';
 
 import {
@@ -22,14 +20,11 @@ import {
 	verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { PlusIcon } from 'lucide-react';
-import { reorderRoutines } from '@/lib/routine/routine.utils';
+import { useRoutines } from '@/lib/routine/routine.context';
 
 export default function Routines() {
-	const [routines, setRoutines] = useState<Routine[]>([]);
-
 	const [routineForm, setRoutineForm] = useState<Routine | null>(null);
-
-	const { user } = useAuth();
+	const { routines, handleReorder } = useRoutines();
 
 	const sensors = useSensors(
 		useSensor(PointerSensor),
@@ -42,24 +37,13 @@ export default function Routines() {
 		setRoutineForm({ ...emptyRoutine, order: routines.length });
 	}
 
-	function handleDragEnd(event: DragEndEvent) {
-		const { active, over } = event;
-		if (!user) return;
-
+	function handleDragEnd({ active, over }: DragEndEvent) {
 		if (over && active.id !== over.id) {
-			setRoutines((routines) => reorderRoutines(routines, over.id, active.id));
-
-			void updateRoutines(user.uid, reorderRoutines(routines, over.id, active.id));
+			const oldIndex = routines.findIndex((r) => r.id === active.id);
+			const newIndex = routines.findIndex((r) => r.id === over.id);
+			handleReorder(oldIndex, newIndex);
 		}
 	}
-
-	useEffect(() => {
-		if (!user) return;
-
-		const unsubscribe = fetchRoutines(user.uid, setRoutines);
-
-		return () => unsubscribe();
-	}, [user]);
 
 	return (
 		<>
