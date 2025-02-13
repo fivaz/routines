@@ -1,23 +1,23 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import type { Routine } from '@/lib/routine/routine.type';
-import { Task } from '@/lib/task/task.type';
 import { Ellipsis } from 'lucide-react';
 import { getDuration, getHistory } from '@/lib/task/task.utils';
 import { Dropdown, DropdownButton, DropdownItem, DropdownMenu } from '@/components/base/dropdown';
 import { RoutineTasksSummary } from '@/components/routine/routine-focus-page/routine-tasks-summary';
 import { RoutineFocusBottom } from '@/components/routine/routine-focus-page/routine-focus-bottom';
+import { useTasks } from '@/lib/task/task.context';
+import { useRoutine } from '@/lib/routine/routine.hooks';
+import { Heading } from '@/components/base/heading';
+import { Skeleton } from '@/components/Skeleton';
 
 export default function RoutineFocusPage({
-	routine,
-	tasks,
 	setPage,
 }: {
-	routine: Routine;
-	tasks: Task[];
 	setPage: Dispatch<SetStateAction<'focus' | 'recap' | 'list'>>;
 }) {
 	const [currentTaskIndex, setCurrentTaskIndex] = useState(0);
 	const [elapsedTime, setElapsedTime] = useState(0);
+	const { tasks } = useTasks();
+	const routine = useRoutine();
 
 	useEffect(() => {
 		const today = new Date().toISOString().split('T')[0];
@@ -39,7 +39,11 @@ export default function RoutineFocusPage({
 				<RoutineTasksSummary tasks={tasks} currentTaskIndex={currentTaskIndex} />
 
 				<div className="flex justify-between items-center">
-					<div className="first-letter:capitalize text-green-500 text-2xl">{routine.name}</div>
+					{routine ? (
+						<Heading className="first-letter:capitalize">{routine.name}</Heading>
+					) : (
+						<Skeleton />
+					)}
 
 					<Dropdown>
 						<DropdownButton outline>
@@ -69,9 +73,7 @@ export default function RoutineFocusPage({
 			</div>
 
 			<RoutineFocusBottom
-				tasks={tasks}
 				setPage={setPage}
-				routineId={routine.id}
 				currentTaskIndex={currentTaskIndex}
 				elapsedTime={elapsedTime}
 				setElapsedTime={setElapsedTime}

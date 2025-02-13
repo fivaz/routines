@@ -67,6 +67,7 @@ export function fetchRoutine(
 }
 
 export function fetchRoutines(userId: string, setRoutines: (routines: Routine[]) => void) {
+	console.log('fetchRoutines');
 	const routinesCollectionRef = query(collection(db, getRoutinePath(userId)), orderBy('order'));
 
 	return onSnapshot(routinesCollectionRef, (snapshot) => {

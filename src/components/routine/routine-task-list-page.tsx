@@ -18,12 +18,10 @@ import {
 	DragEndEvent,
 	KeyboardSensor,
 	PointerSensor,
-	UniqueIdentifier,
 	useSensor,
 	useSensors,
 } from '@dnd-kit/core';
 import {
-	arrayMove,
 	SortableContext,
 	sortableKeyboardCoordinates,
 	verticalListSortingStrategy,
@@ -31,28 +29,37 @@ import {
 import { usePrompt } from '@/lib/prompt-context';
 import { ListIcon } from '@/components/icons/ListIcon';
 import { useTasks } from '@/lib/task/task.context';
+import { useRoutine } from '@/lib/routine/routine.hooks';
 
 export default function RoutineTaskListPage({
-	routine,
 	setPage,
 }: PropsWithChildren<{
-	routine: Routine;
-	setTasks: Dispatch<SetStateAction<Task[]>>;
 	setPage: Dispatch<SetStateAction<'focus' | 'recap' | 'list'>>;
 }>) {
 	const [routineForm, setRoutineForm] = useState<Routine | null>(null);
 	const [taskForm, setTaskForm] = useState<Task | null>(null);
 	const { handleReorder, tasks } = useTasks();
+	const routine = useRoutine();
 
 	const { user } = useAuth();
 	const router = useRouter();
 	const { createPrompt } = usePrompt();
+
+	const sensors = useSensors(
+		useSensor(PointerSensor),
+		useSensor(KeyboardSensor, {
+			coordinateGetter: sortableKeyboardCoordinates,
+		}),
+	);
+
+	if (!routine) return;
 
 	function handleGoToRecap() {
 		setPage('recap');
 	}
 
 	function handleEdit() {
+		if (!routine) return;
 		setRoutineForm(routine);
 	}
 
@@ -62,6 +69,7 @@ export default function RoutineTaskListPage({
 
 	async function handleDelete() {
 		if (!user) return;
+		if (!routine) return;
 		if (
 			await createPrompt({
 				title: 'Delete Routine',
@@ -71,20 +79,6 @@ export default function RoutineTaskListPage({
 			deleteRoutine(user.uid, routine.id);
 			router.push(Routes.ROOT);
 		}
-	}
-
-	const sensors = useSensors(
-		useSensor(PointerSensor),
-		useSensor(KeyboardSensor, {
-			coordinateGetter: sortableKeyboardCoordinates,
-		}),
-	);
-
-	function reorderTasks(tasks: Task[], overId: UniqueIdentifier, activeId: UniqueIdentifier) {
-		const oldIndex = tasks.findIndex((task) => task.id === String(activeId));
-		const newIndex = tasks.findIndex((task) => task.id === String(overId));
-
-		return arrayMove(tasks, oldIndex, newIndex);
 	}
 
 	function handleDragEnd({ active, over }: DragEndEvent) {

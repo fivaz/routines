@@ -6,15 +6,15 @@ import { formatSeconds, getDuration, getDurationFromDate, getHistory } from '@/l
 import { TaskHistoryCarousel } from '@/components/routine/routine-recap-page/task-history-carousel';
 import { UndoIcon } from 'lucide-react';
 import { Button } from '@/components/base/button';
+import { useTasks } from '@/lib/task/task.context';
 
-export function Index({
-	tasks,
+export function RoutineRecapPage({
 	setPage,
 }: {
-	tasks: Task[];
 	setPage: Dispatch<SetStateAction<'focus' | 'recap' | 'list'>>;
 }) {
 	const [date, setDate] = useState<string>(new Date().toISOString().split('T')[0]);
+	const { tasks } = useTasks();
 
 	function getTimeFromDate(task: Task) {
 		const history = getHistory(task, date);

@@ -4,28 +4,26 @@ import { persistTask } from '@/lib/task/task.repository';
 import { useAuth } from '@/lib/auth-context';
 import { usePrompt } from '@/lib/prompt-context';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { Task } from '@/lib/task/task.type';
+import { useParams } from 'next/navigation';
+import { useTasks } from '@/lib/task/task.context';
 
 export function RoutineFocusBottom({
 	setCurrentTaskIndex,
 	elapsedTime,
 	setElapsedTime,
-	tasks,
 	currentTaskIndex,
-	routineId,
 	setPage,
 }: {
 	setCurrentTaskIndex: Dispatch<SetStateAction<number>>;
 	setPage: Dispatch<SetStateAction<'focus' | 'recap' | 'list'>>;
 	elapsedTime: number;
 	currentTaskIndex: number;
-	tasks: Task[];
 	setElapsedTime: Dispatch<SetStateAction<number>>;
-	routineId: string;
 }) {
 	const [isRunning, setIsRunning] = useState(false);
-
+	const { tasks } = useTasks();
 	const { user } = useAuth();
+	const { routineId } = useParams<{ routineId: string }>();
 	const { createPrompt } = usePrompt();
 
 	useEffect(() => {

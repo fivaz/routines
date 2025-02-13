@@ -33,8 +33,6 @@ export function RoutineProvider({ children }: PropsWithChildren) {
 		void reorderRoutines(user.uid, newRoutines);
 	};
 
-	console.log(routines);
-
 	return (
 		<RoutineContext.Provider value={{ routines, handleReorder }}>
 			{children}

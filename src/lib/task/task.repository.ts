@@ -20,6 +20,7 @@ export function getTaskPath(userId: string, routineId: string) {
 }
 
 export function fetchTasks(userId: string, routineId: string, setTasks: (tasks: Task[]) => void) {
+	console.log('fetchTasks');
 	const tasksCollectionRef = query(
 		collection(db, getTaskPath(userId, routineId)),
 		orderBy('order'),
