@@ -1,6 +1,8 @@
 'use client';
 import { useState } from 'react';
 import { Button } from '@/components/base/button';
+import { Text } from '@/components/base/text';
+import { Heading } from '@/components/base/heading';
 import { RoutineForm } from '@/components/routine/routine-form';
 import { emptyRoutine, type Routine } from '@/lib/routine/routine.type';
 import { RoutineRow } from '@/components/routine/routine-row';
@@ -54,9 +56,10 @@ export default function Routines() {
 
 	return (
 		<>
-			<h1 className="text-2xl font-bold mb-4 text-green-500">Routines</h1>
+			<Heading className="text-2xl font-bold mb-4 text-green-500">Routines</Heading>
 
 			<div className="flex flex-col gap-2">
+				<Text>Morning</Text>
 				<DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
 					<SortableContext items={routines} strategy={verticalListSortingStrategy}>
 						{routines.map((routine) => (
@@ -66,7 +69,7 @@ export default function Routines() {
 				</DndContext>
 			</div>
 
-			<div className="fixed bottom-2 m-auto left-1/2 -translate-x-1/2">
+			<div className="fixed bottom-2 m-auto left-1/2 -translate-x-1/2 z-20">
 				<Button className="w-40" color="green" type="button" onClick={handleAddRoutine}>
 					<PlusIcon className="w-5 h-5" />
 					Routine

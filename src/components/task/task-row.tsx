@@ -81,11 +81,9 @@ export function TaskRow({
 				onClick={handleEdit}
 				className="cursor-pointer z-10 w-full h-full flex items-end justify-between"
 			>
-				<span className="first-letter:uppercase p-0.5 text-lg group-hover:underline">
-					{task.name}
-				</span>
+				<span className="first-letter:uppercase p-0.5 group-hover:underline">{task.name}</span>
 
-				<span className="p-0.5 text-lg group-hover:underline">
+				<span className="p-0.5 group-hover:underline">
 					{latestTime(task)} / {formatSeconds(task.durationInSeconds)}
 				</span>
 			</div>

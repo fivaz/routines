@@ -87,7 +87,6 @@ export async function reorderRoutines(userId: string, routines: Routine[]) {
 	const batch = writeBatch(db);
 
 	routines.forEach((routine, index) => {
-		console.log('routine.name', routine.name, index, routine.order);
 		const routineRef = doc(db, getRoutinePath(userId), routine.id);
 		batch.update(routineRef, { order: index });
 	});

@@ -31,6 +31,7 @@ import { usePrompt } from '@/lib/prompt-context';
 import { ListIcon } from '@/components/icons/ListIcon';
 import { useTasks } from '@/lib/task/task.context';
 import { useRoutine } from '@/lib/routine/routine.hooks';
+import { Heading } from '@/components/base/heading';
 
 export default function RoutineTaskListPage({
 	setPage,
@@ -103,19 +104,23 @@ export default function RoutineTaskListPage({
 
 	return (
 		<div className="flex flex-col gap-5">
-			<div className="flex justify-between">
-				<div className="text-green-500 text-2xl">{routine.name}</div>
+			<div className="flex justify-between items-center">
+				<Heading>{routine.name}</Heading>
 
 				<div className="flex gap-3">
-					<Button outline onClick={handleAddTask}>
-						<PlusIcon className="size-5" />
-						Add Task
-					</Button>
+					<div className="hidden md:block">
+						<Button outline onClick={handleAddTask}>
+							<PlusIcon className="size-5" />
+						</Button>
+					</div>
 					<Dropdown>
 						<DropdownButton outline>
 							<Ellipsis />
 						</DropdownButton>
 						<DropdownMenu>
+							<DropdownItem className="block md:hidden" onClick={handleAddTask}>
+								Add task
+							</DropdownItem>
 							<DropdownItem onClick={handleGoToRecap}>Go to recap</DropdownItem>
 							<DropdownItem onClick={handleEdit}>Edit</DropdownItem>
 							<DropdownItem onClick={handleDelete}>
