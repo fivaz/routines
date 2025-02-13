@@ -28,6 +28,7 @@ export function TaskForm({
 	// const [error, setError] = useState('');
 	const [loading, setLoading] = useState(false);
 	const { routines } = useRoutines();
+	const [newRoutineId, setNewRoutineId] = useState<string>(routineId);
 
 	const { user } = useAuth();
 
@@ -39,9 +40,9 @@ export function TaskForm({
 	async function handleSubmit() {
 		if (!user || !taskIn) return;
 		if (taskIn.id) {
-			void editTask(user.uid, routineId, taskIn, imageFile);
+			void editTask(user.uid, routineId, taskIn, imageFile, newRoutineId);
 		} else {
-			void addTask(user.uid, routineId, taskIn, imageFile);
+			void addTask(user.uid, newRoutineId, taskIn, imageFile);
 		}
 		close();
 	}
@@ -90,8 +91,7 @@ export function TaskForm({
 	}
 
 	function handleSelect(routineId: string) {
-		if (!taskIn) return;
-		setTaskIn({ ...taskIn, routineId });
+		setNewRoutineId(routineId);
 	}
 
 	return (
@@ -149,7 +149,7 @@ export function TaskForm({
 								</div>
 								<Field>
 									<Label>Routine</Label>
-									<Listbox name="routineId" value={taskIn.routineId} onChange={handleSelect}>
+									<Listbox name="routineId" value={newRoutineId} onChange={handleSelect}>
 										{routines.map((routine) => (
 											<ListboxOption key={routine.id} value={routine.id}>
 												{routine.name}

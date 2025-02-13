@@ -11,7 +11,7 @@ import {
 	writeBatch,
 } from 'firebase/firestore';
 import { db, storage } from '@/lib/firebase';
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { deleteObject, getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { Task } from '@/lib/task/task.type';
 import { generateImage } from '@/app/(dashboard)/routine/[routineId]/actions';
 
@@ -85,19 +85,45 @@ export async function editTask(
 	routineId: string,
 	task: Task,
 	imageFile: File | null,
+	newRoutineId: string,
 ) {
-	const taskRef = doc(db, getTaskPath(userId, routineId), task.id);
+	try {
+		let newTask = task;
 
-	let newTask = task;
+		if (imageFile) {
+			deleteImage(userId, routineId, task.id);
+			const image = await getImageUrl(userId, routineId, task.id, imageFile);
 
-	if (imageFile) {
-		// TODO remove current image
-		const image = await getImageUrl(userId, routineId, taskRef.id, imageFile);
+			newTask = { ...task, image };
+		}
 
-		newTask = { ...task, image };
+		// If routine ID is different, move the task
+		if (routineId !== newRoutineId) {
+			// Delete from old routine
+			const oldTaskRef = doc(db, getTaskPath(userId, routineId), task.id);
+			await deleteDoc(oldTaskRef);
+
+			// Create in new routine
+			const newTaskRef = doc(db, getTaskPath(userId, newRoutineId), task.id);
+			await setDoc(newTaskRef, newTask);
+
+			// If there was an image, you might need to move it in storage as well
+			// This depends on how your storage paths are structured
+		} else {
+			// Just update the existing task
+			const taskRef = doc(db, getTaskPath(userId, routineId), task.id);
+			await setDoc(taskRef, newTask);
+		}
+	} catch (error) {
+		console.error('Error editing/moving task:', error);
+		throw error;
 	}
+}
 
-	void setDoc(taskRef, newTask);
+function deleteImage(userId: string, routineId: string, taskId: string) {
+	const imageRef = getImageRef(userId, routineId, taskId);
+
+	return deleteObject(imageRef);
 }
 
 export async function getTask(userId: string, routineId: string, taskId: string) {

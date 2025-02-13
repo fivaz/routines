@@ -5,7 +5,6 @@ export type Task = {
 	durationInSeconds: number;
 	order: number;
 	createdAt: string;
-	routineId: string;
 	history: Record<
 		string,
 		{
@@ -18,7 +17,6 @@ export type Task = {
 export const emptyTask: Task = {
 	id: '',
 	name: '',
-	routineId: '',
 	order: 0,
 	image: '',
 	durationInSeconds: 5 * 60,
