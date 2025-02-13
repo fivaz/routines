@@ -30,7 +30,7 @@ export function RoutineRow({ routine }: PropsWithChildren<{ routine: Routine }>)
 				<Button
 					{...listeners}
 					outline
-					className="dark cursor-grab"
+					className="touch-none dark cursor-grab"
 					onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
 						e.stopPropagation(); // Prevent link click when button is clicked
 					}}
