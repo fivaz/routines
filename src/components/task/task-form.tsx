@@ -11,6 +11,8 @@ import { HHmmss } from '@/lib/consts';
 import { ImageIcon, ImageUpscaleIcon, Loader2 } from 'lucide-react';
 import { ImageDialog } from '@/components/ImageDialog';
 import { generateImage } from '@/app/(dashboard)/routine/[routineId]/actions';
+import { Listbox, ListboxOption } from '@/components/base/listbox';
+import { useRoutines } from '@/lib/routine/routine.context';
 
 export function TaskForm({
 	setTaskIn,
@@ -25,6 +27,7 @@ export function TaskForm({
 	const [isImageOpen, setIsImageOpen] = useState(false);
 	// const [error, setError] = useState('');
 	const [loading, setLoading] = useState(false);
+	const { routines } = useRoutines();
 
 	const { user } = useAuth();
 
@@ -86,6 +89,11 @@ export function TaskForm({
 		}
 	}
 
+	function handleSelect(routineId: string) {
+		if (!taskIn) return;
+		setTaskIn({ ...taskIn, routineId });
+	}
+
 	return (
 		<Dialog open={taskIn !== null} onClose={close}>
 			{taskIn && (
@@ -139,6 +147,16 @@ export function TaskForm({
 										/>
 									</Field>
 								</div>
+								<Field>
+									<Label>Routine</Label>
+									<Listbox name="routineId" value={taskIn.routineId} onChange={handleSelect}>
+										{routines.map((routine) => (
+											<ListboxOption key={routine.id} value={routine.id}>
+												{routine.name}
+											</ListboxOption>
+										))}
+									</Listbox>
+								</Field>
 							</FieldGroup>
 						</Fieldset>
 					</DialogBody>
