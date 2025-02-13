@@ -12,7 +12,6 @@ import {
 import { db, storage } from '@/lib/firebase';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { Routine } from '@/lib/routine/routine.type';
-import { Task } from '@/lib/task/task.type';
 
 export function getRoutinePath(userId: string) {
 	return `${DB_PATH.USERS}/${userId}/${DB_PATH.ROUTINES}`;
@@ -73,7 +72,7 @@ export function fetchRoutines(userId: string, setRoutines: (routines: Routine[])
 	return onSnapshot(routinesCollectionRef, (snapshot) => {
 		const routines: Routine[] = [];
 		snapshot.forEach((doc) => {
-			routines.push({ ...doc.data(), id: doc.id } as Task);
+			routines.push({ ...doc.data(), id: doc.id } as Routine);
 		});
 
 		setRoutines(routines);

@@ -15,6 +15,7 @@ import { deleteObject, getDownloadURL, ref, uploadBytes } from 'firebase/storage
 import { Task } from '@/lib/task/task.type';
 import { generateImage } from '@/app/(dashboard)/routine/[routineId]/actions';
 import { Routine } from '@/lib/routine/routine.type';
+import { getRoutinePath } from '@/lib/routine/routine.repository';
 
 export function getTaskPath(userId: string, routineId: string) {
 	return `${DB_PATH.USERS}/${userId}/${DB_PATH.ROUTINES}/${routineId}/${DB_PATH.TASKS}`;
@@ -92,40 +93,40 @@ export async function addTask(
 	task: Task,
 	imageFile: File | null,
 ): Promise<TaskOperationResult> {
-	try {
-		const newTaskRef = doc(collection(db, getTaskPath(userId, routineId)));
-		const taskId = newTaskRef.id;
+	// try {
+	const newTaskRef = doc(collection(db, getTaskPath(userId, routineId)));
+	const taskId = newTaskRef.id;
 
-		// Handle image
-		const image = await handleTaskImage(userId, routineId, taskId, imageFile, task);
-		const newTask = { ...task, id: taskId, image };
+	// Handle image
+	const image = await handleTaskImage(userId, routineId, taskId, imageFile, task);
+	const newTask = { ...task, id: taskId, image };
 
-		// Update task and routine summary in a transaction
-		await runTransaction(db, async (transaction) => {
-			// Add the task
-			transaction.set(newTaskRef, newTask);
+	// Update task and routine summary in a transaction
+	await runTransaction(db, async (transaction) => {
+		const routineRef = doc(db, getRoutinePath(userId), routineId);
+		const routineDoc = await transaction.get(routineRef);
 
-			// Update routine summary
-			const routineRef = doc(db, getTaskPath(userId, routineId));
-			const routineDoc = await transaction.get(routineRef);
+		// Add the task
+		transaction.set(newTaskRef, newTask);
 
-			if (routineDoc.exists()) {
-				const currentTaskCount = (routineDoc.data() as Routine).taskCount || 0;
-				const currentDuration = (routineDoc.data() as Routine).totalDuration || 0;
+		// Update routine summary
+		if (routineDoc.exists()) {
+			const currentTaskCount = (routineDoc.data() as Routine).taskCount || 0;
+			const currentDuration = (routineDoc.data() as Routine).totalDuration || 0;
 
-				transaction.update(routineRef, {
-					taskCount: currentTaskCount + 1,
-					totalDuration: currentDuration + (task.durationInSeconds || 0),
-					lastUpdated: serverTimestamp(),
-				});
-			}
-		});
+			transaction.update(routineRef, {
+				taskCount: currentTaskCount + 1,
+				totalDuration: currentDuration + (task.durationInSeconds || 0),
+				lastUpdated: serverTimestamp(),
+			});
+		}
+	});
 
-		return { success: true, task: newTask };
-	} catch (error) {
-		console.error('Error adding task:', error);
-		return { success: false, error: error as Error };
-	}
+	return { success: true, task: newTask };
+	// } catch (error) {
+	// 	console.error('Error adding task:', error);
+	// 	return { success: false, error: error as Error };
+	// }
 }
 
 export async function editTask(
@@ -149,7 +150,7 @@ export async function editTask(
 		if (routineId !== newRoutineId) {
 			await runTransaction(db, async (transaction) => {
 				// Update old routine summary
-				const oldRoutineRef = doc(db, getTaskPath(userId, routineId));
+				const oldRoutineRef = doc(db, getRoutinePath(userId), routineId);
 				const oldRoutineDoc = await transaction.get(oldRoutineRef);
 
 				if (oldRoutineDoc.exists()) {
@@ -164,7 +165,7 @@ export async function editTask(
 				}
 
 				// Update new routine summary
-				const newRoutineRef = doc(db, getTaskPath(userId, newRoutineId));
+				const newRoutineRef = doc(db, getRoutinePath(userId), newRoutineId);
 				const newRoutineDoc = await transaction.get(newRoutineRef);
 
 				if (newRoutineDoc.exists()) {
@@ -199,7 +200,7 @@ export async function editTask(
 
 					// If duration changed, update routine summary
 					if (oldDuration !== newDuration) {
-						const routineRef = doc(db, getTaskPath(userId, routineId));
+						const routineRef = doc(db, getRoutinePath(userId), routineId);
 						const routineDoc = await transaction.get(routineRef);
 
 						if (routineDoc.exists()) {
@@ -244,7 +245,7 @@ export async function deleteTask(
 			const taskData = taskDoc.data() as Task;
 
 			// Update routine summary
-			const routineRef = doc(db, getTaskPath(userId, routineId));
+			const routineRef = doc(db, getRoutinePath(userId), routineId);
 			const routineDoc = await transaction.get(routineRef);
 
 			if (routineDoc.exists()) {
