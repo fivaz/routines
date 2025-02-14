@@ -93,40 +93,41 @@ export async function addTask(
 	task: Task,
 	imageFile: File | null,
 ): Promise<TaskOperationResult> {
-	// try {
-	const newTaskRef = doc(collection(db, getTaskPath(userId, routineId)));
-	const taskId = newTaskRef.id;
+	try {
+		const newTaskRef = doc(collection(db, getTaskPath(userId, routineId)));
+		const taskId = newTaskRef.id;
 
-	// Handle image
-	const image = await handleTaskImage(userId, routineId, taskId, imageFile, task);
-	const newTask = { ...task, id: taskId, image };
+		// Handle image
+		const image = await handleTaskImage(userId, routineId, taskId, imageFile, task);
+		const newTask = { ...task, id: taskId, image };
+		// const newTask = { ...task, id: taskId };
 
-	// Update task and routine summary in a transaction
-	await runTransaction(db, async (transaction) => {
-		const routineRef = doc(db, getRoutinePath(userId), routineId);
-		const routineDoc = await transaction.get(routineRef);
+		// Update task and routine summary in a transaction
+		await runTransaction(db, async (transaction) => {
+			const routineRef = doc(db, getRoutinePath(userId), routineId);
+			const routineDoc = await transaction.get(routineRef);
 
-		// Add the task
-		transaction.set(newTaskRef, newTask);
+			// Add the task
+			transaction.set(newTaskRef, newTask);
 
-		// Update routine summary
-		if (routineDoc.exists()) {
-			const currentTaskCount = (routineDoc.data() as Routine).taskCount || 0;
-			const currentDuration = (routineDoc.data() as Routine).totalDuration || 0;
+			// Update routine summary
+			if (routineDoc.exists()) {
+				const currentTaskCount = (routineDoc.data() as Routine).taskCount || 0;
+				const currentDuration = (routineDoc.data() as Routine).totalDuration || 0;
 
-			transaction.update(routineRef, {
-				taskCount: currentTaskCount + 1,
-				totalDuration: currentDuration + (task.durationInSeconds || 0),
-				lastUpdated: serverTimestamp(),
-			});
-		}
-	});
+				transaction.update(routineRef, {
+					taskCount: currentTaskCount + 1,
+					totalDuration: currentDuration + (task.durationInSeconds || 0),
+					lastUpdated: serverTimestamp(),
+				});
+			}
+		});
 
-	return { success: true, task: newTask };
-	// } catch (error) {
-	// 	console.error('Error adding task:', error);
-	// 	return { success: false, error: error as Error };
-	// }
+		return { success: true, task: newTask };
+	} catch (error) {
+		console.error('Error adding task:', error);
+		return { success: false, error: error as Error };
+	}
 }
 
 export async function editTask(
@@ -141,7 +142,9 @@ export async function editTask(
 
 		// Handle image if needed
 		if (imageFile) {
-			await deleteImage(userId, routineId, task.id);
+			if (task.image) {
+				await deleteImage(userId, routineId, task.id);
+			}
 			const image = await handleTaskImage(userId, routineId, task.id, imageFile, task);
 			updatedTask = { ...task, image };
 		}
@@ -152,6 +155,9 @@ export async function editTask(
 				// Update old routine summary
 				const oldRoutineRef = doc(db, getRoutinePath(userId), routineId);
 				const oldRoutineDoc = await transaction.get(oldRoutineRef);
+
+				const newRoutineRef = doc(db, getRoutinePath(userId), newRoutineId);
+				const newRoutineDoc = await transaction.get(newRoutineRef);
 
 				if (oldRoutineDoc.exists()) {
 					const oldTaskCount = (oldRoutineDoc.data() as Routine).taskCount || 0;
@@ -165,9 +171,6 @@ export async function editTask(
 				}
 
 				// Update new routine summary
-				const newRoutineRef = doc(db, getRoutinePath(userId), newRoutineId);
-				const newRoutineDoc = await transaction.get(newRoutineRef);
-
 				if (newRoutineDoc.exists()) {
 					const newTaskCount = (oldRoutineDoc.data() as Routine).taskCount || 0;
 					const newDuration = (oldRoutineDoc.data() as Routine).totalDuration || 0;
@@ -263,7 +266,9 @@ export async function deleteTask(
 			transaction.delete(taskRef);
 
 			// Delete the image
-			await deleteImage(userId, routineId, taskId);
+			if (taskData.image) {
+				await deleteImage(userId, routineId, taskId);
+			}
 		});
 
 		return { success: true };
