@@ -10,7 +10,8 @@ import {
 } from 'firebase/firestore';
 import { db, storage } from '@/lib/firebase';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
-import { Routine } from '@/lib/routine/routine.type';
+import { Routine, RoutineTime } from '@/lib/routine/routine.type';
+import { DB_PATH } from '@/lib/consts';
 
 export function getRoutinePath(userId: string) {
 	return `${DB_PATH.USERS}/${userId}/${DB_PATH.ROUTINES}`;
@@ -52,18 +53,6 @@ export async function editRoutine(userId: string, routine: Routine, imageFile: F
 	void setDoc(routineRef, newRoutine);
 }
 
-export function fetchRoutine(
-	userId: string,
-	routineId: string | string[],
-	setRoutine: (routine: Routine) => void,
-) {
-	const routineRef = doc(db, getRoutinePath(userId), String(routineId));
-
-	return onSnapshot(routineRef, (snapshot) => {
-		setRoutine({ ...snapshot.data(), id: snapshot.id } as Routine);
-	});
-}
-
 export function fetchRoutines(userId: string, setRoutines: (routines: Routine[]) => void) {
 	console.log('fetchRoutines');
 	const routinesCollectionRef = query(collection(db, getRoutinePath(userId)), orderBy('order'));
@@ -82,12 +71,17 @@ export function deleteRoutine(userId: string, routineId: string) {
 	deleteDoc(doc(db, getRoutinePath(userId), routineId));
 }
 
-export async function updateRoutines(userId: string, routines: Routine[]) {
+export async function updateTimedRoutines(
+	userId: string,
+	timedRoutines: Record<RoutineTime, Routine[]>,
+) {
 	const batch = writeBatch(db);
 
-	routines.forEach((routine, index) => {
-		const routineRef = doc(db, getRoutinePath(userId), routine.id);
-		batch.update(routineRef, { order: index });
+	Object.entries(timedRoutines).forEach(([time, routines]) => {
+		routines.forEach((routine, index) => {
+			const routineRef = doc(db, getRoutinePath(userId), routine.id);
+			batch.update(routineRef, { order: index, time });
+		});
 	});
 
 	try {

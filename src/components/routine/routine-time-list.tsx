@@ -15,8 +15,8 @@ export function RoutineTimeList({ time, children }: PropsWithChildren<{ time: Ro
 	const style = isDropTarget ? { background: '#00000030' } : undefined;
 
 	return (
-		<div className="p-4 bg-gray-300 rounded-lg" style={style} ref={ref}>
-			<Subheading className="mb-3 text-yellow-600">{time}</Subheading>
+		<div className="p-4 border border-gray-200 rounded-lg" style={style} ref={ref}>
+			<Subheading className="mb-3 text-yellow-600 first-letter:uppercase">{time}</Subheading>
 			<div className="flex flex-col gap-2 min-h-45">{children}</div>
 		</div>
 	);

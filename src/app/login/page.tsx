@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { parseErrors, validateFields } from './service';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import { auth } from '@/lib/firebase';
 import { Routes } from '@/lib/consts';
@@ -34,6 +34,17 @@ export default function Login() {
 			setIsDisabled(false);
 		}
 	}, [isLoading.email, isLoading.github, isLoading.google]);
+
+	async function handleGoogleProvider() {
+		const provider = new GoogleAuthProvider();
+
+		try {
+			await signInWithPopup(auth, provider);
+			void router.push(Routes.ROOT);
+		} catch (error) {
+			console.error('Error during Google sign-in:', (error as Error).message);
+		}
+	}
 
 	async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
 		event.preventDefault();
@@ -183,7 +194,7 @@ export default function Login() {
 
 								<div className="mt-6 grid grid-cols-2 gap-4">
 									<a
-										href="#"
+										onClick={handleGoogleProvider}
 										className="flex w-full items-center justify-center gap-3 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50 focus-visible:ring-transparent"
 									>
 										<GoogleIcon />
