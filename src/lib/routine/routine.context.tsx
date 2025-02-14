@@ -2,13 +2,13 @@ import React, { createContext, PropsWithChildren, useContext, useEffect, useStat
 import { Routine, RoutineTime } from '@/lib/routine/routine.type';
 import { fetchRoutines, updateTimedRoutines } from '@/lib/routine/routine.repository';
 import { useAuth } from '@/lib/auth-context';
-import { move } from '@dnd-kit/helpers';
 
 const RoutineContext = createContext<{
 	routines: Routine[];
 	timedRoutines: Record<RoutineTime, Routine[]>;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	sortRoutines: (event: any) => void;
+	handleSort: (event: any) => void;
+	setTimedRoutines: React.Dispatch<React.SetStateAction<Record<RoutineTime, Routine[]>>>;
 }>({
 	routines: [],
 	timedRoutines: {
@@ -16,7 +16,8 @@ const RoutineContext = createContext<{
 		afternoon: [],
 		evening: [],
 	},
-	sortRoutines: () => {},
+	handleSort: () => {},
+	setTimedRoutines: () => {},
 });
 
 function timeRoutines(routines: Routine[]) {
@@ -52,20 +53,13 @@ export function RoutineProvider({ children }: PropsWithChildren) {
 		return () => unsubscribe();
 	}, [user]);
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	function sortRoutines(event: any) {
+	function handleSort() {
 		if (!user?.uid) return;
-		setTimedRoutines((items) => {
-			const newItems = move(items, event);
-
-			void updateTimedRoutines(user.uid, newItems);
-
-			return newItems;
-		});
+		void updateTimedRoutines(user.uid, timedRoutines);
 	}
 
 	return (
-		<RoutineContext.Provider value={{ routines, timedRoutines, sortRoutines }}>
+		<RoutineContext.Provider value={{ routines, timedRoutines, setTimedRoutines, handleSort }}>
 			{children}
 		</RoutineContext.Provider>
 	);

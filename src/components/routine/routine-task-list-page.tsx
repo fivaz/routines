@@ -12,26 +12,12 @@ import { emptyTask, Task } from '@/lib/task/task.type';
 import { Button } from '@/components/base/button';
 import { RoutineForm } from '@/components/routine/routine-form';
 import { TaskForm } from '@/components/task/task-form';
-import {
-	closestCenter,
-	DndContext,
-	DragEndEvent,
-	KeyboardSensor,
-	PointerSensor,
-	TouchSensor,
-	useSensor,
-	useSensors,
-} from '@dnd-kit/core';
-import {
-	SortableContext,
-	sortableKeyboardCoordinates,
-	verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
 import { usePrompt } from '@/lib/prompt-context';
 import { ListIcon } from '@/components/icons/ListIcon';
 import { useTasks } from '@/lib/task/task.context';
 import { useRoutine } from '@/lib/routine/routine.hooks';
 import { Heading } from '@/components/base/heading';
+import { DragDropProvider } from '@dnd-kit/react';
 
 export default function RoutineTaskListPage({
 	setPage,
@@ -40,29 +26,12 @@ export default function RoutineTaskListPage({
 }>) {
 	const [routineForm, setRoutineForm] = useState<Routine | null>(null);
 	const [taskForm, setTaskForm] = useState<Task | null>(null);
-	const { handleReorder, tasks } = useTasks();
+	const { handleSort, tasks } = useTasks();
 	const routine = useRoutine();
 
 	const { user } = useAuth();
 	const router = useRouter();
 	const { createPrompt } = usePrompt();
-
-	const sensors = useSensors(
-		useSensor(PointerSensor, {
-			activationConstraint: {
-				distance: 8, // 8px of movement required before drag starts
-			},
-		}),
-		useSensor(TouchSensor, {
-			activationConstraint: {
-				delay: 250, // Optional: Adds a delay before dragging starts (in ms)
-				tolerance: 5, // Optional: Defines how much movement is needed to start dragging
-			},
-		}),
-		useSensor(KeyboardSensor, {
-			coordinateGetter: sortableKeyboardCoordinates,
-		}),
-	);
 
 	if (!routine) return;
 
@@ -93,13 +62,6 @@ export default function RoutineTaskListPage({
 		}
 	}
 
-	function handleDragEnd({ active, over }: DragEndEvent) {
-		if (over && active.id !== over.id) {
-			const oldIndex = tasks.findIndex((r) => r.id === active.id);
-			const newIndex = tasks.findIndex((r) => r.id === over.id);
-			handleReorder(oldIndex, newIndex);
-		}
-	}
 	if (!user) return;
 
 	return (
@@ -145,13 +107,11 @@ export default function RoutineTaskListPage({
 				</div>
 			)}
 
-			<DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-				<SortableContext items={tasks} strategy={verticalListSortingStrategy}>
-					{tasks.map((task) => (
-						<TaskRow key={task.id} userId={user.uid} task={task} routine={routine} />
-					))}
-				</SortableContext>
-			</DndContext>
+			<DragDropProvider onDragEnd={handleSort}>
+				{tasks.map((task, index) => (
+					<TaskRow index={index} key={task.id} userId={user.uid} task={task} routine={routine} />
+				))}
+			</DragDropProvider>
 
 			<div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-20">
 				<Button disabled={tasks.length === 0} color="green" onClick={() => setPage('focus')}>

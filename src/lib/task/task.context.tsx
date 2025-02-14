@@ -1,15 +1,17 @@
 import React, { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react';
 import { Task } from '@/lib/task/task.type';
-import { fetchTasks } from '@/lib/task/task.repository';
+import { fetchTasks, updateTasks } from '@/lib/task/task.repository';
 import { useAuth } from '@/lib/auth-context';
 import { useParams } from 'next/navigation';
+import { move } from '@dnd-kit/helpers';
 
 const TaskContext = createContext<{
 	tasks: Task[];
-	setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	handleSort: (event: any) => void;
 }>({
 	tasks: [],
-	setTasks: () => {},
+	handleSort: () => {},
 });
 
 export function TaskProvider({ children }: PropsWithChildren) {
@@ -25,7 +27,20 @@ export function TaskProvider({ children }: PropsWithChildren) {
 		return () => unsubscribe();
 	}, [user, routineId]);
 
-	return <TaskContext.Provider value={{ tasks, setTasks }}>{children}</TaskContext.Provider>;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	function handleSort(event: any) {
+		console.log('handleSort');
+		if (!user?.uid) return;
+		setTasks((items) => {
+			const newItems = move(items, event);
+
+			void updateTasks(user.uid, routineId, newItems);
+
+			return newItems;
+		});
+	}
+
+	return <TaskContext.Provider value={{ tasks, handleSort }}>{children}</TaskContext.Provider>;
 }
 
 export const useTasks = () => useContext(TaskContext);

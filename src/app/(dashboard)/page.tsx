@@ -10,10 +10,11 @@ import { useRoutines } from '@/lib/routine/routine.context';
 import { RoutineTimeList } from '@/components/routine/routine-time-list';
 import { RoutineRow } from '@/components/routine/routine-row';
 import { DragDropProvider } from '@dnd-kit/react';
+import { move } from '@dnd-kit/helpers';
 
 export default function Routines() {
 	const [routineForm, setRoutineForm] = useState<Routine | null>(null);
-	const { timedRoutines, sortRoutines } = useRoutines();
+	const { timedRoutines, setTimedRoutines, handleSort } = useRoutines();
 
 	function handleAddRoutine() {
 		setRoutineForm({ ...emptyRoutine });
@@ -23,7 +24,10 @@ export default function Routines() {
 		<>
 			<Heading className="mb-4">Routines</Heading>
 
-			<DragDropProvider onDragOver={sortRoutines}>
+			<DragDropProvider
+				onDragOver={(event) => setTimedRoutines((items) => move(items, event))}
+				onDragEnd={handleSort}
+			>
 				<div className="flex flex-col gap-2">
 					{Object.entries(timedRoutines).map(([time, routines]) => (
 						<RoutineTimeList key={time} time={time as RoutineTime}>
