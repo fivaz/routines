@@ -13,7 +13,7 @@ import {
 import { db, storage } from '@/lib/firebase';
 import { deleteObject, getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { Task } from '@/lib/task/task.type';
-import { generateImage } from '@/app/(dashboard)/routine/[routineId]/actions';
+import { generateImage, ImageFocus } from '@/app/(dashboard)/routine/[routineId]/actions';
 import { Routine } from '@/lib/routine/routine.type';
 import { getRoutinePath } from '@/lib/routine/routine.repository';
 
@@ -55,8 +55,8 @@ async function convertImageUrlToBlob(imageUrl: string) {
 	return await response.blob();
 }
 
-async function getGeneratedImageFile(taskName: string) {
-	const temporaryImageUrl = await generateImage(taskName);
+async function getGeneratedImageFile(taskName: string, focus: ImageFocus) {
+	const temporaryImageUrl = await generateImage(taskName, focus);
 
 	return convertImageUrlToBlob(temporaryImageUrl);
 }
@@ -67,12 +67,13 @@ async function handleTaskImage(
 	taskId: string,
 	imageFile: File | null,
 	task: Task,
+	focus: ImageFocus,
 ): Promise<string> {
 	try {
 		if (imageFile) {
 			return await getImageUrl(userId, routineId, taskId, imageFile);
 		} else {
-			const blob = await getGeneratedImageFile(task.name);
+			const blob = await getGeneratedImageFile(task.name, focus);
 			return await getImageUrl(userId, routineId, taskId, blob);
 		}
 	} catch (error) {
@@ -87,18 +88,19 @@ interface TaskOperationResult {
 	task?: Task;
 }
 
-export async function addTask(
+export async function addTaskServer(
 	userId: string,
 	routineId: string,
 	task: Task,
 	imageFile: File | null,
+	focus: ImageFocus,
 ): Promise<TaskOperationResult> {
 	try {
 		const newTaskRef = doc(collection(db, getTaskPath(userId, routineId)));
 		const taskId = newTaskRef.id;
 
 		// Handle image
-		const image = await handleTaskImage(userId, routineId, taskId, imageFile, task);
+		const image = await handleTaskImage(userId, routineId, taskId, imageFile, task, focus);
 		const newTask = { ...task, id: taskId, image };
 		// const newTask = { ...task, id: taskId };
 
@@ -136,6 +138,7 @@ export async function editTask(
 	task: Task,
 	imageFile: File | null,
 	newRoutineId: string,
+	focus: ImageFocus,
 ): Promise<TaskOperationResult> {
 	try {
 		let updatedTask = task;
@@ -145,7 +148,7 @@ export async function editTask(
 			if (task.image) {
 				await deleteImage(userId, routineId, task.id);
 			}
-			const image = await handleTaskImage(userId, routineId, task.id, imageFile, task);
+			const image = await handleTaskImage(userId, routineId, task.id, imageFile, task, focus);
 			updatedTask = { ...task, image };
 		}
 

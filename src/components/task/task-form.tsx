@@ -4,15 +4,15 @@ import { Field, FieldGroup, Fieldset, Label } from '@/components/base/fieldset';
 import { Input } from '@/components/base/input';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { Task } from '@/lib/task/task.type';
-import { addTask, editTask } from '@/lib/task/task.repository';
+import { editTask } from '@/lib/task/task.repository';
 import { useAuth } from '@/lib/user/auth-context';
 import { addSeconds, format, parse, startOfDay } from 'date-fns';
 import { HHmmss } from '@/lib/consts';
-import { ImageIcon, ImageUpscaleIcon, Loader2 } from 'lucide-react';
-import { ImageDialog } from '@/components/ImageDialog';
-import { generateImage } from '@/app/(dashboard)/routine/[routineId]/actions';
 import { Listbox, ListboxOption } from '@/components/base/listbox';
 import { useRoutines } from '@/lib/routine/routine.context';
+import { useAddTask } from '@/lib/task/task.hooks';
+import { ImageFocus } from '@/app/(dashboard)/routine/[routineId]/actions';
+import { ImageForm } from '@/components/ImageForm';
 
 export function TaskForm({
 	setTaskIn,
@@ -23,12 +23,11 @@ export function TaskForm({
 	routineId: string;
 	taskIn: Task | null;
 }>) {
-	const [imageFile, setImageFile] = useState<File | null>(null);
-	const [isImageOpen, setIsImageOpen] = useState(false);
-	// const [error, setError] = useState('');
-	const [loading, setLoading] = useState(false);
 	const { routines } = useRoutines();
 	const [newRoutineId, setNewRoutineId] = useState<string>(routineId);
+	const [imageFile, setImageFile] = useState<File | null>(null);
+	const [focus, setFocus] = useState<ImageFocus>('person');
+	const { addTask } = useAddTask();
 
 	const { user } = useAuth();
 
@@ -40,17 +39,11 @@ export function TaskForm({
 	async function handleSubmit() {
 		if (!user || !taskIn) return;
 		if (taskIn.id) {
-			void editTask(user.uid, routineId, taskIn, imageFile, newRoutineId);
+			void editTask(user.uid, routineId, taskIn, imageFile, newRoutineId, focus);
 		} else {
-			void addTask(user.uid, newRoutineId, taskIn, imageFile);
+			addTask(taskIn, newRoutineId, imageFile, focus);
 		}
 		close();
-	}
-
-	function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-		if (e.target.files) {
-			setImageFile(e.target.files[0]);
-		}
 	}
 
 	function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
@@ -75,21 +68,6 @@ export function TaskForm({
 		return format(date, HHmmss); // Format to HH:mm
 	}
 
-	async function handleImageGeneration() {
-		if (!taskIn) return;
-		setLoading(true);
-
-		try {
-			const image = await generateImage(taskIn.name);
-			setTaskIn({ ...taskIn, image });
-		} catch (err) {
-			// setError('Failed to generate image. Please try again.');
-			console.error('Error:', err);
-		} finally {
-			setLoading(false);
-		}
-	}
-
 	function handleSelect(routineId: string) {
 		setNewRoutineId(routineId);
 	}
@@ -111,30 +89,14 @@ export function TaskForm({
 								</Field>
 								<div className="grid grid-cols-1 gap-8 sm:grid-cols-3 sm:gap-4">
 									<Field className="sm:col-span-2">
-										<Label>
-											<div className="flex justify-between">
-												<span>Upload Image</span>
-												{taskIn.image ? (
-													<button onClick={() => setIsImageOpen(true)}>
-														<ImageUpscaleIcon className="w-5 h-5 text-green-500" />
-													</button>
-												) : (
-													<button onClick={handleImageGeneration} disabled={loading}>
-														{loading ? (
-															<Loader2 className="mr-2 h-4 w-4 animate-spin" />
-														) : (
-															<ImageIcon className="w-5 h-5 text-green-500" />
-														)}
-													</button>
-												)}
-											</div>
-										</Label>
-										<Input
-											type="file"
-											onChange={handleFileChange}
-											innerClassName="bg-cover bg-center"
-											style={{ backgroundImage: `url(${taskIn.image})` }}
-										/>
+										<Label>Routine</Label>
+										<Listbox name="routineId" value={newRoutineId} onChange={handleSelect}>
+											{routines.map((routine) => (
+												<ListboxOption key={routine.id} value={routine.id}>
+													{routine.name}
+												</ListboxOption>
+											))}
+										</Listbox>
 									</Field>
 									<Field>
 										<Label>Duration</Label>
@@ -147,17 +109,17 @@ export function TaskForm({
 										/>
 									</Field>
 								</div>
-								<Field>
-									<Label>Routine</Label>
-									<Listbox name="routineId" value={newRoutineId} onChange={handleSelect}>
-										{routines.map((routine) => (
-											<ListboxOption key={routine.id} value={routine.id}>
-												{routine.name}
-											</ListboxOption>
-										))}
-									</Listbox>
-								</Field>
 							</FieldGroup>
+
+							<div className="mt-5">
+								<ImageForm
+									taskIn={taskIn}
+									focus={focus}
+									setFocus={setFocus}
+									setTaskIn={setTaskIn}
+									setImageFile={setImageFile}
+								/>
+							</div>
 						</Fieldset>
 					</DialogBody>
 
@@ -169,7 +131,6 @@ export function TaskForm({
 							{taskIn.id ? 'Edit' : 'Create'}
 						</Button>
 					</DialogActions>
-					<ImageDialog image={taskIn.image} isOpen={isImageOpen} setIsOpen={setIsImageOpen} />
 				</>
 			)}
 		</Dialog>

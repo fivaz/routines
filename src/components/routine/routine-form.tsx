@@ -6,8 +6,7 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import { Routine } from '@/lib/routine/routine.type';
 import { addRoutine, editRoutine } from '@/lib/routine/routine.repository';
 import { useAuth } from '@/lib/user/auth-context';
-import { ImageIcon } from 'lucide-react';
-import { ImageDialog } from '@/components/ImageDialog';
+import { ImageDialogButton } from '@/components/ImageDialogButton';
 
 export function RoutineForm({
 	routineIn,
@@ -69,11 +68,7 @@ export function RoutineForm({
 										<Label>
 											<div className="flex justify-between">
 												<span>Upload Image</span>
-												{routineIn.image && (
-													<button onClick={() => setIsImageOpen(true)}>
-														<ImageIcon className="w-5 h-5 text-green-500" />
-													</button>
-												)}
+												{routineIn.image && <ImageDialogButton image={routineIn.image} />}
 											</div>
 										</Label>
 										<Input
@@ -95,7 +90,6 @@ export function RoutineForm({
 								{routineIn.id ? 'Edit' : 'Create'}
 							</Button>
 						</DialogActions>
-						<ImageDialog image={routineIn.image} isOpen={isImageOpen} setIsOpen={setIsImageOpen} />
 					</>
 				)}
 			</Dialog>

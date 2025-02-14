@@ -1,4 +1,12 @@
-import React, { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react';
+import React, {
+	createContext,
+	Dispatch,
+	PropsWithChildren,
+	SetStateAction,
+	useContext,
+	useEffect,
+	useState,
+} from 'react';
 import { Task } from '@/lib/task/task.type';
 import { fetchTasks, updateTasks } from '@/lib/task/task.repository';
 import { useAuth } from '@/lib/user/auth-context';
@@ -9,9 +17,11 @@ const TaskContext = createContext<{
 	tasks: Task[];
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	handleSort: (event: any) => void;
+	setTasks: Dispatch<SetStateAction<Task[]>>;
 }>({
 	tasks: [],
 	handleSort: () => {},
+	setTasks: () => {},
 });
 
 export function TaskProvider({ children }: PropsWithChildren) {
@@ -40,7 +50,9 @@ export function TaskProvider({ children }: PropsWithChildren) {
 		});
 	}
 
-	return <TaskContext.Provider value={{ tasks, handleSort }}>{children}</TaskContext.Provider>;
+	return (
+		<TaskContext.Provider value={{ tasks, setTasks, handleSort }}>{children}</TaskContext.Provider>
+	);
 }
 
 export const useTasks = () => useContext(TaskContext);
