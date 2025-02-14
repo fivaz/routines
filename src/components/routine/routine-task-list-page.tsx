@@ -16,8 +16,9 @@ import { usePrompt } from '@/lib/prompt-context';
 import { ListIcon } from '@/components/icons/ListIcon';
 import { useTasks } from '@/lib/task/task.context';
 import { useRoutine } from '@/lib/routine/routine.hooks';
-import { Heading } from '@/components/base/heading';
+import { Heading, Subheading } from '@/components/base/heading';
 import { DragDropProvider } from '@dnd-kit/react';
+import { formatSeconds } from '@/lib/task/task.utils';
 
 export default function RoutineTaskListPage({
 	setPage,
@@ -67,7 +68,10 @@ export default function RoutineTaskListPage({
 	return (
 		<div className="flex flex-col gap-5">
 			<div className="flex justify-between items-center">
-				<Heading>{routine.name}</Heading>
+				<div className="flex gap-2 items-center">
+					<Heading>{routine.name}</Heading>
+					<Subheading>({formatSeconds(routine.totalDuration)})</Subheading>
+				</div>
 
 				<div className="flex gap-3">
 					<div className="hidden md:block">
