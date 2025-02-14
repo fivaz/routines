@@ -1,7 +1,9 @@
 'use client';
 import { createContext, useContext, useEffect, useState } from 'react';
-import { onAuthStateChanged, User } from 'firebase/auth';
+import { getRedirectResult, onAuthStateChanged, User } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
+import { useRouter } from 'next/navigation';
+import { Routes } from './consts';
 
 const AuthContext = createContext<{
 	user: User | null;
@@ -11,8 +13,16 @@ const AuthContext = createContext<{
 export function AuthProvider({ children }: { children: React.ReactNode }) {
 	const [user, setUser] = useState<User | null>(null);
 	const [loading, setLoading] = useState(true);
+	const router = useRouter();
 
 	useEffect(() => {
+		getRedirectResult(auth).then((result) => {
+			if (result) {
+				// User is signed in
+				void router.push(Routes.ROOT);
+			}
+		});
+
 		const unsubscribe = onAuthStateChanged(auth, (user) => {
 			setUser(user);
 			setLoading(false);

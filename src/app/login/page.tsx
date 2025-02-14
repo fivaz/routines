@@ -1,7 +1,12 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { parseErrors, validateFields } from './service';
-import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import {
+	GoogleAuthProvider,
+	signInWithEmailAndPassword,
+	signInWithPopup,
+	signInWithRedirect,
+} from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import { auth } from '@/lib/firebase';
 import { Routes } from '@/lib/consts';
@@ -39,8 +44,13 @@ export default function Login() {
 		const provider = new GoogleAuthProvider();
 
 		try {
-			await signInWithPopup(auth, provider);
-			void router.push(Routes.ROOT);
+			if (window.innerWidth > 768) {
+				await signInWithPopup(auth, provider);
+				void router.push(Routes.ROOT);
+			} else {
+				// Use redirect on mobile
+				await signInWithRedirect(auth, provider);
+			}
 		} catch (error) {
 			console.error('Error during Google sign-in:', (error as Error).message);
 		}
