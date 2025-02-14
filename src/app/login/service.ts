@@ -1,4 +1,8 @@
 import { FirebaseError } from 'firebase/app';
+import type { User } from 'firebase/auth';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
+import { createUserInDB, storeAvatar } from '@/lib/user/user.repository';
 
 export function checkEmail(email: string): boolean {
 	return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
@@ -34,4 +38,26 @@ export function parseErrors(error: unknown) {
 		console.error(error);
 		return 'Unexpected error';
 	}
+}
+
+export async function register(
+	displayName: string,
+	email: string,
+	password: string,
+	avatar: string,
+) {
+	const { user } = await createUserWithEmailAndPassword(auth, email, password);
+
+	return createUser(user, displayName, email, avatar);
+}
+
+export async function createUser(user: User, displayName: string, email: string, avatar: string) {
+	const photoURL = await storeAvatar(
+		user.uid,
+		new Blob([avatar], { type: 'image/svg+xml;charset=utf-8' }),
+	);
+
+	await updateProfile(user, { displayName, photoURL });
+
+	await createUserInDB(user.uid, displayName, email, photoURL);
 }

@@ -5,7 +5,7 @@ import { Input } from '@/components/base/input';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { Task } from '@/lib/task/task.type';
 import { addTask, editTask } from '@/lib/task/task.repository';
-import { useAuth } from '@/lib/auth-context';
+import { useAuth } from '@/lib/user/auth-context';
 import { addSeconds, format, parse, startOfDay } from 'date-fns';
 import { HHmmss } from '@/lib/consts';
 import { ImageIcon, ImageUpscaleIcon, Loader2 } from 'lucide-react';

@@ -2,7 +2,7 @@ import { Dispatch, PropsWithChildren, SetStateAction, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 import { deleteRoutine } from '@/lib/routine/routine.repository';
-import { useAuth } from '@/lib/auth-context';
+import { useAuth } from '@/lib/user/auth-context';
 import { type Routine } from '@/lib/routine/routine.type';
 import { Dropdown, DropdownButton, DropdownItem, DropdownMenu } from '@/components/base/dropdown';
 import { Ellipsis, PlusIcon, ZapIcon } from 'lucide-react';

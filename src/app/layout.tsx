@@ -1,4 +1,4 @@
-import { AuthProvider } from '@/lib/auth-context';
+import { AuthProvider } from '@/lib/user/auth-context';
 import './globals.css';
 import { type ReactNode } from 'react';
 import { PromptProvider } from '@/lib/prompt-context';

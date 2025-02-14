@@ -3,7 +3,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { getRedirectResult, onAuthStateChanged, User } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { useRouter } from 'next/navigation';
-import { Routes } from './consts';
+import { Routes } from '../consts';
 
 const AuthContext = createContext<{
 	user: User | null;

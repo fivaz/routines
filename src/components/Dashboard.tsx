@@ -26,7 +26,7 @@ import {
 } from '@/components/base/sidebar';
 import { StackedLayout } from '@/components/base/stacked-layout';
 import { ArrowRightStartOnRectangleIcon, UserIcon } from '@heroicons/react/16/solid';
-import { useAuth } from '@/lib/auth-context';
+import { useAuth } from '@/lib/user/auth-context';
 import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { APP_NAME, Routes } from '@/lib/consts';

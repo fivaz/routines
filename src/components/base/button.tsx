@@ -187,7 +187,7 @@ export const Button = forwardRef(function Button(
 			<TouchTarget>{children}</TouchTarget>
 		</Link>
 	) : (
-		<Headless.Button {...props} className={clsx(classes, 'cursor-default')} ref={ref}>
+		<Headless.Button {...props} className={clsx(classes, 'cursor-pointer')} ref={ref}>
 			{isLoading && (
 				<LoaderCircle className={styles.colors[color ?? 'dark/zinc'] && 'animate-spin'} />
 			)}

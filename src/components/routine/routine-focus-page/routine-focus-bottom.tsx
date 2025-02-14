@@ -1,7 +1,7 @@
 import { formatSeconds } from '@/lib/task/task.utils';
 import { ChevronLeft, ChevronRight, CircleStop, Play } from 'lucide-react';
 import { persistTask } from '@/lib/task/task.repository';
-import { useAuth } from '@/lib/auth-context';
+import { useAuth } from '@/lib/user/auth-context';
 import { usePrompt } from '@/lib/prompt-context';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';

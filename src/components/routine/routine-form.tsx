@@ -5,7 +5,7 @@ import { Input } from '@/components/base/input';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { Routine } from '@/lib/routine/routine.type';
 import { addRoutine, editRoutine } from '@/lib/routine/routine.repository';
-import { useAuth } from '@/lib/auth-context';
+import { useAuth } from '@/lib/user/auth-context';
 import { ImageIcon } from 'lucide-react';
 import { ImageDialog } from '@/components/ImageDialog';
 

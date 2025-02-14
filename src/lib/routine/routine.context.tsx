@@ -1,7 +1,7 @@
 import React, { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react';
 import { Routine, RoutineTime } from '@/lib/routine/routine.type';
 import { fetchRoutines, updateTimedRoutines } from '@/lib/routine/routine.repository';
-import { useAuth } from '@/lib/auth-context';
+import { useAuth } from '@/lib/user/auth-context';
 
 const RoutineContext = createContext<{
 	routines: Routine[];

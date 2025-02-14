@@ -1,7 +1,7 @@
 import React, { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react';
 import { Task } from '@/lib/task/task.type';
 import { fetchTasks, updateTasks } from '@/lib/task/task.repository';
-import { useAuth } from '@/lib/auth-context';
+import { useAuth } from '@/lib/user/auth-context';
 import { useParams } from 'next/navigation';
 import { move } from '@dnd-kit/helpers';
 

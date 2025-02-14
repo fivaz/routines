@@ -2,7 +2,7 @@
 import { Dashboard } from '@/components/Dashboard';
 import { useEffect } from 'react';
 import { Routes } from '@/lib/consts';
-import { useAuth } from '@/lib/auth-context';
+import { useAuth } from '@/lib/user/auth-context';
 import { useRouter } from 'next/navigation';
 import { LoaderCircle } from 'lucide-react';
 import { RoutineProvider } from '@/lib/routine/routine.context';
