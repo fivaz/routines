@@ -12,9 +12,9 @@
     "tsc": "tsc --noEmit --watch"
   },
   "dependencies": {
-    "@dnd-kit/core": "^6.3.1",
-    "@dnd-kit/sortable": "^10.0.0",
-    "@dnd-kit/utilities": "^3.2.2",
+    "@dnd-kit/abstract": "^0.0.9",
+    "@dnd-kit/helpers": "^0.0.9",
+    "@dnd-kit/react": "^0.0.9",
     "@google/generative-ai": "^0.21.0",
     "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.2.0",

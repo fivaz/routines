@@ -1,34 +1,35 @@
 import { PropsWithChildren } from 'react';
-import { Routine } from '@/lib/routine/routine.type';
+import { Routine, RoutineTime } from '@/lib/routine/routine.type';
+
 import { Routes } from '@/lib/consts';
 import Link from 'next/link';
-
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+import { useSortable } from '@dnd-kit/react/sortable';
 import { GripVerticalIcon } from 'lucide-react';
 import { Button } from '@/components/base/button';
 import { formatSeconds } from '@/lib/task/task.utils';
 
-export function RoutineRow({ routine }: PropsWithChildren<{ routine: Routine }>) {
-	const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+export function RoutineRow({
+	routine,
+	index,
+	time,
+}: PropsWithChildren<{ routine: Routine; index: number; time: RoutineTime }>) {
+	const { ref, isDragging } = useSortable({
 		id: routine.id,
+		index,
+		type: 'item',
+		accept: 'item',
+		group: time,
 	});
-
-	const style = {
-		transform: CSS.Transform.toString(transform),
-		transition,
-	};
 
 	return (
 		<div
-			ref={setNodeRef}
-			{...attributes}
+			ref={ref}
+			data-dragging={isDragging}
 			className="group hover:border border-green-400 relative bg-sky-400 h-40 flex flex-col bg-cover bg-center rounded-lg"
-			style={{ backgroundImage: `url('${routine.image}')`, ...style }}
+			style={{ backgroundImage: `url('${routine.image}')` }}
 		>
 			<div className="z-20 absolute top-4 left-4">
 				<Button
-					{...listeners}
 					outline
 					className="touch-none dark cursor-grab"
 					onClick={(e: React.MouseEvent<HTMLButtonElement>) => {

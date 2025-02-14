@@ -1,16 +1,15 @@
 import React, { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react';
 import { Task } from '@/lib/task/task.type';
-import { fetchTasks, reorderTasks } from '@/lib/task/task.repository';
+import { fetchTasks } from '@/lib/task/task.repository';
 import { useAuth } from '@/lib/auth-context';
 import { useParams } from 'next/navigation';
-import { arrayMove } from '@dnd-kit/sortable';
 
 const TaskContext = createContext<{
 	tasks: Task[];
-	handleReorder: (newIndex: number, oldIndex: number) => void;
+	setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
 }>({
 	tasks: [],
-	handleReorder: () => {},
+	setTasks: () => {},
 });
 
 export function TaskProvider({ children }: PropsWithChildren) {
@@ -26,16 +25,7 @@ export function TaskProvider({ children }: PropsWithChildren) {
 		return () => unsubscribe();
 	}, [user, routineId]);
 
-	const handleReorder = async (oldIndex: number, newIndex: number) => {
-		if (!tasks || !user) return;
-
-		const newTasks = arrayMove(tasks, oldIndex, newIndex);
-		setTasks(newTasks);
-
-		void reorderTasks(user.uid, routineId, newTasks);
-	};
-
-	return <TaskContext.Provider value={{ tasks, handleReorder }}>{children}</TaskContext.Provider>;
+	return <TaskContext.Provider value={{ tasks, setTasks }}>{children}</TaskContext.Provider>;
 }
 
 export const useTasks = () => useContext(TaskContext);

@@ -1,4 +1,3 @@
-import { DB_PATH } from '@/lib/consts';
 import {
 	collection,
 	deleteDoc,
@@ -83,7 +82,7 @@ export function deleteRoutine(userId: string, routineId: string) {
 	deleteDoc(doc(db, getRoutinePath(userId), routineId));
 }
 
-export async function reorderRoutines(userId: string, routines: Routine[]) {
+export async function updateRoutines(userId: string, routines: Routine[]) {
 	const batch = writeBatch(db);
 
 	routines.forEach((routine, index) => {
