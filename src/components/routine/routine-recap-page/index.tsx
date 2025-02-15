@@ -2,9 +2,9 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import { Task } from '@/lib/task/task.type';
 import { Heading } from '@/components/base/heading';
 import { Text } from '@/components/base/text';
-import { formatSeconds, getDuration, getDurationFromDate, getHistory } from '@/lib/task/task.utils';
+import { formatSeconds, getDuration, getHistory } from '@/lib/task/task.utils';
 import { TaskHistoryCarousel } from '@/components/routine/routine-recap-page/task-history-carousel';
-import { UndoIcon } from 'lucide-react';
+import { ChevronDownIcon, ChevronUpIcon, UndoIcon } from 'lucide-react';
 import { Button } from '@/components/base/button';
 import { useTasks } from '@/lib/task/task.context';
 import Image from 'next/image';
@@ -18,11 +18,19 @@ export function RoutineRecapPage({
 	const { tasks } = useTasks();
 
 	function getTimeFromDate(task: Task) {
-		const history = getHistory(task, date);
-		if (!history) {
+		const duration = getDurationFromDate(task, date);
+		if (!duration) {
 			return '-';
 		}
-		return formatSeconds(getDuration(history.startAt, history.endAt));
+		return formatSeconds(duration);
+	}
+
+	function getDurationFromDate(task: Task, date: string) {
+		const history = getHistory(task, date);
+		if (!history) {
+			return 0;
+		}
+		return getDuration(history.startAt, history.endAt);
 	}
 
 	function getExpectedTime() {
@@ -35,6 +43,25 @@ export function RoutineRecapPage({
 		const totalDuration = tasks.reduce((sum, task) => sum + getDurationFromDate(task, date), 0);
 
 		return formatSeconds(totalDuration);
+	}
+
+	function DeltaIcon({ task }: { task: Task }) {
+		const expectedTime = task.durationInSeconds;
+		const actualTime = getDurationFromDate(task, date);
+
+		if (actualTime === 0) {
+			return <div className="size-5"></div>;
+		}
+
+		if (expectedTime < actualTime) {
+			return <ChevronUpIcon className="text-red-500 size-5" />;
+		}
+
+		if (expectedTime > actualTime) {
+			return <ChevronDownIcon className="text-green-500 size-5" />;
+		}
+
+		return <div className="size-5"></div>;
 	}
 
 	return (
@@ -61,7 +88,10 @@ export function RoutineRecapPage({
 								<Text className="truncate">{task.name}</Text>
 							</div>
 							<Text className="w-1/4 text-right">{formatSeconds(task.durationInSeconds)}</Text>
-							<Text className="w-1/4 text-right">{getTimeFromDate(task)}</Text>
+							<div className="w-1/4 flex gap-2 items-center justify-end">
+								<Text>{getTimeFromDate(task)}</Text>
+								<DeltaIcon task={task} />
+							</div>
 						</li>
 					))}
 				</ul>
