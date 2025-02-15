@@ -5,7 +5,7 @@ import { deleteRoutine } from '@/lib/routine/routine.repository';
 import { useAuth } from '@/lib/user/auth-context';
 import { type Routine } from '@/lib/routine/routine.type';
 import { Dropdown, DropdownButton, DropdownItem, DropdownMenu } from '@/components/base/dropdown';
-import { Ellipsis, PlusIcon, ZapIcon } from 'lucide-react';
+import { Ellipsis, PlusIcon, ScrollTextIcon, ZapIcon } from 'lucide-react';
 import { Routes } from '@/lib/consts';
 import { TaskRow } from '@/components/task/task-row';
 import { emptyTask, Task } from '@/lib/task/task.type';
@@ -74,20 +74,25 @@ export default function RoutineTaskListPage({
 				</div>
 
 				<div className="flex gap-3">
-					<div className="hidden md:block">
+					<div className="hidden md:flex gap-3">
 						<Button outline onClick={handleAddTask}>
 							<PlusIcon className="size-5" />
+						</Button>
+						<Button outline onClick={handleGoToRecap}>
+							<ScrollTextIcon className="size-5" />
 						</Button>
 					</div>
 					<Dropdown>
 						<DropdownButton outline>
-							<Ellipsis />
+							<Ellipsis className="size-5" />
 						</DropdownButton>
 						<DropdownMenu>
 							<DropdownItem className="block md:hidden" onClick={handleAddTask}>
 								Add task
 							</DropdownItem>
-							<DropdownItem onClick={handleGoToRecap}>Go to recap</DropdownItem>
+							<DropdownItem className="block md:hidden" onClick={handleGoToRecap}>
+								Go to recap
+							</DropdownItem>
 							<DropdownItem onClick={handleEdit}>Edit</DropdownItem>
 							<DropdownItem onClick={handleDelete}>
 								<div className="text-red-500">Delete</div>

@@ -39,10 +39,10 @@ export function RoutineRecapPage({
 
 	return (
 		<div className="flex flex-col">
-			<div className="flex justify-between">
+			<div className="flex justify-between items-center">
 				<Heading className="pb-4">Recap</Heading>
-				<Button plain onClick={() => setPage('list')}>
-					<UndoIcon />
+				<Button outline onClick={() => setPage('list')}>
+					<UndoIcon className="size-5" />
 				</Button>
 			</div>
 			<TaskHistoryCarousel date={date} setDate={setDate} />
