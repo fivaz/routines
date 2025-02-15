@@ -7,6 +7,7 @@ import { TaskHistoryCarousel } from '@/components/routine/routine-recap-page/tas
 import { UndoIcon } from 'lucide-react';
 import { Button } from '@/components/base/button';
 import { useTasks } from '@/lib/task/task.context';
+import Image from 'next/image';
 
 export function RoutineRecapPage({
 	setPage,
@@ -54,8 +55,11 @@ export function RoutineRecapPage({
 				</li>
 				<ul role="list" className=" divide-y divide-gray-200 ">
 					{tasks.map((task) => (
-						<li key={task.id} className="py-4 flex justify-between">
-							<Text className="w-2/4 truncate">{task.name}</Text>
+						<li key={task.id} className="py-2 flex justify-between items-center">
+							<div className="w-2/4 flex gap-2 items-center">
+								<Image src={task.image} alt="task" className="rounded-md" width={40} height={40} />
+								<Text className="truncate">{task.name}</Text>
+							</div>
 							<Text className="w-1/4 text-right">{formatSeconds(task.durationInSeconds)}</Text>
 							<Text className="w-1/4 text-right">{getTimeFromDate(task)}</Text>
 						</li>
