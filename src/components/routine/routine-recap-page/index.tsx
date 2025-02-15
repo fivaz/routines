@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import { Task } from '@/lib/task/task.type';
 import { Heading } from '@/components/base/heading';
 import { Text } from '@/components/base/text';
-import { formatSeconds, getDuration, getHistory } from '@/lib/task/task.utils';
+import { formatSeconds, formatSecondsSmall, getDuration, getHistory } from '@/lib/task/task.utils';
 import { TaskHistoryCarousel } from '@/components/routine/routine-recap-page/task-history-carousel';
 import { ChevronDownIcon, ChevronUpIcon, UndoIcon } from 'lucide-react';
 import { Button } from '@/components/base/button';
@@ -16,14 +16,6 @@ export function RoutineRecapPage({
 }) {
 	const [date, setDate] = useState<string>(new Date().toISOString().split('T')[0]);
 	const { tasks } = useTasks();
-
-	function getTimeFromDate(task: Task) {
-		const duration = getDurationFromDate(task, date);
-		if (!duration) {
-			return '-';
-		}
-		return formatSeconds(duration);
-	}
 
 	function getDurationFromDate(task: Task, date: string) {
 		const history = getHistory(task, date);
@@ -80,16 +72,35 @@ export function RoutineRecapPage({
 					<Text className="w-1/4 text-right">{getExpectedTime()}</Text>
 					<Text className="w-1/4 text-right">{getActualTime()}</Text>
 				</li>
-				<ul role="list" className=" divide-y divide-gray-200 ">
+				<ul role="list" className=" divide-y divide-gray-200">
 					{tasks.map((task) => (
-						<li key={task.id} className="py-2 flex justify-between items-center">
-							<div className="w-2/4 flex gap-2 items-center">
-								<Image src={task.image} alt="task" className="rounded-md" width={40} height={40} />
-								<Text className="truncate">{task.name}</Text>
+						<li key={task.id} className="py-2 gap-2 flex justify-between items-center">
+							<div className="flex gap-2 items-center w-1/2 truncate">
+								<Image
+									src={task.image}
+									alt="task"
+									className="md:size-10 size-8 rounded-md"
+									width={40}
+									height={40}
+								/>
+
+								<Text className="w-1/2 truncate">{task.name}</Text>
 							</div>
-							<Text className="w-1/4 text-right">{formatSeconds(task.durationInSeconds)}</Text>
-							<div className="w-1/4 flex gap-2 items-center justify-end">
-								<Text>{getTimeFromDate(task)}</Text>
+							<div className="flex gap-2 items-center">
+								<Text className="hidden md:block w-30 text-right">
+									{formatSeconds(task.durationInSeconds)}
+								</Text>
+								<Text className="block md:hidden w-17 text-right">
+									{formatSecondsSmall(task.durationInSeconds)}
+								</Text>
+
+								<Text className="hidden md:block w-30 text-right">
+									{formatSeconds(getDurationFromDate(task, date))}
+								</Text>
+								<Text className="block md:hidden w-17 text-right">
+									{formatSecondsSmall(getDurationFromDate(task, date))}
+								</Text>
+
 								<DeltaIcon task={task} />
 							</div>
 						</li>
