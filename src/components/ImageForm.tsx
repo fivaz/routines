@@ -3,12 +3,13 @@ import { Field, FieldGroup, Label } from '@/components/base/fieldset';
 import { ChevronDownIcon, ImageIcon } from 'lucide-react';
 import { Input } from '@/components/base/input';
 import { Radio, RadioField, RadioGroup } from '@/components/base/radio';
-import { Task } from '@/lib/task/task.type';
+import { ImageFocus, Task } from '@/lib/task/task.type';
 import { ImageDialogButton } from '@/components/ImageDialogButton';
-import { generateImage, ImageFocus } from '@/app/(dashboard)/routine/[routineId]/actions';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { Text } from '@/components/base/text';
 import { Button } from '@/components/base/button';
+import { generateImage } from '@/lib/task/task.repository';
+import { useAuth } from '@/lib/user/auth-context';
 
 export function ImageForm({
 	taskIn,
@@ -16,21 +17,31 @@ export function ImageForm({
 	setTaskIn,
 	setImageFile,
 	setFocus,
+	routineId,
 }: {
 	taskIn: Task;
+	routineId: string;
 	focus: ImageFocus;
 	setTaskIn: Dispatch<SetStateAction<Task | null>>;
 	setImageFile: Dispatch<SetStateAction<File | null>>;
 	setFocus: Dispatch<SetStateAction<ImageFocus>>;
 }) {
+	const { user } = useAuth();
 	const [loading, setLoading] = useState(false);
 	// const [error, setError] = useState('');
 	async function handleImageGeneration() {
-		if (!taskIn) return;
-		setLoading(true);
+		if (!user || !taskIn) return;
+		const tokenId = await user.getIdToken();
+
+		const image = generateImage({
+			routineId,
+			taskId: taskIn.id,
+			taskName: taskIn.name,
+			focus,
+			tokenId,
+		});
 
 		try {
-			const image = await generateImage(taskIn.name, focus);
 			setTaskIn({ ...taskIn, image });
 		} catch (err) {
 			// setError('Failed to generate image. Please try again.');

@@ -3,15 +3,13 @@ import { Dialog, DialogActions, DialogBody, DialogTitle } from '@/components/bas
 import { Field, FieldGroup, Fieldset, Label } from '@/components/base/fieldset';
 import { Input } from '@/components/base/input';
 import { Dispatch, SetStateAction, useState } from 'react';
-import { Task } from '@/lib/task/task.type';
-import { editTask } from '@/lib/task/task.repository';
+import { ImageFocus, Task } from '@/lib/task/task.type';
+import { addTask, editTask } from '@/lib/task/task.repository';
 import { useAuth } from '@/lib/user/auth-context';
 import { addSeconds, format, parse, startOfDay } from 'date-fns';
 import { HHmmss } from '@/lib/consts';
 import { Listbox, ListboxOption } from '@/components/base/listbox';
 import { useRoutines } from '@/lib/routine/routine.context';
-import { useAddTask } from '@/lib/task/task.hooks';
-import { ImageFocus } from '@/app/(dashboard)/routine/[routineId]/actions';
 import { ImageForm } from '@/components/ImageForm';
 
 export function TaskForm({
@@ -27,7 +25,6 @@ export function TaskForm({
 	const [newRoutineId, setNewRoutineId] = useState<string>(routineId);
 	const [imageFile, setImageFile] = useState<File | null>(null);
 	const [focus, setFocus] = useState<ImageFocus>('person');
-	const { addTask } = useAddTask();
 
 	const { user } = useAuth();
 
@@ -38,10 +35,31 @@ export function TaskForm({
 
 	async function handleSubmit() {
 		if (!user || !taskIn) return;
-		if (taskIn.id) {
-			void editTask(user.uid, routineId, taskIn, imageFile, newRoutineId, focus);
-		} else {
-			addTask(taskIn, newRoutineId, imageFile, focus);
+		try {
+			const tokenId = await user.getIdToken();
+
+			if (taskIn.id) {
+				void editTask({
+					userId: user.uid,
+					routineId,
+					newRoutineId,
+					task: taskIn,
+					imageFile,
+					focus,
+					tokenId,
+				});
+			} else {
+				void addTask({
+					userId: user.uid,
+					task: taskIn,
+					routineId: newRoutineId,
+					imageFile,
+					focus,
+					tokenId,
+				});
+			}
+		} catch (error) {
+			console.error(error);
 		}
 		close();
 	}
@@ -113,6 +131,7 @@ export function TaskForm({
 
 							<div className="mt-5">
 								<ImageForm
+									routineId={routineId}
 									taskIn={taskIn}
 									focus={focus}
 									setFocus={setFocus}

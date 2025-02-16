@@ -23,3 +23,5 @@ export const emptyTask: Task = {
 	createdAt: new Date().toISOString(),
 	history: {},
 };
+
+export type ImageFocus = 'person' | 'object';

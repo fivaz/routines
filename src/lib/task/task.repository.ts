@@ -12,8 +12,7 @@ import {
 } from 'firebase/firestore';
 import { db, storage } from '@/lib/firebase';
 import { deleteObject, getDownloadURL, ref, uploadBytes } from 'firebase/storage';
-import { Task } from '@/lib/task/task.type';
-import { generateImage, ImageFocus } from '@/app/(dashboard)/routine/[routineId]/actions';
+import { ImageFocus, Task } from '@/lib/task/task.type';
 import { Routine } from '@/lib/routine/routine.type';
 import { getRoutinePath } from '@/lib/routine/routine.repository';
 
@@ -50,31 +49,66 @@ async function getImageUrl(userId: string, routineId: string, taskId: string, im
 	return await getDownloadURL(imageRef);
 }
 
-async function convertImageUrlToBlob(imageUrl: string) {
-	const response = await fetch(imageUrl);
-	return await response.blob();
+export function generateImage({
+	routineId,
+	taskId,
+	taskName,
+	focus,
+	tokenId,
+}: {
+	routineId: string;
+	taskId: string;
+	taskName: string;
+	focus: ImageFocus;
+	tokenId: string;
+}): string {
+	const body = {
+		taskName,
+		focus,
+		routineId,
+		taskId,
+	};
+
+	try {
+		fetch(`${process.env.BACKEND_URL}/generate-image`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${tokenId}`, // Add Bearer token here
+			},
+			body: JSON.stringify(body), // Send the body as JSON
+		});
+
+		// the image will take time to be generated, so this text will show a placeholder image in the meanwhile
+		return 'waiting_image';
+	} catch (error) {
+		console.error('Error making POST request:', error);
+		return 'error';
+	}
 }
 
-async function getGeneratedImageFile(taskName: string, focus: ImageFocus) {
-	const temporaryImageUrl = await generateImage(taskName, focus);
-
-	return convertImageUrlToBlob(temporaryImageUrl);
-}
-
-async function handleTaskImage(
-	userId: string,
-	routineId: string,
-	taskId: string,
-	imageFile: File | null,
-	task: Task,
-	focus: ImageFocus,
-): Promise<string> {
+async function handleTaskImage({
+	userId,
+	routineId,
+	taskId,
+	taskName,
+	imageFile,
+	focus,
+	tokenId,
+}: {
+	userId: string;
+	routineId: string;
+	taskId: string;
+	taskName: string;
+	imageFile: File | null;
+	focus: ImageFocus;
+	tokenId: string;
+}): Promise<string> {
 	try {
 		if (imageFile) {
 			return await getImageUrl(userId, routineId, taskId, imageFile);
 		} else {
-			const blob = await getGeneratedImageFile(task.name, focus);
-			return await getImageUrl(userId, routineId, taskId, blob);
+			return generateImage({ routineId, taskId, taskName, focus, tokenId });
 		}
 	} catch (error) {
 		console.error('Error handling task image:', error);
@@ -88,19 +122,35 @@ interface TaskOperationResult {
 	task?: Task;
 }
 
-export async function addTaskServer(
-	userId: string,
-	routineId: string,
-	task: Task,
-	imageFile: File | null,
-	focus: ImageFocus,
-): Promise<TaskOperationResult> {
+export async function addTask({
+	userId,
+	routineId,
+	task,
+	imageFile,
+	focus,
+	tokenId,
+}: {
+	userId: string;
+	routineId: string;
+	task: Omit<Task, 'id'>;
+	imageFile: File | null;
+	focus: ImageFocus;
+	tokenId: string;
+}): Promise<TaskOperationResult> {
 	try {
 		const newTaskRef = doc(collection(db, getTaskPath(userId, routineId)));
 		const taskId = newTaskRef.id;
 
 		// Handle image
-		const image = await handleTaskImage(userId, routineId, taskId, imageFile, task, focus);
+		const image = await handleTaskImage({
+			userId,
+			routineId,
+			taskId: taskId,
+			taskName: task.name,
+			imageFile,
+			focus,
+			tokenId,
+		});
 		const newTask = { ...task, id: taskId, image };
 		// const newTask = { ...task, id: taskId };
 
@@ -112,6 +162,7 @@ export async function addTaskServer(
 			// Add the task
 			transaction.set(newTaskRef, newTask);
 
+			// TODO sum the value of taskCount and taskDuration everytime instead of just getting the difference when something is deleted
 			// Update routine summary
 			if (routineDoc.exists()) {
 				const currentTaskCount = (routineDoc.data() as Routine).taskCount || 0;
@@ -125,21 +176,28 @@ export async function addTaskServer(
 			}
 		});
 
-		return { success: true, task: newTask };
+		return { success: true };
 	} catch (error) {
 		console.error('Error adding task:', error);
 		return { success: false, error: error as Error };
 	}
 }
 
-export async function editTask(
-	userId: string,
-	routineId: string,
-	task: Task,
-	imageFile: File | null,
-	newRoutineId: string,
-	focus: ImageFocus,
-): Promise<TaskOperationResult> {
+export async function editTask({
+	userId,
+	routineId,
+	newRoutineId,
+	imageFile,
+	task,
+}: {
+	userId: string;
+	routineId: string;
+	newRoutineId: string;
+	imageFile: File | null;
+	task: Task;
+	focus: ImageFocus;
+	tokenId: string;
+}): Promise<TaskOperationResult> {
 	try {
 		let updatedTask = task;
 
@@ -148,7 +206,8 @@ export async function editTask(
 			if (task.image) {
 				await deleteImage(userId, routineId, task.id);
 			}
-			const image = await handleTaskImage(userId, routineId, task.id, imageFile, task, focus);
+			const image = await getImageUrl(userId, routineId, task.id, imageFile);
+
 			updatedTask = { ...task, image };
 		}
 
