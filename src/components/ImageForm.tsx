@@ -33,7 +33,7 @@ export function ImageForm({
 		if (!user || !taskIn) return;
 		const tokenId = await user.getIdToken();
 
-		const image = generateImage({
+		const image = await generateImage({
 			routineId,
 			taskId: taskIn.id,
 			taskName: taskIn.name,

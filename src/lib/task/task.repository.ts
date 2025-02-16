@@ -49,7 +49,7 @@ async function getImageUrl(userId: string, routineId: string, taskId: string, im
 	return await getDownloadURL(imageRef);
 }
 
-export function generateImage({
+export async function generateImage({
 	routineId,
 	taskId,
 	taskName,
@@ -61,7 +61,7 @@ export function generateImage({
 	taskName: string;
 	focus: ImageFocus;
 	tokenId: string;
-}): string {
+}): Promise<string> {
 	const body = {
 		taskName,
 		focus,
@@ -70,7 +70,7 @@ export function generateImage({
 	};
 
 	try {
-		fetch(`${process.env.BACKEND_URL}/generate-image`, {
+		const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/generate-image`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -79,8 +79,7 @@ export function generateImage({
 			body: JSON.stringify(body), // Send the body as JSON
 		});
 
-		// the image will take time to be generated, so this text will show a placeholder image in the meanwhile
-		return 'waiting_image';
+		return response.text();
 	} catch (error) {
 		console.error('Error making POST request:', error);
 		return 'error';
