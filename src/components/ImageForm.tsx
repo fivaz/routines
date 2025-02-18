@@ -1,23 +1,29 @@
-import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react';
+import {
+	Disclosure,
+	DisclosureButton,
+	DisclosurePanel,
+	Field as HeadlessField,
+	Label as HeadlessLabel,
+	RadioGroup as HeadlessRadioGroup,
+} from '@headlessui/react';
 import { Field, FieldGroup, Label } from '@/components/base/fieldset';
 import { ChevronDownIcon, ImageIcon } from 'lucide-react';
 import { Input } from '@/components/base/input';
-import { Radio, RadioField, RadioGroup } from '@/components/base/radio';
+import { Radio } from '@/components/base/radio';
 import { ImageFocus, Task } from '@/lib/task/task.type';
 import { ImageDialogButton } from '@/components/ImageDialogButton';
-import { Dispatch, SetStateAction, useState } from 'react';
-import { Text } from '@/components/base/text';
+import { Dispatch, SetStateAction } from 'react';
 import { Button } from '@/components/base/button';
 import { generateImage } from '@/lib/task/task.repository';
 import { useAuth } from '@/lib/user/auth-context';
 
 export function ImageForm({
 	taskIn,
-	focus,
 	setTaskIn,
 	setImageFile,
 	setFocus,
 	routineId,
+	close,
 }: {
 	taskIn: Task;
 	routineId: string;
@@ -25,35 +31,41 @@ export function ImageForm({
 	setTaskIn: Dispatch<SetStateAction<Task | null>>;
 	setImageFile: Dispatch<SetStateAction<File | null>>;
 	setFocus: Dispatch<SetStateAction<ImageFocus>>;
+	close: () => void;
 }) {
 	const { user } = useAuth();
-	const [loading, setLoading] = useState(false);
-	// const [error, setError] = useState('');
-	async function handleImageGeneration() {
+
+	async function handleImageGeneration(imageFocus: ImageFocus) {
 		if (!user || !taskIn) return;
+
+		close();
+
 		const tokenId = await user.getIdToken();
 
 		const image = await generateImage({
 			routineId,
 			taskId: taskIn.id,
 			taskName: taskIn.name,
-			focus,
+			focus: imageFocus,
 			tokenId,
 		});
 
-		try {
-			setTaskIn({ ...taskIn, image });
-		} catch (err) {
-			// setError('Failed to generate image. Please try again.');
-			console.error('Error:', err);
-		} finally {
-			setLoading(false);
-		}
+		setTaskIn({ ...taskIn, image });
 	}
 
 	function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-		if (e.target.files) {
-			setImageFile(e.target.files[0]);
+		const file = e.target.files?.[0];
+		if (file) {
+			setImageFile(file);
+			const reader = new FileReader();
+
+			reader.onload = (e) => {
+				if (e.target?.result) {
+					setTaskIn({ ...taskIn, image: e.target.result as string });
+				}
+			};
+
+			reader.readAsDataURL(file);
 		}
 	}
 
@@ -62,58 +74,81 @@ export function ImageForm({
 	}
 
 	return (
-		<>
-			<Disclosure>
-				<DisclosureButton className="group flex w-full items-center justify-between">
-					<Label className="font-semibold">Image</Label>
-					<ChevronDownIcon className="size-5 group-data-[open]:rotate-180" />
-				</DisclosureButton>
-				<DisclosurePanel className="mt-2 text-sm/5 text-white/50">
-					<FieldGroup>
-						<Field>
-							<Label>
-								<div className="flex justify-between">
-									<span>Upload Image</span>
-									{taskIn.image && <ImageDialogButton image={taskIn.image} />}
-								</div>
-							</Label>
+		<Disclosure as="div" className="border rounded-md p-2 dark:border-white border-gray-200 shadow">
+			<DisclosureButton className="group flex w-full items-center justify-between">
+				<Label className="font-semibold">Image</Label>
+				<ChevronDownIcon className="size-5 group-data-[open]:rotate-180 dark:text-white" />
+			</DisclosureButton>
+			<DisclosurePanel className="p-2 text-sm/5 text-white/50">
+				<FieldGroup>
+					<Field>
+						<Label>
+							<div className="flex justify-between">
+								<span>Upload Image</span>
+								{taskIn.image && <ImageDialogButton image={taskIn.image} />}
+							</div>
+						</Label>
+						{taskIn.image === 'waiting_image' ? (
+							<div>waiting image...</div>
+						) : (
 							<Input
 								type="file"
+								accept="image/*"
 								onChange={handleFileChange}
 								innerClassName="bg-cover bg-center"
 								style={{ backgroundImage: `url(${taskIn.image})` }}
 							/>
-						</Field>
+						)}
+					</Field>
+					{taskIn.id ? (
 						<Field>
-							<Text className="text-center mb-5">Or</Text>
-							<Label>
-								<div className="flex justify-between items-center">
-									Let an image be generated for:
-									<Button color="green" onClick={handleImageGeneration}>
-										<ImageIcon />
-										Generate image
-									</Button>
-								</div>
-							</Label>
-							<RadioGroup
-								name="resale"
+							<Label>Or generate an image for:</Label>
+							<div className="grid grid-cols-2 gap-2 mt-5">
+								<Button
+									className="col-span-2 md:col-span-1"
+									color="green"
+									onClick={() => handleImageGeneration('person')}
+								>
+									<ImageIcon className="block md:hidden" />
+									the person of the task
+								</Button>
+
+								<Button
+									className="col-span-2 md:col-span-1"
+									color="green"
+									onClick={() => handleImageGeneration('object')}
+								>
+									<ImageIcon className="block md:hidden" />
+									the object of the task
+								</Button>
+							</div>
+						</Field>
+					) : (
+						<Field>
+							<Label>Or let an image be generated for:</Label>
+							<HeadlessRadioGroup
+								name="generate"
 								defaultValue="person"
-								className="mt-6 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4 items-center"
+								className="mt-4 grid grid-cols-2 items-center justify-center gap-2"
 								onChange={handleImageFocus}
 							>
-								<RadioField className="mb-0 group relative flex cursor-pointer rounded-lg border border-gray-300 bg-white p-4 shadow-xs focus:outline-hidden data-focus:border-indigo-600 data-focus:ring-2 data-focus:ring-indigo-600">
+								<HeadlessField className="col-span-2 md:col-span-1 flex items-center gap-2">
 									<Radio value="person" color="green" />
-									<Label>the person of the task</Label>
-								</RadioField>
-								<RadioField className="group relative flex cursor-pointer rounded-lg border border-gray-300 bg-white p-4 shadow-xs focus:outline-hidden data-focus:border-indigo-600 data-focus:ring-2 data-focus:ring-indigo-600">
+									<HeadlessLabel className="text-base/6 select-none sm:text-sm/6 text-gray-800 dark:text-white">
+										the person of the task
+									</HeadlessLabel>
+								</HeadlessField>
+								<HeadlessField className="col-span-2 md:col-span-1 flex items-center gap-2">
 									<Radio value="object" color="green" />
-									<Label>the object of the task</Label>
-								</RadioField>
-							</RadioGroup>
+									<HeadlessLabel className="text-base/6 select-none sm:text-sm/6 text-gray-800 dark:text-white">
+										the object of the task
+									</HeadlessLabel>
+								</HeadlessField>
+							</HeadlessRadioGroup>
 						</Field>
-					</FieldGroup>
-				</DisclosurePanel>
-			</Disclosure>
-		</>
+					)}
+				</FieldGroup>
+			</DisclosurePanel>
+		</Disclosure>
 	);
 }

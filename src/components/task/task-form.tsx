@@ -127,18 +127,19 @@ export function TaskForm({
 										/>
 									</Field>
 								</div>
-							</FieldGroup>
 
-							<div className="mt-5">
-								<ImageForm
-									routineId={routineId}
-									taskIn={taskIn}
-									focus={focus}
-									setFocus={setFocus}
-									setTaskIn={setTaskIn}
-									setImageFile={setImageFile}
-								/>
-							</div>
+								<div className="mt-6">
+									<ImageForm
+										close={close}
+										routineId={routineId}
+										taskIn={taskIn}
+										focus={focus}
+										setFocus={setFocus}
+										setTaskIn={setTaskIn}
+										setImageFile={setImageFile}
+									/>
+								</div>
+							</FieldGroup>
 						</Fieldset>
 					</DialogBody>
 
