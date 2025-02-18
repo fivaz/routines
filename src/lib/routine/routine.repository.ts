@@ -90,3 +90,34 @@ export async function updateTimedRoutines(
 		console.error('Error in batch update: ', error);
 	}
 }
+
+export async function generateRoutineImage(
+	routineId: string,
+	routineName: string,
+	tokenId: string,
+): Promise<string> {
+	if (!process.env.NEXT_PUBLIC_BACKEND_URL) {
+		return 'api_not_set';
+	}
+
+	const body = {
+		routineName,
+		routineId,
+	};
+
+	try {
+		const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/generate-routine-image`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${tokenId}`, // Add Bearer token here
+			},
+			body: JSON.stringify(body), // Send the body as JSON
+		});
+
+		return response.text();
+	} catch (error) {
+		console.error('Error making POST request:', error);
+		return 'error';
+	}
+}

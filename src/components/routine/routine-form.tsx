@@ -6,7 +6,7 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import { Routine } from '@/lib/routine/routine.type';
 import { addRoutine, editRoutine } from '@/lib/routine/routine.repository';
 import { useAuth } from '@/lib/user/auth-context';
-import { ImageDialogButton } from '@/components/ImageDialogButton';
+import { RoutineImageForm } from '@/components/RoutineImageForm';
 
 export function RoutineForm({
 	routineIn,
@@ -16,7 +16,6 @@ export function RoutineForm({
 	setRoutineIn: Dispatch<SetStateAction<Routine | null>>;
 }) {
 	const [imageFile, setImageFile] = useState<File | null>(null);
-	const [isImageOpen, setIsImageOpen] = useState(false);
 
 	const { user } = useAuth();
 
@@ -34,12 +33,6 @@ export function RoutineForm({
 		}
 		close();
 	}
-
-	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		if (e.target.files) {
-			setImageFile(e.target.files[0]);
-		}
-	};
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (!routineIn) return;
@@ -64,20 +57,12 @@ export function RoutineForm({
 										<Label>Name</Label>
 										<Input value={routineIn.name} name="name" onChange={handleChange} />
 									</Field>
-									<Field>
-										<Label>
-											<div className="flex justify-between">
-												<span>Upload Image</span>
-												{routineIn.image && <ImageDialogButton image={routineIn.image} />}
-											</div>
-										</Label>
-										<Input
-											type="file"
-											onChange={handleFileChange}
-											innerClassName="bg-cover bg-center"
-											style={{ backgroundImage: `url(${routineIn.image})` }}
-										/>
-									</Field>
+									<RoutineImageForm
+										close={close}
+										routineIn={routineIn}
+										setRoutineIn={setRoutineIn}
+										setImageFile={setImageFile}
+									/>
 								</FieldGroup>
 							</Fieldset>
 						</DialogBody>

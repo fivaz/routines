@@ -49,7 +49,7 @@ async function getImageUrl(userId: string, routineId: string, taskId: string, im
 	return await getDownloadURL(imageRef);
 }
 
-export async function generateImage({
+export async function generateTaskImage({
 	routineId,
 	taskId,
 	taskName,
@@ -74,7 +74,7 @@ export async function generateImage({
 	};
 
 	try {
-		const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/generate-image`, {
+		const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/generate-task-image`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -111,7 +111,7 @@ async function handleTaskImage({
 		if (imageFile) {
 			return await getImageUrl(userId, routineId, taskId, imageFile);
 		} else {
-			return generateImage({ routineId, taskId, taskName, focus, tokenId });
+			return generateTaskImage({ routineId, taskId, taskName, focus, tokenId });
 		}
 	} catch (error) {
 		console.error('Error handling task image:', error);

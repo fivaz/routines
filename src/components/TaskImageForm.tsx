@@ -14,10 +14,10 @@ import { ImageFocus, Task } from '@/lib/task/task.type';
 import { ImageDialogButton } from '@/components/ImageDialogButton';
 import { Dispatch, SetStateAction } from 'react';
 import { Button } from '@/components/base/button';
-import { editTask, generateImage } from '@/lib/task/task.repository';
+import { editTask, generateTaskImage } from '@/lib/task/task.repository';
 import { useAuth } from '@/lib/user/auth-context';
 
-export function ImageForm({
+export function TaskImageForm({
 	taskIn,
 	setTaskIn,
 	setImageFile,
@@ -40,7 +40,7 @@ export function ImageForm({
 
 		const tokenId = await user.getIdToken();
 
-		const image = await generateImage({
+		const image = await generateTaskImage({
 			routineId,
 			taskId: taskIn.id,
 			taskName: taskIn.name,
@@ -93,7 +93,7 @@ export function ImageForm({
 				<FieldGroup>
 					<Field>
 						<Label>
-							<div className="flex justify-between">
+							<div className="flex justify-between items-center">
 								<span>Upload Image</span>
 								{taskIn.image && <ImageDialogButton image={taskIn.image} />}
 							</div>

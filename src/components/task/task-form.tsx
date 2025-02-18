@@ -10,7 +10,7 @@ import { addSeconds, format, parse, startOfDay } from 'date-fns';
 import { HHmmss } from '@/lib/consts';
 import { Listbox, ListboxOption } from '@/components/base/listbox';
 import { useRoutines } from '@/lib/routine/routine.context';
-import { ImageForm } from '@/components/ImageForm';
+import { TaskImageForm } from '@/components/TaskImageForm';
 
 export function TaskForm({
 	setTaskIn,
@@ -129,7 +129,7 @@ export function TaskForm({
 								</div>
 
 								<div className="mt-6">
-									<ImageForm
+									<TaskImageForm
 										close={close}
 										routineId={routineId}
 										taskIn={taskIn}
