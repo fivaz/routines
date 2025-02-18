@@ -20,8 +20,6 @@ export default function RegisterPage() {
 	const [password, setPassword] = useState('');
 	const [errorMessage, setErrorMessage] = useState('');
 
-	const [isDisabled, setIsDisabled] = useState(false);
-
 	const [isLoading, setIsLoading] = useState({
 		email: false,
 		google: false,
@@ -148,7 +146,7 @@ export default function RegisterPage() {
 						<div>
 							<Button
 								isLoading={isLoading.email}
-								disabled={isDisabled}
+								disabled={isLoading.email}
 								type="submit"
 								color="green"
 								className="w-full"
