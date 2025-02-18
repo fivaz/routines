@@ -62,6 +62,10 @@ export async function generateImage({
 	focus: ImageFocus;
 	tokenId: string;
 }): Promise<string> {
+	if (!process.env.NEXT_PUBLIC_BACKEND_URL) {
+		return 'api_not_set';
+	}
+
 	const body = {
 		taskName,
 		focus,
