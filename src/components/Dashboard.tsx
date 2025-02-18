@@ -33,6 +33,7 @@ import { APP_NAME, Routes } from '@/lib/consts';
 import { useRouter } from 'next/navigation';
 import { Logo } from '@/components/Logo';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import { BackEndStatus } from '@/components/BackEndStatus';
 
 const navItems = [{ label: 'Home', url: '/' }];
 
@@ -67,6 +68,7 @@ export function Dashboard({ children }: React.PropsWithChildren) {
 					</NavbarSection>
 					<NavbarSpacer />
 					<NavbarSection>
+						<BackEndStatus />
 						<ThemeToggle />
 						<Dropdown>
 							<DropdownButton as={NavbarItem}>
