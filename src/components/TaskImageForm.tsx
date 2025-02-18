@@ -8,7 +8,6 @@ import {
 } from '@headlessui/react';
 import { Field, FieldGroup, Label } from '@/components/base/fieldset';
 import { ChevronDownIcon, ImageIcon } from 'lucide-react';
-import { Input } from '@/components/base/input';
 import { Radio } from '@/components/base/radio';
 import { ImageFocus, Task } from '@/lib/task/task.type';
 import { ImageDialogButton } from '@/components/ImageDialogButton';
@@ -17,6 +16,7 @@ import { Button } from '@/components/base/button';
 import { editTask, generateTaskImage } from '@/lib/task/task.repository';
 import { useAuth } from '@/lib/user/auth-context';
 import useBackendStatus from '@/lib/use-backend-status';
+import { ImageInput } from '@/components/ImageInput';
 
 export function TaskImageForm({
 	taskIn,
@@ -100,17 +100,7 @@ export function TaskImageForm({
 								{taskIn.image && <ImageDialogButton image={taskIn.image} />}
 							</div>
 						</Label>
-						{taskIn.image === 'waiting_image' ? (
-							<div>waiting image...</div>
-						) : (
-							<Input
-								type="file"
-								accept="image/*"
-								onChange={handleFileChange}
-								innerClassName="bg-cover bg-center"
-								style={{ backgroundImage: `url(${taskIn.image})` }}
-							/>
-						)}
+						<ImageInput image={taskIn.image} onChange={handleFileChange} />
 					</Field>
 					{taskIn.id ? (
 						<Field>

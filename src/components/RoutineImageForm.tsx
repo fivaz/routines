@@ -1,5 +1,4 @@
 import { Field, FieldGroup, Label } from '@/components/base/fieldset';
-import { Input } from '@/components/base/input';
 import { Routine } from '@/lib/routine/routine.type';
 import { ImageDialogButton } from '@/components/ImageDialogButton';
 import { Dispatch, SetStateAction } from 'react';
@@ -8,6 +7,7 @@ import { useAuth } from '@/lib/user/auth-context';
 import { Button } from '@/components/base/button';
 import { ImageIcon } from 'lucide-react';
 import useBackendStatus from '@/lib/use-backend-status';
+import { ImageInput } from '@/components/ImageInput';
 
 export function RoutineImageForm({
 	routineIn,
@@ -65,17 +65,7 @@ export function RoutineImageForm({
 							{routineIn.image && <ImageDialogButton image={routineIn.image} />}
 						</div>
 					</Label>
-					{routineIn.image === 'waiting_image' ? (
-						<div>waiting image...</div>
-					) : (
-						<Input
-							type="file"
-							accept="image/*"
-							onChange={handleFileChange}
-							innerClassName="bg-cover bg-center"
-							style={{ backgroundImage: `url(${routineIn.image})` }}
-						/>
-					)}
+					<ImageInput image={routineIn.image} onChange={handleFileChange} />
 				</Field>
 				{routineIn.id && (
 					<Field className="col-span-1 flex flex-col gap-2 justify-between">
