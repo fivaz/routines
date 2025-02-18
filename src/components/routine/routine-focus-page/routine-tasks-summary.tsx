@@ -1,11 +1,14 @@
 import { Task } from '@/lib/task/task.type';
+import { Dispatch, SetStateAction } from 'react';
 
 export function RoutineTasksSummary({
 	tasks,
 	currentTaskIndex,
+	setCurrentTaskIndex,
 }: {
 	tasks: Task[];
 	currentTaskIndex: number;
+	setCurrentTaskIndex: Dispatch<SetStateAction<number>>;
 }) {
 	function hasHistory(index: number) {
 		const today = new Date().toISOString().split('T')[0];
@@ -16,9 +19,10 @@ export function RoutineTasksSummary({
 	return (
 		<div className="flex w-full md:gap-2 gap-1">
 			{tasks.map((_, index) => (
-				<div
+				<button
+					onClick={() => setCurrentTaskIndex(index)}
 					key={index}
-					className={`grow h-2 rounded ${index === currentTaskIndex ? 'bg-blue-500' : hasHistory(index) ? 'bg-green-500' : 'bg-gray-300'}`}
+					className={`cursor-pointer grow h-2 rounded ${index === currentTaskIndex ? 'bg-blue-500' : hasHistory(index) ? 'bg-green-500' : 'bg-gray-300'}`}
 				/>
 			))}
 		</div>

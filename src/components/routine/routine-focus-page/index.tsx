@@ -36,7 +36,11 @@ export default function RoutineFocusPage({
 	return (
 		<div className="flex flex-col justify-between h-full md:h-[calc(100vh-136px)] items-center gap-4">
 			<div className="flex flex-col gap-4 w-full">
-				<RoutineTasksSummary tasks={tasks} currentTaskIndex={currentTaskIndex} />
+				<RoutineTasksSummary
+					tasks={tasks}
+					setCurrentTaskIndex={setCurrentTaskIndex}
+					currentTaskIndex={currentTaskIndex}
+				/>
 
 				<div className="flex justify-between items-center">
 					{routine ? (
