@@ -35,6 +35,7 @@ export function TaskForm({
 
 	async function handleSubmit() {
 		if (!user || !taskIn) return;
+
 		try {
 			const tokenId = await user.getIdToken();
 
@@ -45,8 +46,6 @@ export function TaskForm({
 					newRoutineId,
 					task: taskIn,
 					imageFile,
-					focus,
-					tokenId,
 				});
 			} else {
 				void addTask({
@@ -60,8 +59,9 @@ export function TaskForm({
 			}
 		} catch (error) {
 			console.error(error);
+		} finally {
+			close();
 		}
-		close();
 	}
 
 	function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {

@@ -150,6 +150,7 @@ export async function addTask({
 			focus,
 			tokenId,
 		});
+
 		const newTask = { ...task, id: taskId, image };
 		// const newTask = { ...task, id: taskId };
 
@@ -194,8 +195,6 @@ export async function editTask({
 	newRoutineId: string;
 	imageFile: File | null;
 	task: Task;
-	focus: ImageFocus;
-	tokenId: string;
 }): Promise<TaskOperationResult> {
 	try {
 		let updatedTask = task;

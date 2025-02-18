@@ -14,7 +14,7 @@ import { ImageFocus, Task } from '@/lib/task/task.type';
 import { ImageDialogButton } from '@/components/ImageDialogButton';
 import { Dispatch, SetStateAction } from 'react';
 import { Button } from '@/components/base/button';
-import { generateImage } from '@/lib/task/task.repository';
+import { editTask, generateImage } from '@/lib/task/task.repository';
 import { useAuth } from '@/lib/user/auth-context';
 
 export function ImageForm({
@@ -38,8 +38,6 @@ export function ImageForm({
 	async function handleImageGeneration(imageFocus: ImageFocus) {
 		if (!user || !taskIn) return;
 
-		close();
-
 		const tokenId = await user.getIdToken();
 
 		const image = await generateImage({
@@ -50,7 +48,19 @@ export function ImageForm({
 			tokenId,
 		});
 
-		setTaskIn({ ...taskIn, image });
+		const taskWithImage = { ...taskIn, image };
+
+		setTaskIn(taskWithImage);
+
+		void editTask({
+			userId: user.uid,
+			routineId,
+			newRoutineId: routineId,
+			imageFile: null,
+			task: taskWithImage,
+		});
+
+		close();
 	}
 
 	function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
