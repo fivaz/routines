@@ -7,6 +7,7 @@ import { editRoutine, generateRoutineImage } from '@/lib/routine/routine.reposit
 import { useAuth } from '@/lib/user/auth-context';
 import { Button } from '@/components/base/button';
 import { ImageIcon } from 'lucide-react';
+import useBackendStatus from '@/lib/use-backend-status';
 
 export function RoutineImageForm({
 	routineIn,
@@ -20,6 +21,7 @@ export function RoutineImageForm({
 	close: () => void;
 }) {
 	const { user } = useAuth();
+	const { isLoading, isBackendActive } = useBackendStatus();
 
 	async function handleImageGeneration() {
 		if (!user || !routineIn) return;
@@ -78,7 +80,12 @@ export function RoutineImageForm({
 				{routineIn.id && (
 					<Field className="col-span-1 flex flex-col gap-2 justify-between">
 						<Label>Or generate image</Label>
-						<Button color="green" onClick={handleImageGeneration}>
+						<Button
+							isLoading={isLoading}
+							disabled={!isBackendActive}
+							color="green"
+							onClick={handleImageGeneration}
+						>
 							<ImageIcon />
 							generate
 						</Button>

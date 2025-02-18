@@ -96,10 +96,6 @@ export async function generateRoutineImage(
 	routineName: string,
 	tokenId: string,
 ): Promise<string> {
-	if (!process.env.NEXT_PUBLIC_BACKEND_URL) {
-		return 'api_not_set';
-	}
-
 	const body = {
 		routineName,
 		routineId,

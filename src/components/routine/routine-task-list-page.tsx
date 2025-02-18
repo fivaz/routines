@@ -19,6 +19,7 @@ import { useRoutine } from '@/lib/routine/routine.hooks';
 import { Heading, Subheading } from '@/components/base/heading';
 import { DragDropProvider } from '@dnd-kit/react';
 import { formatSeconds } from '@/lib/task/task.utils';
+import useBackendStatus from '@/lib/use-backend-status';
 
 export default function RoutineTaskListPage({
 	setPage,
@@ -29,6 +30,7 @@ export default function RoutineTaskListPage({
 	const [taskForm, setTaskForm] = useState<Task | null>(null);
 	const { handleSort, tasks } = useTasks();
 	const routine = useRoutine();
+	const { isLoading } = useBackendStatus();
 
 	const { user } = useAuth();
 	const router = useRouter();
@@ -75,7 +77,7 @@ export default function RoutineTaskListPage({
 
 				<div className="flex gap-3">
 					<div className="hidden md:flex gap-3">
-						<Button outline onClick={handleAddTask}>
+						<Button outline onClick={handleAddTask} isLoading={isLoading} disabled={isLoading}>
 							<PlusIcon className="size-5" />
 						</Button>
 						<Button outline onClick={handleGoToRecap}>
@@ -87,7 +89,11 @@ export default function RoutineTaskListPage({
 							<Ellipsis className="size-5" />
 						</DropdownButton>
 						<DropdownMenu>
-							<DropdownItem className="block md:hidden" onClick={handleAddTask}>
+							<DropdownItem
+								className="block md:hidden"
+								onClick={handleAddTask}
+								disabled={isLoading}
+							>
 								Add task
 							</DropdownItem>
 							<DropdownItem className="block md:hidden" onClick={handleGoToRecap}>

@@ -16,6 +16,7 @@ import { Dispatch, SetStateAction } from 'react';
 import { Button } from '@/components/base/button';
 import { editTask, generateTaskImage } from '@/lib/task/task.repository';
 import { useAuth } from '@/lib/user/auth-context';
+import useBackendStatus from '@/lib/use-backend-status';
 
 export function TaskImageForm({
 	taskIn,
@@ -34,6 +35,7 @@ export function TaskImageForm({
 	close: () => void;
 }) {
 	const { user } = useAuth();
+	const { isLoading, isBackendActive } = useBackendStatus();
 
 	async function handleImageGeneration(imageFocus: ImageFocus) {
 		if (!user || !taskIn) return;
@@ -117,6 +119,8 @@ export function TaskImageForm({
 								<Button
 									className="col-span-2 md:col-span-1"
 									color="green"
+									isLoading={isLoading}
+									disabled={!isBackendActive}
 									onClick={() => handleImageGeneration('person')}
 								>
 									<ImageIcon className="block md:hidden" />
@@ -126,6 +130,8 @@ export function TaskImageForm({
 								<Button
 									className="col-span-2 md:col-span-1"
 									color="green"
+									isLoading={isLoading}
+									disabled={!isBackendActive}
 									onClick={() => handleImageGeneration('object')}
 								>
 									<ImageIcon className="block md:hidden" />
