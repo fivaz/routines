@@ -30,7 +30,7 @@ export default function RoutineTaskListPage({
 	const [taskForm, setTaskForm] = useState<Task | null>(null);
 	const { handleSort, tasks } = useTasks();
 	const routine = useRoutine();
-	const { isLoading } = useBackendStatus();
+	const { status } = useBackendStatus();
 
 	const { user } = useAuth();
 	const router = useRouter();
@@ -77,7 +77,12 @@ export default function RoutineTaskListPage({
 
 				<div className="flex gap-3">
 					<div className="hidden md:flex gap-3">
-						<Button outline onClick={handleAddTask} isLoading={isLoading} disabled={isLoading}>
+						<Button
+							outline
+							onClick={handleAddTask}
+							isLoading={status === 'loading'}
+							disabled={status === 'loading'}
+						>
 							<PlusIcon className="size-5" />
 						</Button>
 						<Button outline onClick={handleGoToRecap}>
@@ -92,7 +97,7 @@ export default function RoutineTaskListPage({
 							<DropdownItem
 								className="block md:hidden"
 								onClick={handleAddTask}
-								disabled={isLoading}
+								disabled={status === 'loading'}
 							>
 								Add task
 							</DropdownItem>

@@ -21,7 +21,7 @@ export function RoutineImageForm({
 	close: () => void;
 }) {
 	const { user } = useAuth();
-	const { isLoading, isBackendActive } = useBackendStatus();
+	const { status } = useBackendStatus();
 
 	async function handleImageGeneration() {
 		if (!user || !routineIn) return;
@@ -81,8 +81,8 @@ export function RoutineImageForm({
 					<Field className="col-span-1 flex flex-col gap-2 justify-between">
 						<Label>Or generate image</Label>
 						<Button
-							isLoading={isLoading}
-							disabled={!isBackendActive}
+							isLoading={status === 'loading'}
+							disabled={status !== 'success'}
 							color="green"
 							onClick={handleImageGeneration}
 						>

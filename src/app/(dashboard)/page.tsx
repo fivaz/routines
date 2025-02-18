@@ -16,7 +16,7 @@ import useBackendStatus from '@/lib/use-backend-status';
 export default function Routines() {
 	const [routineForm, setRoutineForm] = useState<Routine | null>(null);
 	const { timedRoutines, setTimedRoutines, handleSort } = useRoutines();
-	const { isLoading } = useBackendStatus();
+	const { status } = useBackendStatus();
 
 	function handleAddRoutine() {
 		setRoutineForm({ ...emptyRoutine });
@@ -48,8 +48,8 @@ export default function Routines() {
 
 			<div className="fixed bottom-2 m-auto left-1/2 -translate-x-1/2 z-20">
 				<Button
-					isLoading={isLoading}
-					disabled={isLoading}
+					isLoading={status === 'loading'}
+					disabled={status === 'loading'}
 					className="w-40"
 					color="green"
 					type="button"

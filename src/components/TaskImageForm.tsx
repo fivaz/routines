@@ -35,7 +35,7 @@ export function TaskImageForm({
 	close: () => void;
 }) {
 	const { user } = useAuth();
-	const { isLoading, isBackendActive } = useBackendStatus();
+	const { status } = useBackendStatus();
 
 	async function handleImageGeneration(imageFocus: ImageFocus) {
 		if (!user || !taskIn) return;
@@ -119,8 +119,8 @@ export function TaskImageForm({
 								<Button
 									className="col-span-2 md:col-span-1"
 									color="green"
-									isLoading={isLoading}
-									disabled={!isBackendActive}
+									isLoading={status === 'loading'}
+									disabled={status !== 'success'}
 									onClick={() => handleImageGeneration('person')}
 								>
 									<ImageIcon className="block md:hidden" />
@@ -130,8 +130,8 @@ export function TaskImageForm({
 								<Button
 									className="col-span-2 md:col-span-1"
 									color="green"
-									isLoading={isLoading}
-									disabled={!isBackendActive}
+									isLoading={status === 'loading'}
+									disabled={status !== 'success'}
 									onClick={() => handleImageGeneration('object')}
 								>
 									<ImageIcon className="block md:hidden" />
