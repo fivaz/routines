@@ -97,7 +97,7 @@ export function RoutineFocusBottom({
 	};
 
 	return (
-		<div className="flex flex-col gap-4 w-full">
+		<div className="flex flex-col gap-4 w-full pb-4">
 			<div className="gap-2">
 				<h2 className="first-letter:capitalize text-xl font-bold text-green-600 dark:text-green-500">
 					{tasks[currentTaskIndex].name}
@@ -108,11 +108,11 @@ export function RoutineFocusBottom({
 				</p>
 			</div>
 
-			<div className="relative dark:text-green-600 dark:bg-gray-200 bg-gray-300 text-white flex h-14 md:mx-0 md:rounded-lg -mx-6">
+			<div className="relative dark:text-green-600 dark:bg-gray-200 bg-gray-300 text-white flex h-14 rounded-lg">
 				{/* Progress Bar */}
 				<div
 					style={{ width: `${(elapsedTime / tasks[currentTaskIndex].durationInSeconds) * 100}%` }}
-					className="absolute top-0 left-0 h-full w-0 bg-gradient-to-r from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500 to-90% transition-all duration-100"
+					className="absolute top-0 left-0 h-full w-0 bg-gradient-to-r from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500 to-90% transition-all duration-100 rounded-lg"
 				/>
 
 				{/* Controls */}
