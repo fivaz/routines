@@ -1,9 +1,9 @@
-import { formatSeconds } from '@/lib/task/task.utils';
+import { formatSeconds, getDurationFromDate } from '@/lib/task/task.utils';
 import { ChevronLeft, ChevronRight, CircleStop, Play } from 'lucide-react';
 import { persistTask } from '@/lib/task/task.repository';
 import { useAuth } from '@/lib/user/auth-context';
 import { usePrompt } from '@/lib/prompt-context';
-import { Dispatch, SetStateAction, useEffect } from 'react';
+import { Dispatch, SetStateAction, useEffect, useMemo } from 'react';
 import { useParams } from 'next/navigation';
 import { useTasks } from '@/lib/task/task.context';
 
@@ -28,6 +28,7 @@ export function RoutineFocusBottom({
 	const { user } = useAuth();
 	const { routineId } = useParams<{ routineId: string }>();
 	const { createPrompt } = usePrompt();
+	const today = new Date().toISOString().split('T')[0];
 
 	useEffect(() => {
 		let timer: NodeJS.Timeout | null = null;
@@ -45,10 +46,17 @@ export function RoutineFocusBottom({
 		};
 	}, [isRunning, setElapsedTime]);
 
+	const totalElapsedTime = useMemo(
+		() => formatSeconds(tasks.reduce((total, task) => total + getDurationFromDate(task, today), 0)),
+		[tasks, today],
+	);
+
+	function totalExpectedTime() {
+		return formatSeconds(tasks.reduce((total, task) => total + task.durationInSeconds, 0));
+	}
+
 	async function handleStart() {
 		if (!user) return;
-
-		const today = new Date().toISOString().split('T')[0];
 
 		if (tasks[currentTaskIndex].history?.[today]) {
 			if (
@@ -105,10 +113,16 @@ export function RoutineFocusBottom({
 				<h2 className="first-letter:capitalize text-xl font-bold text-green-600 dark:text-green-500">
 					{tasks[currentTaskIndex].name}
 				</h2>
-				<p className="text-lg text-gray-800 dark:text-gray-300">
-					{formatSeconds(elapsedTime) || '0s'} /{' '}
-					{formatSeconds(tasks[currentTaskIndex].durationInSeconds)}
-				</p>
+
+				<div className="flex justify-between items-end">
+					<div className="text-lg text-gray-800 dark:text-gray-300">
+						{formatSeconds(elapsedTime) || '0s'} /{' '}
+						{formatSeconds(tasks[currentTaskIndex].durationInSeconds)}
+					</div>
+					<div className="text-red-500 text-lg font-semibold">
+						{totalElapsedTime} / {totalExpectedTime()}
+					</div>
+				</div>
 			</div>
 
 			<div className="relative dark:text-green-600 dark:bg-gray-200 bg-gray-300 text-white flex h-14 rounded-lg">
