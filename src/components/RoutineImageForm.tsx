@@ -1,4 +1,4 @@
-import { Field, FieldGroup, Label } from '@/components/base/fieldset';
+import { Field, Label } from '@/components/base/fieldset';
 import { Routine } from '@/lib/routine/routine.type';
 import { ImageDialogButton } from '@/components/ImageDialogButton';
 import { Dispatch, SetStateAction } from 'react';
@@ -56,32 +56,30 @@ export function RoutineImageForm({
 	}
 
 	return (
-		<FieldGroup>
-			<div className="grid grid-cols-3 gap-2">
-				<Field className={routineIn.id ? 'col-span-2' : 'col-span-3'}>
-					<Label>
-						<div className="flex justify-between items-center">
-							<span>Upload Image</span>
-							{routineIn.image && <ImageDialogButton image={routineIn.image} />}
-						</div>
-					</Label>
-					<ImageInput image={routineIn.image} onChange={handleFileChange} />
+		<div className="grid grid-cols-3 md:gap-2 gap-6">
+			<Field className={routineIn.id ? 'col-span-3 md:col-span-2' : 'col-span-3'}>
+				<Label>
+					<div className="flex justify-between items-center">
+						<span>Upload Image</span>
+						{routineIn.image && <ImageDialogButton image={routineIn.image} />}
+					</div>
+				</Label>
+				<ImageInput image={routineIn.image} onChange={handleFileChange} />
+			</Field>
+			{routineIn.id && (
+				<Field className="col-span-3 md:col-span-1 flex flex-col gap-2 justify-between">
+					<Label>Or generate image</Label>
+					<Button
+						isLoading={status === 'loading'}
+						disabled={status !== 'success'}
+						color="green"
+						onClick={handleImageGeneration}
+					>
+						<ImageIcon />
+						generate
+					</Button>
 				</Field>
-				{routineIn.id && (
-					<Field className="col-span-1 flex flex-col gap-2 justify-between">
-						<Label>Or generate image</Label>
-						<Button
-							isLoading={status === 'loading'}
-							disabled={status !== 'success'}
-							color="green"
-							onClick={handleImageGeneration}
-						>
-							<ImageIcon />
-							generate
-						</Button>
-					</Field>
-				)}
-			</div>
-		</FieldGroup>
+			)}
+		</div>
 	);
 }
