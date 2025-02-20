@@ -16,6 +16,7 @@ export default function RoutineFocusPage({
 }) {
 	const [currentTaskIndex, setCurrentTaskIndex] = useState(0);
 	const [elapsedTime, setElapsedTime] = useState(0);
+	const [isRunning, setIsRunning] = useState(false);
 	const { tasks } = useTasks();
 	const routine = useRoutine();
 
@@ -38,6 +39,7 @@ export default function RoutineFocusPage({
 			<div className="flex flex-col gap-4 w-full">
 				<RoutineTasksSummary
 					tasks={tasks}
+					isRunning={isRunning}
 					setCurrentTaskIndex={setCurrentTaskIndex}
 					currentTaskIndex={currentTaskIndex}
 				/>
@@ -77,6 +79,8 @@ export default function RoutineFocusPage({
 			</div>
 
 			<RoutineFocusBottom
+				isRunning={isRunning}
+				setIsRunning={setIsRunning}
 				setPage={setPage}
 				currentTaskIndex={currentTaskIndex}
 				elapsedTime={elapsedTime}
