@@ -7,7 +7,7 @@ import { useAuth } from '@/lib/user/auth-context';
 import { Button } from '@/components/base/button';
 import { ImageIcon } from 'lucide-react';
 import useBackendStatus from '@/lib/use-backend-status';
-import { ImageInput } from '@/components/ImageInput';
+import { Input } from '@/components/base/input';
 
 export function RoutineImageForm({
 	routineIn,
@@ -64,7 +64,13 @@ export function RoutineImageForm({
 						{routineIn.image && <ImageDialogButton image={routineIn.image} />}
 					</div>
 				</Label>
-				<ImageInput image={routineIn.image} onChange={handleFileChange} />
+				<Input
+					type="file"
+					accept="image/*"
+					onChange={handleFileChange}
+					innerClassName="bg-cover bg-center"
+					style={{ backgroundImage: `url(${routineIn.image})` }}
+				/>
 			</Field>
 			{routineIn.id && (
 				<Field className="col-span-3 md:col-span-1 flex flex-col gap-2 justify-between">

@@ -8,6 +8,7 @@ import { ChevronDownIcon, ChevronUpIcon, UndoIcon } from 'lucide-react';
 import { Button } from '@/components/base/button';
 import { useTasks } from '@/lib/task/task.context';
 import Image from 'next/image';
+import clsx from 'clsx';
 
 export function RoutineRecapPage({
 	setPage,
@@ -76,15 +77,16 @@ export function RoutineRecapPage({
 					{tasks.map((task) => (
 						<li key={task.id} className="py-2 gap-2 flex justify-between items-center">
 							<div className="flex gap-2 items-center w-1/2 truncate">
-								<Image
-									src={task.image}
-									alt="task"
-									className="md:size-10 size-8 rounded-md"
-									width={40}
-									height={40}
-								/>
-
-								<Text className="w-1/2 truncate">{task.name}</Text>
+								{task.image && (
+									<Image
+										src={task.image}
+										alt="task"
+										className="md:size-10 size-8 rounded-md"
+										width={40}
+										height={40}
+									/>
+								)}
+								<Text className={clsx({ 'w-1/2': !!task.image }, 'truncate')}>{task.name}</Text>
 							</div>
 							<div className="flex gap-2 items-center">
 								<Text className="hidden md:block w-30 text-right">

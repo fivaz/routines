@@ -9,6 +9,7 @@ import { useSortable } from '@dnd-kit/react/sortable';
 import { formatSeconds, latestTime } from '@/lib/task/task.utils';
 import { usePrompt } from '@/lib/prompt-context';
 import { Button } from '@/components/base/button';
+import { ImageWaitingSkeleton } from '@/components/task/ImageWaitingSkeleton';
 
 export function TaskRow({
 	userId,
@@ -39,9 +40,10 @@ export function TaskRow({
 	return (
 		<div
 			ref={ref}
-			className=" group hover:border border-green-400 relative rounded-lg bg-green-400 text-white p-4 h-40 bg-cover bg-center flex flex-col justify-between"
+			className=" group hover:border border-green-400 relative rounded-lg text-white p-4 h-40 bg-cover bg-center flex flex-col justify-between"
 			style={{ backgroundImage: `url('${task.image}')` }}
 		>
+			<ImageWaitingSkeleton image={task.image} />
 			<div className="z-20 absolute top-4 left-4">
 				<Button
 					outline

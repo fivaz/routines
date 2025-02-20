@@ -16,7 +16,7 @@ import { Button } from '@/components/base/button';
 import { editTask, generateTaskImage } from '@/lib/task/task.repository';
 import { useAuth } from '@/lib/user/auth-context';
 import useBackendStatus from '@/lib/use-backend-status';
-import { ImageInput } from '@/components/ImageInput';
+import { Input } from '@/components/base/input';
 
 export function TaskImageForm({
 	taskIn,
@@ -100,7 +100,13 @@ export function TaskImageForm({
 								{taskIn.image && <ImageDialogButton image={taskIn.image} />}
 							</div>
 						</Label>
-						<ImageInput image={taskIn.image} onChange={handleFileChange} />
+						<Input
+							type="file"
+							accept="image/*"
+							onChange={handleFileChange}
+							innerClassName="bg-cover bg-center"
+							style={{ backgroundImage: `url(${taskIn.image})` }}
+						/>
 					</Field>
 					{taskIn.id ? (
 						<Field>
