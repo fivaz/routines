@@ -11,10 +11,11 @@ import {
 	writeBatch,
 } from 'firebase/firestore';
 import { db, storage } from '@/lib/firebase';
-import { deleteObject, getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { deleteObject, getDownloadURL, getMetadata, ref, uploadBytes } from 'firebase/storage';
 import { ImageFocus, Task } from '@/lib/task/task.type';
 import { Routine } from '@/lib/routine/routine.type';
 import { getRoutinePath } from '@/lib/routine/routine.repository';
+import { FirebaseError } from 'firebase/app';
 
 export function getTaskPath(userId: string, routineId: string) {
 	return `${DB_PATH.USERS}/${userId}/${DB_PATH.ROUTINES}/${routineId}/${DB_PATH.TASKS}`;
@@ -338,10 +339,27 @@ export async function deleteTask(
 	}
 }
 
-function deleteImage(userId: string, routineId: string, taskId: string) {
+async function deleteImage(userId: string, routineId: string, taskId: string) {
 	const imageRef = getImageRef(userId, routineId, taskId);
 
-	return deleteObject(imageRef);
+	try {
+		// Check if the file exists first by getting its metadata
+		await getMetadata(imageRef);
+
+		// If we get here, the file exists and we can delete it
+		await deleteObject(imageRef);
+		console.log(`Successfully deleted image for task ${taskId}`);
+	} catch (error) {
+		// Check if the error is because the file doesn't exist
+		if ((error as FirebaseError).code === 'storage/object-not-found') {
+			console.log(
+				`No image found for task in ${getTaskPath(userId, routineId)}/${taskId}, nothing to delete`,
+			);
+			return;
+		}
+		// Re-throw any other errors
+		throw error;
+	}
 }
 
 export async function updateTasks(userId: string, routineId: string, tasks: Task[]) {
