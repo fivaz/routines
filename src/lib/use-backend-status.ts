@@ -19,7 +19,7 @@ const useBackendStatus = (
 
 		while (currentRetryCount < maxRetries) {
 			try {
-				const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/ping`);
+				const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/health`);
 				if (response.ok) {
 					setStatus('success');
 					return;
