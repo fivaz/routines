@@ -108,7 +108,7 @@ export function RoutineFocusBottom({
 	};
 
 	return (
-		<div className="flex flex-col gap-4 w-full pb-4">
+		<div className="flex flex-col gap-4 w-full">
 			<div className="gap-2">
 				<h2 className="first-letter:capitalize text-xl font-bold text-green-600 dark:text-green-500">
 					{tasks[currentTaskIndex].name}
