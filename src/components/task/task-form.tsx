@@ -108,7 +108,12 @@ export function TaskForm({
 								<div className="grid grid-cols-1 gap-8 sm:grid-cols-3 sm:gap-4">
 									<Field className="sm:col-span-2">
 										<Label>Routine</Label>
-										<Listbox name="routineId" value={newRoutineId} onChange={handleSelect}>
+										<Listbox
+											className="mt-3"
+											name="routineId"
+											value={newRoutineId}
+											onChange={handleSelect}
+										>
 											{routines.map((routine) => (
 												<ListboxOption key={routine.id} value={routine.id}>
 													{routine.name}
