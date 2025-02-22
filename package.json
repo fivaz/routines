@@ -18,7 +18,7 @@
 		"@google/generative-ai": "^0.21.0",
 		"@headlessui/react": "^2.2.0",
 		"@heroicons/react": "^2.2.0",
-		"@sentry/nextjs": "^9",
+		"@sentry/nextjs": "^9.1.0",
 		"@tailwindcss/postcss": "^4.0.4",
 		"clsx": "^2.1.1",
 		"date-fns": "^4.1.0",
