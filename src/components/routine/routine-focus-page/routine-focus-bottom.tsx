@@ -107,6 +107,15 @@ export function RoutineFocusBottom({
 		}
 	};
 
+	function progressBarSize() {
+		const widthPercentage = Math.min(
+			(elapsedTime / tasks[currentTaskIndex].durationInSeconds) * 100,
+			100,
+		);
+
+		return { width: `${widthPercentage}%` };
+	}
+
 	return (
 		<div className="flex flex-col gap-4 w-full">
 			<div className="gap-2">
@@ -128,7 +137,7 @@ export function RoutineFocusBottom({
 			<div className="relative text-white dark:bg-gray-200 bg-linear-to-r/srgb from-indigo-500 to-teal-400 flex h-14 rounded-lg">
 				{/* Progress Bar */}
 				<div
-					style={{ width: `${(elapsedTime / tasks[currentTaskIndex].durationInSeconds) * 100}%` }}
+					style={progressBarSize()}
 					className="absolute top-0 left-0 h-full w-0 bg-gradient-to-r from-yellow-500 from-10% via-orange-500 via-30% to-red-500 to-90% transition-all duration-100 rounded-lg"
 				/>
 
