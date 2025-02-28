@@ -21,7 +21,6 @@ import {
 	SidebarBody,
 	SidebarHeader,
 	SidebarItem,
-	SidebarLabel,
 	SidebarSection,
 } from '@/components/base/sidebar';
 import { StackedLayout } from '@/components/base/stacked-layout';
@@ -34,6 +33,7 @@ import { useRouter } from 'next/navigation';
 import { Logo } from '@/components/Logo';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { BackEndStatus } from '@/components/BackEndStatus';
+import { Tooltip } from '@/components/base/tooltip';
 
 const navItems = [{ label: 'Home', url: '/' }];
 
@@ -53,10 +53,12 @@ export function Dashboard({ children }: React.PropsWithChildren) {
 			navbar={
 				<Navbar>
 					<Dropdown>
-						<DropdownButton as={NavbarItem} className="max-lg:hidden">
-							<Logo className="text-green-500 w-5 h-5" />
-							<NavbarLabel>{APP_NAME}</NavbarLabel>
-						</DropdownButton>
+						<Tooltip text={process.env.NEXT_PUBLIC_FIREBASE_API_KEY as string}>
+							<DropdownButton as={NavbarItem} className="max-lg:hidden">
+								<Logo className="text-green-500 w-5 h-5" />
+								<NavbarLabel>{APP_NAME}</NavbarLabel>
+							</DropdownButton>
+						</Tooltip>
 					</Dropdown>
 					<NavbarDivider className="max-lg:hidden" />
 					<NavbarSection className="max-lg:hidden">
@@ -93,10 +95,12 @@ export function Dashboard({ children }: React.PropsWithChildren) {
 				<Sidebar>
 					<SidebarHeader>
 						<Dropdown>
-							<DropdownButton as={SidebarItem} className="lg:mb-2.5">
-								<Logo className="text-green-500 w-5 h-5" />
-								<SidebarLabel>{APP_NAME}</SidebarLabel>
-							</DropdownButton>
+							<Tooltip text={process.env.NEXT_PUBLIC_FIREBASE_API_KEY as string}>
+								<DropdownButton as={NavbarItem} className="lg:mb-2.5">
+									<Logo className="text-green-500 w-5 h-5" />
+									<NavbarLabel>{APP_NAME}</NavbarLabel>
+								</DropdownButton>
+							</Tooltip>
 						</Dropdown>
 					</SidebarHeader>
 					<SidebarBody>
