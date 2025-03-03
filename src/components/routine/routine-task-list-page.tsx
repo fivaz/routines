@@ -19,7 +19,7 @@ import { useRoutine } from '@/lib/routine/routine.hooks';
 import { Heading, Subheading } from '@/components/base/heading';
 import { DragDropProvider } from '@dnd-kit/react';
 import { formatSeconds } from '@/lib/task/task.utils';
-import useBackendStatus from '@/lib/use-backend-status';
+import { useBackendStatus } from '@/lib/use-backend-status';
 
 export default function RoutineTaskListPage({
 	setPage,

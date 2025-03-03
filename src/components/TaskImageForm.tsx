@@ -15,7 +15,7 @@ import { Dispatch, SetStateAction } from 'react';
 import { Button } from '@/components/base/button';
 import { editTask, generateTaskImage } from '@/lib/task/task.repository';
 import { useAuth } from '@/lib/user/auth-context';
-import useBackendStatus from '@/lib/use-backend-status';
+import { useBackendStatus } from '@/lib/use-backend-status';
 import { Input } from '@/components/base/input';
 
 export function TaskImageForm({

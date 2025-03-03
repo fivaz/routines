@@ -3,15 +3,17 @@ import { useCallback, useEffect, useState } from 'react';
 interface BackendStatusReturn {
 	status: BackendStatus;
 	retry: () => void;
+	credits: number;
 }
 
-type BackendStatus = 'fail' | 'loading' | 'success';
+type BackendStatus = 'loading' | 'success' | 'error' | 'no-balance';
 
-const useBackendStatus = (
+export function useBackendStatus(
 	maxRetries: number = 10,
 	retryDelay: number = 3000,
-): BackendStatusReturn => {
+): BackendStatusReturn {
 	const [status, setStatus] = useState<BackendStatus>('loading');
+	const [credits, setCredits] = useState<number>(0);
 
 	const checkStatus = useCallback(async (): Promise<void> => {
 		setStatus('loading');
@@ -19,9 +21,20 @@ const useBackendStatus = (
 
 		while (currentRetryCount < maxRetries) {
 			try {
-				const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/health`);
+				const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/credits`);
 				if (response.ok) {
-					setStatus('success');
+					const data = await response.json();
+					setCredits(data.credits);
+
+					if (data.credits >= 40) {
+						setStatus('success');
+					} else {
+						setStatus('no-balance');
+					}
+					return;
+				} else {
+					// Handle API error responses
+					setStatus('error');
 					return;
 				}
 			} catch (error) {
@@ -31,14 +44,14 @@ const useBackendStatus = (
 			currentRetryCount++;
 			await new Promise((resolve) => setTimeout(resolve, retryDelay));
 		}
-		setStatus('fail');
+
+		// After max retries, set status to error
+		setStatus('error');
 	}, [maxRetries, retryDelay]);
 
 	useEffect(() => {
 		void checkStatus();
 	}, [checkStatus, maxRetries, retryDelay]);
 
-	return { status, retry: checkStatus };
-};
-
-export default useBackendStatus;
+	return { status, retry: checkStatus, credits };
+}

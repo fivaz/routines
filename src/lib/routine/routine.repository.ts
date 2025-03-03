@@ -102,14 +102,17 @@ export async function generateRoutineImage(
 	};
 
 	try {
-		const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/generate-routine-image`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${tokenId}`, // Add Bearer token here
+		const response = await fetch(
+			`${process.env.NEXT_PUBLIC_BACKEND_URL}/protected/generate-routine-image`,
+			{
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${tokenId}`, // Add Bearer token here
+				},
+				body: JSON.stringify(body), // Send the body as JSON
 			},
-			body: JSON.stringify(body), // Send the body as JSON
-		});
+		);
 
 		return response.text();
 	} catch (error) {

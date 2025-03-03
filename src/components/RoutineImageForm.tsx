@@ -6,7 +6,7 @@ import { editRoutine, generateRoutineImage } from '@/lib/routine/routine.reposit
 import { useAuth } from '@/lib/user/auth-context';
 import { Button } from '@/components/base/button';
 import { ImageIcon } from 'lucide-react';
-import useBackendStatus from '@/lib/use-backend-status';
+import { useBackendStatus } from '@/lib/use-backend-status';
 import { Input } from '@/components/base/input';
 
 export function RoutineImageForm({

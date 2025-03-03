@@ -11,7 +11,7 @@ import { RoutineTimeList } from '@/components/routine/routine-time-list';
 import { RoutineRow } from '@/components/routine/routine-row';
 import { DragDropProvider } from '@dnd-kit/react';
 import { move } from '@dnd-kit/helpers';
-import useBackendStatus from '@/lib/use-backend-status';
+import { useBackendStatus } from '@/lib/use-backend-status';
 
 export default function Routines() {
 	const [routineForm, setRoutineForm] = useState<Routine | null>(null);
