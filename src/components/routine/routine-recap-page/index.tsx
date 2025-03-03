@@ -23,6 +23,9 @@ export function RoutineRecapPage({
 		if (!history) {
 			return 0;
 		}
+		if (!history.startAt || !history.endAt) {
+			return 0;
+		}
 		return getDuration(history.startAt, history.endAt);
 	}
 

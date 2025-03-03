@@ -55,10 +55,10 @@ export function sortTasks(tasks: Task[]) {
 
 export function latestTime(task: Task) {
 	const histories = Object.keys(task.history);
-	console.log(histories.length);
 	if (!histories.length) {
 		return '-';
 	}
+
 	const latestKey = histories.sort().pop();
 	if (!latestKey) {
 		console.error("no key found in history, this shouldn't happen");
@@ -66,7 +66,6 @@ export function latestTime(task: Task) {
 	}
 	const duration = getDurationFromDate(task, latestKey);
 	if (!duration) {
-		console.error("no duration found, this shouldn't happen");
 		return '-';
 	}
 	return formatSeconds(duration);
