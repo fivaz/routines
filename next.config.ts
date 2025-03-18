@@ -58,7 +58,7 @@ export default withSentryConfig(
 		// https://github.com/getsentry/sentry-webpack-plugin#options
 
 		org: 'fivaz-lb',
-		project: 'javascript-nextjs',
+		project: 'routine-frontend',
 
 		// Only print logs for uploading source maps in CI
 		silent: !process.env.CI,
