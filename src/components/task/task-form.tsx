@@ -137,7 +137,7 @@ export function TaskForm({
 										</Listbox>
 									</Field>
 									<Field>
-										<Label>Duration</Label>
+										<Label>Duration (mm:ss)</Label>
 										<Input
 											type="time"
 											value={convertDurationToHHmmss(taskIn.durationInSeconds)}
