@@ -11,6 +11,7 @@ import { HHmmss } from '@/lib/consts';
 import { Listbox, ListboxOption } from '@/components/base/listbox';
 import { useRoutines } from '@/lib/routine/routine.context';
 import { TaskImageForm } from '@/components/TaskImageForm';
+import * as Sentry from '@sentry/nextjs';
 
 export function TaskForm({
 	setTaskIn,
@@ -78,8 +79,15 @@ export function TaskForm({
 	}
 
 	function convertDurationToSeconds(durationHHmmss: string): number {
-		const date = parse(durationHHmmss, HHmmss, new Date()); // Parse into Date object
-		return date.getHours() * 3600 + date.getMinutes() * 60 + date.getSeconds();
+		try {
+			const date = parse(durationHHmmss, HHmmss, new Date()); // Parse into Date object
+			return date.getHours() * 3600 + date.getMinutes() * 60 + date.getSeconds();
+		} catch (error) {
+			Sentry.captureException(error, {
+				extra: { durationHHmmss },
+			});
+			return 60;
+		}
 	}
 
 	function convertDurationToHHmmss(durationInSeconds: number): string {
