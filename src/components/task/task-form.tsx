@@ -71,6 +71,7 @@ export function TaskForm({
 
 	function handleDuration(e: React.ChangeEvent<HTMLInputElement>) {
 		if (!taskIn) return;
+		console.log('e.target.value provided:', e.target.value);
 		const durationInSeconds = convertDurationToSeconds(e.target.value);
 
 		setTaskIn({ ...taskIn, durationInSeconds });
@@ -82,6 +83,7 @@ export function TaskForm({
 	}
 
 	function convertDurationToHHmmss(durationInSeconds: number): string {
+		console.log('durationInSeconds provided', durationInSeconds);
 		const date = addSeconds(startOfDay(new Date()), durationInSeconds); // Start from midnight and add seconds
 		return format(date, HHmmss); // Format to HH:mm
 	}
