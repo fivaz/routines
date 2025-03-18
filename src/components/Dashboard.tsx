@@ -53,7 +53,7 @@ export function Dashboard({ children }: React.PropsWithChildren) {
 			navbar={
 				<Navbar>
 					<Dropdown>
-						<Tooltip text={process.env.NEXT_PUBLIC_FIREBASE_API_KEY as string}>
+						<Tooltip text={process.env.NEXT_PUBLIC_COMMIT_HASH as string}>
 							<DropdownButton as={NavbarItem} className="max-lg:hidden">
 								<Logo className="text-green-500 w-5 h-5" />
 								<NavbarLabel>{APP_NAME}</NavbarLabel>
