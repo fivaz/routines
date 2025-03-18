@@ -6,8 +6,8 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import { ImageFocus, Task } from '@/lib/task/task.type';
 import { addTask, editTask } from '@/lib/task/task.repository';
 import { useAuth } from '@/lib/user/auth-context';
-import { addSeconds, format, parse, startOfDay } from 'date-fns';
-import { HHmmss } from '@/lib/consts';
+import { addSeconds, format, isValid, parse, startOfDay } from 'date-fns';
+import { mmss } from '@/lib/consts';
 import { Listbox, ListboxOption } from '@/components/base/listbox';
 import { useRoutines } from '@/lib/routine/routine.context';
 import { TaskImageForm } from '@/components/TaskImageForm';
@@ -72,28 +72,33 @@ export function TaskForm({
 
 	function handleDuration(e: React.ChangeEvent<HTMLInputElement>) {
 		if (!taskIn) return;
-		console.log('e.target.value provided:', e.target.value);
 		const durationInSeconds = convertDurationToSeconds(e.target.value);
 
 		setTaskIn({ ...taskIn, durationInSeconds });
 	}
 
-	function convertDurationToSeconds(durationHHmmss: string): number {
-		try {
-			const date = parse(durationHHmmss, HHmmss, new Date()); // Parse into Date object
-			return date.getHours() * 3600 + date.getMinutes() * 60 + date.getSeconds();
-		} catch (error) {
-			Sentry.captureException(error, {
-				extra: { durationHHmmss },
-			});
+	function convertDurationToSeconds(durationMmss: string): number {
+		const date = parse(durationMmss, mmss, new Date());
+
+		if (!isValid(date)) {
+			const errorMessage = `Invalid time format: ${durationMmss}. Expected format: 'mm:ss'`;
+
+			// Log to console
+			console.error(errorMessage);
+
+			// Capture and send to Sentry
+			Sentry.captureException(new Error(errorMessage));
+
 			return 60;
 		}
+
+		const [minutes, seconds] = durationMmss.split(':').map(Number);
+		return minutes * 60 + seconds;
 	}
 
 	function convertDurationToHHmmss(durationInSeconds: number): string {
-		console.log('durationInSeconds provided', durationInSeconds);
 		const date = addSeconds(startOfDay(new Date()), durationInSeconds); // Start from midnight and add seconds
-		return format(date, HHmmss); // Format to HH:mm
+		return format(date, mmss); // Format to mm:ss
 	}
 
 	function handleSelect(routineId: string) {
@@ -137,7 +142,6 @@ export function TaskForm({
 											type="time"
 											value={convertDurationToHHmmss(taskIn.durationInSeconds)}
 											name="durationInSeconds"
-											step="1"
 											onChange={handleDuration}
 										/>
 									</Field>

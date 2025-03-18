@@ -14,5 +14,5 @@ export const DB_PATH = {
 };
 
 export const yyyyMMdd = 'yyyy-MM-dd';
-export const HHmmss = 'HH:mm:ss';
+export const mmss = 'mm:ss';
 export const APP_NAME = 'Routines';
