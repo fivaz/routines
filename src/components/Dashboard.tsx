@@ -55,7 +55,7 @@ export function Dashboard({ children }: React.PropsWithChildren) {
 					<Dropdown>
 						<Tooltip text={process.env.NEXT_PUBLIC_COMMIT_HASH as string}>
 							<DropdownButton as={NavbarItem} className="max-lg:hidden">
-								<Logo className="text-green-500 w-5 h-5" />
+								<Logo className="text-green-500 size-5" />
 								<NavbarLabel>{APP_NAME}</NavbarLabel>
 							</DropdownButton>
 						</Tooltip>
@@ -97,7 +97,7 @@ export function Dashboard({ children }: React.PropsWithChildren) {
 						<Dropdown>
 							<Tooltip text={process.env.NEXT_PUBLIC_COMMIT_HASH as string}>
 								<DropdownButton as={NavbarItem} className="lg:mb-2.5">
-									<Logo className="text-green-500 w-5 h-5" />
+									<Logo className="text-green-500 size-5" />
 									<NavbarLabel>{APP_NAME}</NavbarLabel>
 								</DropdownButton>
 							</Tooltip>
