@@ -30,7 +30,18 @@ export default function Routines() {
 			},
 			{} as Record<string, Routine[]>,
 		);
-		setGroupedRoutines(groups);
+
+		const sortedGroups = Object.keys(groups)
+			.sort((a, b) => a.localeCompare(b))
+			.reduce(
+				(acc, key) => {
+					acc[key] = groups[key];
+					return acc;
+				},
+				{} as Record<string, Routine[]>,
+			);
+
+		setGroupedRoutines(sortedGroups);
 	}, [routines]);
 
 	function flattenGroupedRoutines(groups: Record<string, Routine[]>): Routine[] {

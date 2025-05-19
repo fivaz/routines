@@ -57,6 +57,10 @@ export function RoutineForm({
 										<Label>Name</Label>
 										<Input value={routineIn.name} name="name" onChange={handleChange} />
 									</Field>
+									<Field>
+										<Label>Group</Label>
+										<Input value={routineIn.group} name="group" onChange={handleChange} />
+									</Field>
 									<RoutineImageForm
 										close={close}
 										routineIn={routineIn}
