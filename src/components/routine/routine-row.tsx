@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react';
-import { Routine, RoutineTime } from '@/lib/routine/routine.type';
+import { Routine } from '@/lib/routine/routine.type';
 
 import { Routes } from '@/lib/consts';
 import Link from 'next/link';
@@ -12,14 +12,14 @@ import { ImageWaitingSkeleton } from '@/components/task/ImageWaitingSkeleton';
 export function RoutineRow({
 	routine,
 	index,
-	time,
-}: PropsWithChildren<{ routine: Routine; index: number; time: RoutineTime }>) {
+	group,
+}: PropsWithChildren<{ routine: Routine; index: number; group: string }>) {
 	const { ref, isDragging } = useSortable({
 		id: routine.id,
 		index,
 		type: 'item',
 		accept: 'item',
-		group: time,
+		group: group,
 	});
 
 	return (

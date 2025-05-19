@@ -1,12 +1,11 @@
 import React, { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react';
 import { Routine } from '@/lib/routine/routine.type';
-import { fetchRoutines, updateTimedRoutines } from '@/lib/routine/routine.repository';
+import { fetchRoutines, updateRoutines } from '@/lib/routine/routine.repository';
 import { useAuth } from '@/lib/user/auth-context';
 
 const RoutineContext = createContext<{
 	routines: Routine[];
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	handleSort: (event: any) => void;
+	handleSort: (routines: Routine[]) => void;
 }>({
 	routines: [],
 	handleSort: () => {},
@@ -25,9 +24,9 @@ export function RoutineProvider({ children }: PropsWithChildren) {
 		return () => unsubscribe();
 	}, [user]);
 
-	function handleSort() {
+	function handleSort(routines: Routine[]) {
 		if (!user?.uid) return;
-		void updateTimedRoutines(user.uid, {}); // timedRoutines removed; passing empty object or adjust as needed
+		void updateRoutines(user.uid, routines);
 	}
 
 	return (

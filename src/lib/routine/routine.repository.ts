@@ -71,17 +71,12 @@ export function deleteRoutine(userId: string, routineId: string) {
 	deleteDoc(doc(db, getRoutinePath(userId), routineId));
 }
 
-export async function updateGroupedRoutines(
-	userId: string,
-	groupedRoutines: Record<string, Routine[]>,
-) {
+export async function updateRoutines(userId: string, routines: Routine[]) {
 	const batch = writeBatch(db);
 
-	Object.entries(groupedRoutines).forEach(([group, routines]) => {
-		routines.forEach((routine, index) => {
-			const routineRef = doc(db, getRoutinePath(userId), routine.id);
-			batch.update(routineRef, { order: index, group });
-		});
+	routines.forEach((routine, index) => {
+		const routineRef = doc(db, getRoutinePath(userId), routine.id);
+		batch.update(routineRef, { order: routine.order, group: routine.group });
 	});
 
 	try {

@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/base/button';
 import { Heading } from '@/components/base/heading';
 import { RoutineForm } from '@/components/routine/routine-form';
@@ -15,26 +15,57 @@ import { useBackendStatus } from '@/lib/use-backend-status';
 
 export default function Routines() {
 	const [routineForm, setRoutineForm] = useState<Routine | null>(null);
-	const { groupedRoutines, setGroupedRoutines, handleSort } = useRoutines();
+	const { routines, handleSort } = useRoutines();
 	const { status } = useBackendStatus();
+
+	const [groupedRoutines, setGroupedRoutines] = useState<Record<string, Routine[]>>({});
+
+	useEffect(() => {
+		const groups = routines.reduce(
+			(acc, routine) => {
+				const group = routine.group || '';
+				if (!acc[group]) acc[group] = [];
+				acc[group].push(routine);
+				return acc;
+			},
+			{} as Record<string, Routine[]>,
+		);
+		setGroupedRoutines(groups);
+	}, [routines]);
+
+	function flattenGroupedRoutines(groups: Record<string, Routine[]>): Routine[] {
+		return Object.entries(groups).flatMap(([group, routines]) =>
+			routines.map((routine, index) => ({
+				...routine,
+				group,
+				order: index,
+			})),
+		);
+	}
 
 	function handleAddRoutine() {
 		setRoutineForm({ ...emptyRoutine });
+	}
+
+	function handleDragOver(event: Parameters<typeof move>[1]) {
+		setGroupedRoutines(move(groupedRoutines, event));
+	}
+
+	function handleDragEnd() {
+		const flat = flattenGroupedRoutines(groupedRoutines);
+		handleSort(flat);
 	}
 
 	return (
 		<>
 			<Heading className="mb-4">Routines</Heading>
 
-			<DragDropProvider
-				onDragOver={(event) => setGroupedRoutines((items) => move(items, event))}
-				onDragEnd={handleSort}
-			>
+			<DragDropProvider onDragOver={handleDragOver} onDragEnd={handleDragEnd}>
 				<div className="flex flex-col gap-2">
 					{Object.entries(groupedRoutines).map(([group, routines]) => (
-						<RoutineTimeList key={group} time={group}>
+						<RoutineTimeList key={group} group={group}>
 							{routines.map((routine, index) => (
-								<RoutineRow time={group} index={index} routine={routine} key={routine.id} />
+								<RoutineRow group={group} index={index} routine={routine} key={routine.id} />
 							))}
 						</RoutineTimeList>
 					))}
