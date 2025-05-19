@@ -10,7 +10,7 @@ import {
 } from 'firebase/firestore';
 import { db, storage } from '@/lib/firebase';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
-import { Routine, RoutineTime } from '@/lib/routine/routine.type';
+import { Routine } from '@/lib/routine/routine.type';
 import { DB_PATH } from '@/lib/consts';
 
 export function getRoutinePath(userId: string) {
@@ -71,16 +71,16 @@ export function deleteRoutine(userId: string, routineId: string) {
 	deleteDoc(doc(db, getRoutinePath(userId), routineId));
 }
 
-export async function updateTimedRoutines(
+export async function updateGroupedRoutines(
 	userId: string,
-	timedRoutines: Record<RoutineTime, Routine[]>,
+	groupedRoutines: Record<string, Routine[]>,
 ) {
 	const batch = writeBatch(db);
 
-	Object.entries(timedRoutines).forEach(([time, routines]) => {
+	Object.entries(groupedRoutines).forEach(([group, routines]) => {
 		routines.forEach((routine, index) => {
 			const routineRef = doc(db, getRoutinePath(userId), routine.id);
-			batch.update(routineRef, { order: index, time });
+			batch.update(routineRef, { order: index, group });
 		});
 	});
 
