@@ -27,9 +27,9 @@ export function RoutineForm({
 	async function handleSubmit() {
 		if (!user || !routineIn) return;
 		if (routineIn.id) {
-			await editRoutine(user.uid, routineIn, imageFile);
+			editRoutine(user.uid, routineIn, imageFile);
 		} else {
-			await addRoutine(user.uid, routineIn, imageFile);
+			addRoutine(user.uid, routineIn, imageFile);
 		}
 		close();
 	}
