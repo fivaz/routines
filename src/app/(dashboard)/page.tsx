@@ -7,8 +7,8 @@ import { emptyRoutine, type Routine } from '@/lib/routine/routine.type';
 
 import { PlusIcon } from 'lucide-react';
 import { useRoutines } from '@/lib/routine/routine.context';
-import { RoutineTimeList } from '@/components/routine/routine-time-list';
-import { RoutineRow } from '@/components/routine/routine-row';
+import { RoutineGroupList } from '@/app/(dashboard)/routine/routine-group-list';
+import { RoutineRow } from '@/app/(dashboard)/routine/routine-row';
 import { DragDropProvider } from '@dnd-kit/react';
 import { move } from '@dnd-kit/helpers';
 import { useBackendStatus } from '@/lib/use-backend-status';
@@ -74,11 +74,11 @@ export default function Routines() {
 			<DragDropProvider onDragOver={handleDragOver} onDragEnd={handleDragEnd}>
 				<div className="flex flex-col gap-2">
 					{Object.entries(groupedRoutines).map(([group, routines]) => (
-						<RoutineTimeList key={group} group={group}>
+						<RoutineGroupList key={group} group={group}>
 							{routines.map((routine, index) => (
 								<RoutineRow group={group} index={index} routine={routine} key={routine.id} />
 							))}
-						</RoutineTimeList>
+						</RoutineGroupList>
 					))}
 				</div>
 			</DragDropProvider>

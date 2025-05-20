@@ -1,9 +1,9 @@
 'use client';
 import { useState } from 'react';
 
-import RoutineTaskListPage from '@/components/routine/routine-task-list-page';
-import RoutineFocusPage from '@/components/routine/routine-focus-page/index';
-import { RoutineRecapPage } from '@/components/routine/routine-recap-page';
+import RoutineTaskListPage from '@/app/(dashboard)/routine/[routineId]/routine-task-list-page';
+import RoutineFocusPage from '@/app/(dashboard)/routine/[routineId]/routine-focus-page/index';
+import RoutineRecapPage from '@/app/(dashboard)/routine/[routineId]/routine-recap-page';
 
 export default function Routine() {
 	const [page, setPage] = useState<'focus' | 'recap' | 'list'>('list');

@@ -3,7 +3,7 @@ import { Subheading } from '@/components/base/heading';
 import { useDroppable } from '@dnd-kit/react';
 import { CollisionPriority } from '@dnd-kit/abstract';
 
-export function RoutineTimeList({ group, children }: PropsWithChildren<{ group: string }>) {
+export function RoutineGroupList({ group, children }: PropsWithChildren<{ group: string }>) {
 	const { isDropTarget, ref } = useDroppable({
 		id: group,
 		type: 'column',

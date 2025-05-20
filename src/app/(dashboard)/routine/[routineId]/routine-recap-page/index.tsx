@@ -3,14 +3,14 @@ import { Task } from '@/lib/task/task.type';
 import { Heading } from '@/components/base/heading';
 import { Text } from '@/components/base/text';
 import { formatSeconds, formatSecondsSmall, getDuration, getHistory } from '@/lib/task/task.utils';
-import { TaskHistoryCarousel } from '@/components/routine/routine-recap-page/task-history-carousel';
+import { TaskHistoryCarousel } from '@/app/(dashboard)/routine/[routineId]/routine-recap-page/task-history-carousel';
 import { ChevronDownIcon, ChevronUpIcon, UndoIcon } from 'lucide-react';
 import { Button } from '@/components/base/button';
 import { useTasks } from '@/lib/task/task.context';
 import Image from 'next/image';
 import clsx from 'clsx';
 
-export function RoutineRecapPage({
+export default function RoutineRecapPage({
 	setPage,
 }: {
 	setPage: Dispatch<SetStateAction<'focus' | 'recap' | 'list'>>;
