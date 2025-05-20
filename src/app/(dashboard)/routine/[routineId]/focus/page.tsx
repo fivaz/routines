@@ -1,24 +1,24 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+'use client';
+import { useEffect, useState } from 'react';
 import { Ellipsis } from 'lucide-react';
 import { getDuration, getHistory } from '@/lib/task/task.utils';
 import { Dropdown, DropdownButton, DropdownItem, DropdownMenu } from '@/components/base/dropdown';
-import { RoutineTasksSummary } from '@/app/(dashboard)/routine/[routineId]/routine-focus-page/routine-tasks-summary';
-import { RoutineFocusBottom } from '@/app/(dashboard)/routine/[routineId]/routine-focus-page/routine-focus-bottom';
+import { RoutineTasksSummary } from '@/app/(dashboard)/routine/[routineId]/focus/routine-tasks-summary';
+import { RoutineFocusBottom } from '@/app/(dashboard)/routine/[routineId]/focus/routine-focus-bottom';
 import { useTasks } from '@/lib/task/task.context';
 import { useRoutine } from '@/lib/routine/routine.hooks';
 import { Heading } from '@/components/base/heading';
 import { Skeleton } from '@/components/Skeleton';
+import { useParams, useRouter } from 'next/navigation';
 
-export default function RoutineFocusPage({
-	setPage,
-}: {
-	setPage: Dispatch<SetStateAction<'focus' | 'recap' | 'list'>>;
-}) {
+export default function RoutineFocusPage() {
 	const [currentTaskIndex, setCurrentTaskIndex] = useState(0);
 	const [elapsedTime, setElapsedTime] = useState(0);
 	const [isRunning, setIsRunning] = useState(false);
 	const { tasks } = useTasks();
 	const routine = useRoutine();
+	const { routineId } = useParams<{ routineId: string }>();
+	const router = useRouter();
 
 	useEffect(() => {
 		const today = new Date().toISOString().split('T')[0];
@@ -31,7 +31,7 @@ export default function RoutineFocusPage({
 	}, [currentTaskIndex, tasks]);
 
 	function handleEndFocus() {
-		setPage('list');
+		router.push(`/routine/${routineId}`);
 	}
 
 	return (
@@ -81,7 +81,6 @@ export default function RoutineFocusPage({
 			<RoutineFocusBottom
 				isRunning={isRunning}
 				setIsRunning={setIsRunning}
-				setPage={setPage}
 				currentTaskIndex={currentTaskIndex}
 				elapsedTime={elapsedTime}
 				setElapsedTime={setElapsedTime}

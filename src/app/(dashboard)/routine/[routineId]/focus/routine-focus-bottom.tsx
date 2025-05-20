@@ -4,7 +4,7 @@ import { persistTask } from '@/lib/task/task.repository';
 import { useAuth } from '@/lib/user/auth-context';
 import { usePrompt } from '@/lib/prompt-context';
 import { Dispatch, SetStateAction, useEffect, useMemo } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useTasks } from '@/lib/task/task.context';
 
 export function RoutineFocusBottom({
@@ -12,23 +12,22 @@ export function RoutineFocusBottom({
 	elapsedTime,
 	setElapsedTime,
 	currentTaskIndex,
-	setPage,
 	isRunning,
 	setIsRunning,
 }: {
 	isRunning: boolean;
 	setIsRunning: Dispatch<SetStateAction<boolean>>;
 	setCurrentTaskIndex: Dispatch<SetStateAction<number>>;
-	setPage: Dispatch<SetStateAction<'focus' | 'recap' | 'list'>>;
 	elapsedTime: number;
 	currentTaskIndex: number;
 	setElapsedTime: Dispatch<SetStateAction<number>>;
 }) {
 	const { tasks } = useTasks();
 	const { user } = useAuth();
-	const { routineId } = useParams<{ routineId: string }>();
 	const { createPrompt } = usePrompt();
 	const today = new Date().toISOString().split('T')[0];
+	const { routineId } = useParams<{ routineId: string }>();
+	const router = useRouter();
 
 	useEffect(() => {
 		let timer: NodeJS.Timeout | null = null;
@@ -87,7 +86,7 @@ export function RoutineFocusBottom({
 		if (currentTaskIndex < tasks.length - 1) {
 			goToNextTask();
 		} else {
-			setPage('list');
+			router.push(`/routine/${routineId}`);
 		}
 	}
 

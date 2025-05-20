@@ -1,4 +1,5 @@
-import { Dispatch, SetStateAction, useState } from 'react';
+'use client';
+import { useState } from 'react';
 import { Task } from '@/lib/task/task.type';
 import { Heading } from '@/components/base/heading';
 import { Text } from '@/components/base/text';
@@ -9,14 +10,12 @@ import { Button } from '@/components/base/button';
 import { useTasks } from '@/lib/task/task.context';
 import Image from 'next/image';
 import clsx from 'clsx';
+import { useParams } from 'next/navigation';
 
-export default function RoutineRecapPage({
-	setPage,
-}: {
-	setPage: Dispatch<SetStateAction<'focus' | 'recap' | 'list'>>;
-}) {
+export default function RoutineRecapPage() {
 	const [date, setDate] = useState<string>(new Date().toISOString().split('T')[0]);
 	const { tasks } = useTasks();
+	const { routineId } = useParams<{ routineId: string }>();
 
 	function getDurationFromDate(task: Task, date: string) {
 		const history = getHistory(task, date);
@@ -64,7 +63,7 @@ export default function RoutineRecapPage({
 		<div className="flex flex-col">
 			<div className="flex justify-between items-center">
 				<Heading className="pb-4">Recap</Heading>
-				<Button outline onClick={() => setPage('list')}>
+				<Button outline href={`routine/${routineId}`}>
 					<UndoIcon className="size-5" />
 				</Button>
 			</div>

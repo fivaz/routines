@@ -1,6 +1,6 @@
 import { Dispatch, PropsWithChildren, SetStateAction, useState } from 'react';
 
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { deleteRoutine } from '@/lib/routine/routine.repository';
 import { useAuth } from '@/lib/user/auth-context';
 import { type Routine } from '@/lib/routine/routine.type';
@@ -24,13 +24,14 @@ import { useBackendStatus } from '@/lib/use-backend-status';
 export default function RoutineTaskListPage({
 	setPage,
 }: PropsWithChildren<{
-	setPage: Dispatch<SetStateAction<'focus' | 'recap' | 'list'>>;
+	setPage: Dispatch<SetStateAction<'recap' | 'list'>>;
 }>) {
 	const [routineForm, setRoutineForm] = useState<Routine | null>(null);
 	const [taskForm, setTaskForm] = useState<Task | null>(null);
 	const { handleSort, tasks } = useTasks();
 	const routine = useRoutine();
 	const { status } = useBackendStatus();
+	const pathname = usePathname();
 
 	const { user } = useAuth();
 	const router = useRouter();
@@ -134,7 +135,7 @@ export default function RoutineTaskListPage({
 			</DragDropProvider>
 
 			<div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-20">
-				<Button disabled={tasks.length === 0} color="green" onClick={() => setPage('focus')}>
+				<Button disabled={tasks.length === 0} color="green" href={`${pathname}/focus`}>
 					<ZapIcon />
 					Enter Focus
 				</Button>
