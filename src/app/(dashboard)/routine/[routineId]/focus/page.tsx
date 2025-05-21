@@ -19,19 +19,26 @@ export default function RoutineFocusPage() {
 	const routine = useRoutine();
 	const { routineId } = useParams<{ routineId: string }>();
 	const router = useRouter();
+	const currentTask = tasks[currentTaskIndex];
 
 	useEffect(() => {
-		const today = new Date().toISOString().split('T')[0];
-		const todayHistory = getHistory(tasks[currentTaskIndex], today);
-		if (todayHistory) {
-			setElapsedTime(getDuration(todayHistory.startAt, todayHistory.endAt));
-		} else {
-			setElapsedTime(0);
+		if (currentTask) {
+			const today = new Date().toISOString().split('T')[0];
+			const todayHistory = getHistory(currentTask, today);
+			if (todayHistory) {
+				setElapsedTime(getDuration(todayHistory.startAt, todayHistory.endAt));
+			} else {
+				setElapsedTime(0);
+			}
 		}
-	}, [currentTaskIndex, tasks]);
+	}, [currentTask, tasks]);
 
 	function handleEndFocus() {
 		router.push(`/routine/${routineId}`);
+	}
+
+	if (!currentTask) {
+		return null;
 	}
 
 	return (
@@ -65,10 +72,10 @@ export default function RoutineFocusPage() {
 			</div>
 
 			<div className="flex overflow-hidden aspect-square items-center justify-center">
-				{tasks[currentTaskIndex].image ? (
+				{currentTask.image ? (
 					<img
-						src={tasks[currentTaskIndex].image}
-						alt={tasks[currentTaskIndex].name}
+						src={currentTask.image}
+						alt={currentTask.name}
 						className="h-full w-full object-cover rounded-lg"
 					/>
 				) : (

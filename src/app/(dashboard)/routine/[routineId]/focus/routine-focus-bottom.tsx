@@ -6,6 +6,7 @@ import { usePrompt } from '@/lib/prompt-context';
 import { Dispatch, SetStateAction, useEffect, useMemo } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useTasks } from '@/lib/task/task.context';
+import RoutineStatus from '@/app/(dashboard)/routine/[routineId]/focus/routine-status';
 
 export function RoutineFocusBottom({
 	setCurrentTaskIndex,
@@ -28,6 +29,7 @@ export function RoutineFocusBottom({
 	const today = new Date().toISOString().split('T')[0];
 	const { routineId } = useParams<{ routineId: string }>();
 	const router = useRouter();
+	const currentTask = tasks[currentTaskIndex];
 
 	useEffect(() => {
 		let timer: NodeJS.Timeout | null = null;
@@ -50,6 +52,10 @@ export function RoutineFocusBottom({
 		[tasks, today],
 	);
 
+	if (!currentTask) {
+		return null;
+	}
+
 	function totalExpectedTime() {
 		return formatSeconds(tasks.reduce((total, task) => total + task.durationInSeconds, 0));
 	}
@@ -57,7 +63,7 @@ export function RoutineFocusBottom({
 	async function handleStart() {
 		if (!user) return;
 
-		if (tasks[currentTaskIndex].history?.[today]) {
+		if (currentTask.history?.[today]) {
 			if (
 				!(await createPrompt({
 					title: 'Task already accomplished today',
@@ -69,20 +75,21 @@ export function RoutineFocusBottom({
 		}
 
 		const startTime = new Date().toISOString();
-		tasks[currentTaskIndex].history[today] = { startAt: startTime, endAt: '' };
+		currentTask.history[today] = { startAt: startTime, endAt: '' };
 
 		setIsRunning(true);
-		void persistTask(user.uid, routineId, tasks[currentTaskIndex]);
+		void persistTask(user.uid, routineId, currentTask);
 	}
 
 	function handleStop() {
 		if (!user) return;
 
 		const today = new Date().toISOString().split('T')[0];
-		tasks[currentTaskIndex].history[today].endAt = new Date().toISOString();
+		currentTask.history[today].endAt = new Date().toISOString();
 
 		setIsRunning(false);
-		void persistTask(user.uid, routineId, tasks[currentTaskIndex]);
+		void persistTask(user.uid, routineId, currentTask);
+
 		if (currentTaskIndex < tasks.length - 1) {
 			goToNextTask();
 		} else {
@@ -120,10 +127,7 @@ export function RoutineFocusBottom({
 	};
 
 	function progressBarSize() {
-		const widthPercentage = Math.min(
-			(elapsedTime / tasks[currentTaskIndex].durationInSeconds) * 100,
-			100,
-		);
+		const widthPercentage = Math.min((elapsedTime / currentTask.durationInSeconds) * 100, 100);
 
 		return { width: `${widthPercentage}%` };
 	}
@@ -131,14 +135,16 @@ export function RoutineFocusBottom({
 	return (
 		<div className="flex flex-col gap-4 w-full">
 			<div className="gap-2">
-				<h2 className="first-letter:capitalize text-xl font-bold text-green-600 dark:text-green-500">
-					{tasks[currentTaskIndex].name}
-				</h2>
+				<div className="flex justify-between">
+					<h2 className="first-letter:capitalize text-xl font-bold text-green-600 dark:text-green-500">
+						{currentTask.name}
+					</h2>
+					<RoutineStatus today={today} tasks={tasks} />
+				</div>
 
 				<div className="flex justify-between items-end">
 					<div className="text-lg text-gray-800 dark:text-gray-300">
-						{formatSeconds(elapsedTime) || '0s'} /{' '}
-						{formatSeconds(tasks[currentTaskIndex].durationInSeconds)}
+						{formatSeconds(elapsedTime) || '0s'} / {formatSeconds(currentTask.durationInSeconds)}
 					</div>
 					<div className="text-red-500 text-lg font-semibold">
 						{totalElapsedTime} / {totalExpectedTime()}
