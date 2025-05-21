@@ -74,7 +74,7 @@ export function deleteRoutine(userId: string, routineId: string) {
 export async function updateRoutines(userId: string, routines: Routine[]) {
 	const batch = writeBatch(db);
 
-	routines.forEach((routine, index) => {
+	routines.forEach((routine) => {
 		const routineRef = doc(db, getRoutinePath(userId), routine.id);
 		batch.update(routineRef, { order: routine.order, group: routine.group });
 	});
