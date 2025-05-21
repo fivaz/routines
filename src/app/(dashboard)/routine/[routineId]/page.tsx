@@ -1,6 +1,5 @@
 'use client';
 import { useParams, useRouter } from 'next/navigation';
-import { deleteRoutine } from '@/lib/routine/routine.repository';
 import { useAuth } from '@/lib/user/auth-context';
 import { type Routine } from '@/lib/routine/routine.type';
 import { Dropdown, DropdownButton, DropdownItem, DropdownMenu } from '@/components/base/dropdown';
@@ -14,7 +13,7 @@ import { TaskForm } from '@/components/task/task-form';
 import { usePrompt } from '@/lib/prompt-context';
 import { ListIcon } from '@/components/icons/ListIcon';
 import { useTasks } from '@/lib/task/task.context';
-import { useRoutine } from '@/lib/routine/routine.hooks';
+import { useRoutine, useRoutineActions } from '@/lib/routine/routine.hooks';
 import { Heading, Subheading } from '@/components/base/heading';
 import { DragDropProvider } from '@dnd-kit/react';
 import { formatSeconds } from '@/lib/task/task.utils';
@@ -24,14 +23,18 @@ import { useState } from 'react';
 export default function RoutinePage() {
 	const [routineForm, setRoutineForm] = useState<Routine | null>(null);
 	const [taskForm, setTaskForm] = useState<Task | null>(null);
+
 	const { handleSort, tasks } = useTasks();
 	const routine = useRoutine();
 	const { status } = useBackendStatus();
+
 	const { routineId } = useParams<{ routineId: string }>();
 
 	const { user } = useAuth();
 	const router = useRouter();
 	const { createPrompt } = usePrompt();
+
+	const { deleteRoutine } = useRoutineActions();
 
 	if (!routine) return;
 
@@ -49,7 +52,6 @@ export default function RoutinePage() {
 	}
 
 	async function handleDelete() {
-		if (!user) return;
 		if (!routine) return;
 		if (
 			await createPrompt({
@@ -57,7 +59,7 @@ export default function RoutinePage() {
 				message: 'Are you sure you want to delete this routine?',
 			})
 		) {
-			deleteRoutine(user.uid, routine.id);
+			void deleteRoutine(routine.id);
 			router.push(Routes.ROOT);
 		}
 	}
