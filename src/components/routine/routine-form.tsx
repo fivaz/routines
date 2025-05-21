@@ -2,7 +2,7 @@ import { Button } from '@/components/base/button';
 import { Dialog, DialogActions, DialogBody, DialogTitle } from '@/components/base/dialog';
 import { Field, FieldGroup, Fieldset, Label } from '@/components/base/fieldset';
 import { Input } from '@/components/base/input';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
 import { Routine } from '@/lib/routine/routine.type';
 import { addRoutine, editRoutine } from '@/lib/routine/routine.repository';
 import { useAuth } from '@/lib/user/auth-context';
@@ -24,12 +24,13 @@ export function RoutineForm({
 		setRoutineIn(null);
 	}
 
-	async function handleSubmit() {
+	async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+		event.preventDefault();
 		if (!user || !routineIn) return;
 		if (routineIn.id) {
-			editRoutine(user.uid, routineIn, imageFile);
+			void editRoutine(user.uid, routineIn, imageFile);
 		} else {
-			addRoutine(user.uid, routineIn, imageFile);
+			void addRoutine(user.uid, routineIn, imageFile);
 		}
 		close();
 	}
@@ -42,45 +43,47 @@ export function RoutineForm({
 	return (
 		<>
 			<Dialog open={routineIn !== null} onClose={close}>
-				{routineIn && (
-					<>
-						<DialogTitle>
-							<div className="text-lg text-green-500">
-								{routineIn.id ? 'Edit' : 'Create'} routine
-							</div>
-						</DialogTitle>
+				<form onSubmit={handleSubmit}>
+					{routineIn && (
+						<>
+							<DialogTitle>
+								<div className="text-lg text-green-500">
+									{routineIn.id ? 'Edit' : 'Create'} routine
+								</div>
+							</DialogTitle>
 
-						<DialogBody>
-							<Fieldset>
-								<FieldGroup>
-									<Field>
-										<Label>Name</Label>
-										<Input value={routineIn.name} name="name" onChange={handleChange} />
-									</Field>
-									<Field>
-										<Label>Group</Label>
-										<Input value={routineIn.group} name="group" onChange={handleChange} />
-									</Field>
-									<RoutineImageForm
-										close={close}
-										routineIn={routineIn}
-										setRoutineIn={setRoutineIn}
-										setImageFile={setImageFile}
-									/>
-								</FieldGroup>
-							</Fieldset>
-						</DialogBody>
+							<DialogBody>
+								<Fieldset>
+									<FieldGroup>
+										<Field>
+											<Label>Name</Label>
+											<Input value={routineIn.name} name="name" onChange={handleChange} />
+										</Field>
+										<Field>
+											<Label>Group</Label>
+											<Input value={routineIn.group} name="group" onChange={handleChange} />
+										</Field>
+										<RoutineImageForm
+											close={close}
+											routineIn={routineIn}
+											setRoutineIn={setRoutineIn}
+											setImageFile={setImageFile}
+										/>
+									</FieldGroup>
+								</Fieldset>
+							</DialogBody>
 
-						<DialogActions>
-							<Button plain onClick={close}>
-								Cancel
-							</Button>
-							<Button color="green" onClick={handleSubmit}>
-								{routineIn.id ? 'Edit' : 'Create'}
-							</Button>
-						</DialogActions>
-					</>
-				)}
+							<DialogActions>
+								<Button plain onClick={close}>
+									Cancel
+								</Button>
+								<Button color="green" type="submit">
+									{routineIn.id ? 'Edit' : 'Create'}
+								</Button>
+							</DialogActions>
+						</>
+					)}
+				</form>
 			</Dialog>
 		</>
 	);
