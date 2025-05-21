@@ -91,9 +91,15 @@ export function RoutineFocusBottom({
 	}
 
 	function handlePrevTask() {
-		if (!isRunning && currentTaskIndex > 0) {
-			setCurrentTaskIndex(currentTaskIndex - 1);
+		if (isRunning) {
+			return;
 		}
+
+		if (currentTaskIndex <= 0) {
+			return;
+		}
+
+		setCurrentTaskIndex(currentTaskIndex - 1);
 	}
 
 	function goToNextTask() {
@@ -101,9 +107,16 @@ export function RoutineFocusBottom({
 	}
 
 	const handleNextTask = () => {
-		if (!isRunning && currentTaskIndex < tasks.length - 1) {
-			setCurrentTaskIndex(currentTaskIndex + 1);
+		if (isRunning) {
+			return;
 		}
+
+		if (currentTaskIndex >= tasks.length - 1) {
+			router.push(`/routine/${routineId}/finish`);
+			return;
+		}
+
+		setCurrentTaskIndex(currentTaskIndex + 1);
 	};
 
 	function progressBarSize() {
