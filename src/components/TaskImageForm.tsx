@@ -13,10 +13,9 @@ import { ImageFocus, Task } from '@/lib/task/task.type';
 import { ImageDialogButton } from '@/components/ImageDialogButton';
 import { Dispatch, SetStateAction } from 'react';
 import { Button } from '@/components/base/button';
-import { editTask, generateTaskImage } from '@/lib/task/task.repository';
-import { useAuth } from '@/lib/user/auth-context';
 import { useBackendStatus } from '@/lib/use-backend-status';
 import { Input } from '@/components/base/input';
+import { useTaskActions } from '@/lib/task/task.hooks';
 
 export function TaskImageForm({
 	taskIn,
@@ -34,20 +33,17 @@ export function TaskImageForm({
 	setFocus: Dispatch<SetStateAction<ImageFocus>>;
 	close: () => void;
 }) {
-	const { user } = useAuth();
 	const { status } = useBackendStatus();
+	const { editTask, generateTaskImage } = useTaskActions();
 
 	async function handleImageGeneration(imageFocus: ImageFocus) {
-		if (!user || !taskIn) return;
-
-		const tokenId = await user.getIdToken();
+		if (!taskIn) return;
 
 		const image = await generateTaskImage({
 			routineId,
 			taskId: taskIn.id,
 			taskName: taskIn.name,
 			focus: imageFocus,
-			tokenId,
 		});
 
 		const taskWithImage = { ...taskIn, image };
@@ -55,7 +51,6 @@ export function TaskImageForm({
 		setTaskIn(taskWithImage);
 
 		void editTask({
-			userId: user.uid,
 			routineId,
 			newRoutineId: routineId,
 			imageFile: null,

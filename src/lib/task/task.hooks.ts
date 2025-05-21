@@ -3,6 +3,7 @@ import {
 	addTask as addTaskRepo,
 	deleteTask as deleteTaskRepo,
 	editTask as editTaskRepo,
+	generateTaskImage as generateTaskImageRepo,
 } from './task.repository';
 import { ImageFocus, Task } from './task.type';
 
@@ -14,7 +15,7 @@ export function useTaskActions() {
 			console.log('No authenticated user found');
 			return;
 		}
-		return await deleteTaskRepo(user.uid, routineId, taskId);
+		return deleteTaskRepo(user.uid, routineId, taskId);
 	}
 
 	async function editTask(params: {
@@ -27,7 +28,7 @@ export function useTaskActions() {
 			console.log('No authenticated user found');
 			return;
 		}
-		return await editTaskRepo({ userId: user.uid, ...params });
+		return editTaskRepo({ userId: user.uid, ...params });
 	}
 
 	async function addTask(params: {
@@ -43,8 +44,22 @@ export function useTaskActions() {
 
 		const tokenId = await user.getIdToken();
 
-		return await addTaskRepo({ userId: user.uid, ...params, tokenId });
+		return addTaskRepo({ userId: user.uid, ...params, tokenId });
 	}
 
-	return { deleteTask, editTask, addTask };
+	async function generateTaskImage(params: {
+		routineId: string;
+		taskId: string;
+		taskName: string;
+		focus: ImageFocus;
+	}): Promise<string> {
+		if (!user?.uid) {
+			console.log('No authenticated user found');
+			return 'error';
+		}
+		const tokenId = await user.getIdToken();
+		return generateTaskImageRepo({ ...params, tokenId });
+	}
+
+	return { deleteTask, editTask, addTask, generateTaskImage };
 }
