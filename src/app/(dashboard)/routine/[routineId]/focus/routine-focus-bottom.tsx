@@ -23,7 +23,7 @@ export function RoutineFocusBottom({
 	currentTaskIndex: number;
 	setElapsedTime: Dispatch<SetStateAction<number>>;
 }) {
-	const { tasks } = useTasks();
+	const { tasks, setTasks } = useTasks();
 	const { user } = useAuth();
 	const { createPrompt } = usePrompt();
 	const today = new Date().toISOString().split('T')[0];
@@ -33,10 +33,29 @@ export function RoutineFocusBottom({
 
 	useEffect(() => {
 		let timer: NodeJS.Timeout | null = null;
+
 		if (isRunning) {
 			setElapsedTime(0);
+
 			timer = setInterval(() => {
-				setElapsedTime((prev) => prev + 1);
+				setElapsedTime((prev) => {
+					const newTime = prev + 1;
+
+					const now = new Date().toISOString();
+
+					setTasks((prevTasks) => {
+						const updatedTasks = [...prevTasks];
+						const task = updatedTasks[currentTaskIndex];
+
+						if (task?.history?.[today]) {
+							task.history[today].endAt = now;
+						}
+
+						return updatedTasks;
+					});
+
+					return newTime;
+				});
 			}, 1000);
 		}
 
@@ -45,7 +64,7 @@ export function RoutineFocusBottom({
 				clearInterval(timer);
 			}
 		};
-	}, [isRunning, setElapsedTime]);
+	}, [isRunning, setElapsedTime, today, currentTaskIndex, setTasks]);
 
 	const totalElapsedTime = useMemo(
 		() => formatSeconds(tasks.reduce((total, task) => total + getDurationFromDate(task, today), 0)),
