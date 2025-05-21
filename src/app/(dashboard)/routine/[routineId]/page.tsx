@@ -1,6 +1,5 @@
 'use client';
 import { useParams, useRouter } from 'next/navigation';
-import { useAuth } from '@/lib/user/auth-context';
 import { type Routine } from '@/lib/routine/routine.type';
 import { Dropdown, DropdownButton, DropdownItem, DropdownMenu } from '@/components/base/dropdown';
 import { Ellipsis, PlusIcon, ScrollTextIcon, ZapIcon } from 'lucide-react';
@@ -19,6 +18,7 @@ import { DragDropProvider } from '@dnd-kit/react';
 import { formatSeconds } from '@/lib/task/task.utils';
 import { useBackendStatus } from '@/lib/use-backend-status';
 import { useState } from 'react';
+import { Skeleton } from '@/components/Skeleton';
 
 export default function RoutinePage() {
 	const [routineForm, setRoutineForm] = useState<Routine | null>(null);
@@ -27,16 +27,10 @@ export default function RoutinePage() {
 	const { handleSort, tasks } = useTasks();
 	const routine = useRoutine();
 	const { status } = useBackendStatus();
-
 	const { routineId } = useParams<{ routineId: string }>();
-
-	const { user } = useAuth();
-	const router = useRouter();
 	const { createPrompt } = usePrompt();
-
 	const { deleteRoutine } = useRoutineActions();
-
-	if (!routine) return;
+	const router = useRouter();
 
 	function handleGoToRecap() {
 		router.push(`/routine/${routineId}/recap`);
@@ -64,14 +58,16 @@ export default function RoutinePage() {
 		}
 	}
 
-	if (!user) return;
-
 	return (
 		<div className="flex flex-col gap-5">
 			<div className="flex justify-between items-center">
 				<div className="flex gap-2 items-center">
-					<Heading>{routine.name}</Heading>
-					<Subheading>({formatSeconds(routine.totalDuration)})</Subheading>
+					{routine ? <Heading>{routine.name}</Heading> : <Skeleton />}
+					{routine ? (
+						<Subheading>({formatSeconds(routine.totalDuration)})</Subheading>
+					) : (
+						<Skeleton className="w-10" />
+					)}
 				</div>
 
 				<div className="flex gap-3">
@@ -112,7 +108,13 @@ export default function RoutinePage() {
 				</div>
 			</div>
 
-			{tasks.length === 0 && (
+			{routine && tasks.length > 0 ? (
+				<DragDropProvider onDragEnd={handleSort}>
+					{tasks.map((task, index) => (
+						<TaskRow index={index} key={task.id} task={task} routine={routine} />
+					))}
+				</DragDropProvider>
+			) : (
 				<div className="md:pt-28 pt-32 flex justify-center items-center flex-col">
 					<ListIcon className="size-12 text-gray-400" />
 					<h2 className="mt-2 text-base font-semibold dark:text-white text-gray-900">Add tasks</h2>
@@ -126,12 +128,6 @@ export default function RoutinePage() {
 				</div>
 			)}
 
-			<DragDropProvider onDragEnd={handleSort}>
-				{tasks.map((task, index) => (
-					<TaskRow index={index} key={task.id} userId={user.uid} task={task} routine={routine} />
-				))}
-			</DragDropProvider>
-
 			<div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-20">
 				<Button disabled={tasks.length === 0} color="green" href={`/routine/${routineId}/focus`}>
 					<ZapIcon />
@@ -139,7 +135,7 @@ export default function RoutinePage() {
 				</Button>
 			</div>
 
-			<TaskForm routineId={routine.id} taskIn={taskForm} setTaskIn={setTaskForm} />
+			{routine && <TaskForm routineId={routine.id} taskIn={taskForm} setTaskIn={setTaskForm} />}
 
 			<RoutineForm routineIn={routineForm} setRoutineIn={setRoutineForm} />
 		</div>
