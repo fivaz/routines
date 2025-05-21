@@ -21,7 +21,7 @@ import { formatSeconds } from '@/lib/task/task.utils';
 import { useBackendStatus } from '@/lib/use-backend-status';
 import { useState } from 'react';
 
-export default function RoutineTaskListPage() {
+export default function RoutinePage() {
 	const [routineForm, setRoutineForm] = useState<Routine | null>(null);
 	const [taskForm, setTaskForm] = useState<Task | null>(null);
 	const { handleSort, tasks } = useTasks();
