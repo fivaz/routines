@@ -8,6 +8,7 @@ import {
 	editRoutine as editRoutineRepo,
 } from './routine.repository';
 import { Routine } from '@/lib/routine/routine.type';
+import { safeThrowUnauthorized } from '@/lib/error-handle';
 
 export function useRoutine() {
 	const { routines } = useRoutines();
@@ -22,24 +23,21 @@ export function useRoutineActions() {
 
 	async function deleteRoutine(routineId: string) {
 		if (!user?.uid) {
-			console.log('No authenticated user found');
-			return;
+			return safeThrowUnauthorized();
 		}
 		return deleteRoutineRepo(user.uid, routineId);
 	}
 
 	async function editRoutine(routine: Routine, imageFile: File | null) {
 		if (!user?.uid) {
-			console.log('No authenticated user found');
-			return;
+			return safeThrowUnauthorized();
 		}
 		return editRoutineRepo(user.uid, routine, imageFile);
 	}
 
 	async function addRoutine(routine: Routine, imageFile: File | null) {
 		if (!user?.uid) {
-			console.log('No authenticated user found');
-			return;
+			return safeThrowUnauthorized();
 		}
 		return addRoutineRepo(user.uid, routine, imageFile);
 	}
