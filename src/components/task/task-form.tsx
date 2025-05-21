@@ -4,14 +4,13 @@ import { Field, FieldGroup, Fieldset, Label } from '@/components/base/fieldset';
 import { Input } from '@/components/base/input';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { ImageFocus, Task } from '@/lib/task/task.type';
-import { addTask, editTask } from '@/lib/task/task.repository';
-import { useAuth } from '@/lib/user/auth-context';
 import { addSeconds, format, isValid, parse, startOfDay } from 'date-fns';
 import { mmss } from '@/lib/consts';
 import { Listbox, ListboxOption } from '@/components/base/listbox';
 import { useRoutines } from '@/lib/routine/routine.context';
 import { TaskImageForm } from '@/components/TaskImageForm';
 import * as Sentry from '@sentry/nextjs';
+import { useTaskActions } from '@/lib/task/task.hooks';
 
 export function TaskForm({
 	setTaskIn,
@@ -26,8 +25,7 @@ export function TaskForm({
 	const [newRoutineId, setNewRoutineId] = useState<string>(routineId);
 	const [imageFile, setImageFile] = useState<File | null>(null);
 	const [focus, setFocus] = useState<ImageFocus>('person');
-
-	const { user } = useAuth();
+	const { addTask, editTask } = useTaskActions();
 
 	function close() {
 		setImageFile(null);
@@ -35,14 +33,11 @@ export function TaskForm({
 	}
 
 	async function handleSubmit() {
-		if (!user || !taskIn) return;
+		if (!taskIn) return;
 
 		try {
-			const tokenId = await user.getIdToken();
-
 			if (taskIn.id) {
 				void editTask({
-					userId: user.uid,
 					routineId,
 					newRoutineId,
 					task: taskIn,
@@ -50,12 +45,10 @@ export function TaskForm({
 				});
 			} else {
 				void addTask({
-					userId: user.uid,
 					task: taskIn,
 					routineId: newRoutineId,
 					imageFile,
 					focus,
-					tokenId,
 				});
 			}
 		} catch (error) {

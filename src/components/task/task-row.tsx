@@ -3,7 +3,7 @@ import { type Task } from '@/lib/task/task.type';
 import { type Routine } from '@/lib/routine/routine.type';
 import { Dropdown, DropdownButton, DropdownItem, DropdownMenu } from '@/components/base/dropdown';
 import { Ellipsis, GripVerticalIcon } from 'lucide-react';
-import { deleteTask } from '@/lib/task/task.repository';
+import { useTaskActions } from '@/lib/task/task.hooks';
 import { TaskForm } from '@/components/task/task-form';
 import { useSortable } from '@dnd-kit/react/sortable';
 import { formatSeconds, latestTime } from '@/lib/task/task.utils';
@@ -12,13 +12,14 @@ import { Button } from '@/components/base/button';
 import { ImageWaitingSkeleton } from '@/components/task/ImageWaitingSkeleton';
 
 export function TaskRow({
-	userId,
 	task,
 	routine,
 	index,
-}: PropsWithChildren<{ index: number; userId: string; task: Task; routine: Routine }>) {
+}: PropsWithChildren<{ index: number; task: Task; routine: Routine }>) {
 	const [taskForm, setTaskForm] = useState<Task | null>(null);
 	const { createPrompt } = usePrompt();
+
+	const { deleteTask } = useTaskActions();
 
 	const { ref } = useSortable({ id: task.id, index });
 
@@ -33,7 +34,7 @@ export function TaskRow({
 				message: 'Are you sure you want to delete this task?',
 			})
 		) {
-			void deleteTask(userId, routine.id, task.id);
+			await deleteTask(routine.id, task.id);
 		}
 	}
 
