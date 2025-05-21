@@ -1,14 +1,19 @@
 import { PropsWithChildren } from 'react';
 import { Subheading } from '@/components/base/heading';
-import { useDroppable } from '@dnd-kit/react';
 import { CollisionPriority } from '@dnd-kit/abstract';
+import { useSortable } from '@dnd-kit/react/sortable';
 
-export function RoutineGroupList({ group, children }: PropsWithChildren<{ group: string }>) {
-	const { isDropTarget, ref } = useDroppable({
+export function RoutineGroup({
+	group,
+	index,
+	children,
+}: PropsWithChildren<{ group: string; index: number }>) {
+	const { isDropTarget, ref } = useSortable({
 		id: group,
+		index,
 		type: 'column',
-		accept: 'item',
 		collisionPriority: CollisionPriority.Low,
+		accept: ['item', 'column'],
 	});
 
 	const style = isDropTarget ? { background: '#00000030' } : undefined;

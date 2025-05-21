@@ -7,7 +7,7 @@ import { emptyRoutine, type Routine } from '@/lib/routine/routine.type';
 
 import { PlusIcon } from 'lucide-react';
 import { useRoutines } from '@/lib/routine/routine.context';
-import { RoutineGroupList } from '@/app/(dashboard)/routine/routine-group-list';
+import { RoutineGroup } from '@/app/(dashboard)/routine/routine-group';
 import { RoutineRow } from '@/app/(dashboard)/routine/routine-row';
 import { DragDropProvider } from '@dnd-kit/react';
 import { move } from '@dnd-kit/helpers';
@@ -20,8 +20,10 @@ export default function Routines() {
 
 	const [groupedRoutines, setGroupedRoutines] = useState<Record<string, Routine[]>>({});
 
+	const [groupOrder, setGroupOrder] = useState(() => Object.keys(groupedRoutines));
+
 	useEffect(() => {
-		const groups = routines.reduce(
+		const routineMap = routines.reduce(
 			(acc, routine) => {
 				const group = routine.group || '';
 				if (!acc[group]) acc[group] = [];
@@ -31,21 +33,16 @@ export default function Routines() {
 			{} as Record<string, Routine[]>,
 		);
 
-		const sortedGroups = Object.keys(groups)
-			.sort((a, b) => a.localeCompare(b))
-			.reduce(
-				(acc, key) => {
-					acc[key] = groups[key];
-					return acc;
-				},
-				{} as Record<string, Routine[]>,
-			);
+		setGroupedRoutines(() => {
+			console.log(routineMap);
+			return routineMap;
+		});
 
-		setGroupedRoutines(sortedGroups);
+		setGroupOrder(() => Object.keys(routineMap));
 	}, [routines]);
 
-	function flattenGroupedRoutines(groups: Record<string, Routine[]>): Routine[] {
-		return Object.entries(groups).flatMap(([group, routines]) =>
+	function flattenGroupedRoutines(routineMap: Record<string, Routine[]>): Routine[] {
+		return Object.entries(routineMap).flatMap(([group, routines]) =>
 			routines.map((routine, index) => ({
 				...routine,
 				group,
@@ -59,10 +56,25 @@ export default function Routines() {
 	}
 
 	function handleDragOver(event: Parameters<typeof move>[1]) {
-		setGroupedRoutines(move(groupedRoutines, event));
+		const { source } = event.operation;
+
+		if (source?.type === 'column') return;
+
+		setGroupedRoutines((items) => move(items, event));
 	}
 
-	function handleDragEnd() {
+	function handleDragEnd(event: Parameters<typeof move>[1] & { canceled: boolean }) {
+		const { source } = event.operation;
+
+		if (event.canceled || source?.type !== 'column') return;
+
+		setGroupOrder((columns) => {
+			const reorderColumns = move(columns, event);
+
+			return reorderColumns;
+		});
+
+		//persist update
 		const flat = flattenGroupedRoutines(groupedRoutines);
 		handleSort(flat);
 	}
@@ -73,12 +85,12 @@ export default function Routines() {
 
 			<DragDropProvider onDragOver={handleDragOver} onDragEnd={handleDragEnd}>
 				<div className="flex flex-col gap-2">
-					{Object.entries(groupedRoutines).map(([group, routines]) => (
-						<RoutineGroupList key={group} group={group}>
-							{routines.map((routine, index) => (
+					{groupOrder.map((group, groupIndex) => (
+						<RoutineGroup key={group} group={group} index={groupIndex}>
+							{groupedRoutines[group].map((routine, index) => (
 								<RoutineRow group={group} index={index} routine={routine} key={routine.id} />
 							))}
-						</RoutineGroupList>
+						</RoutineGroup>
 					))}
 				</div>
 			</DragDropProvider>

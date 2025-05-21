@@ -2,6 +2,7 @@ import React, { createContext, PropsWithChildren, useContext, useEffect, useStat
 import { Routine } from '@/lib/routine/routine.type';
 import { fetchRoutines, updateRoutines } from '@/lib/routine/routine.repository';
 import { useAuth } from '@/lib/user/auth-context';
+import { safeThrowUnauthorized } from '@/lib/error-handle';
 
 const RoutineContext = createContext<{
 	routines: Routine[];
@@ -15,7 +16,9 @@ export function RoutineProvider({ children }: PropsWithChildren) {
 	const { user } = useAuth();
 	const [routines, setRoutines] = useState<Routine[]>([]);
 	useEffect(() => {
-		if (!user?.uid) return;
+		if (!user?.uid) {
+			return;
+		}
 
 		const unsubscribe = fetchRoutines(user.uid, (routines) => {
 			setRoutines(routines);
@@ -25,7 +28,9 @@ export function RoutineProvider({ children }: PropsWithChildren) {
 	}, [user]);
 
 	function handleSort(routines: Routine[]) {
-		if (!user?.uid) return;
+		if (!user?.uid) {
+			return safeThrowUnauthorized();
+		}
 		void updateRoutines(user.uid, routines);
 	}
 
