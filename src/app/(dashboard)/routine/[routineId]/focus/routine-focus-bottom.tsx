@@ -38,23 +38,19 @@ export function RoutineFocusBottom({
 			setElapsedTime(0);
 
 			intervalId = setInterval(() => {
-				setElapsedTime((prev) => {
-					const newTime = prev + 1;
+				const now = new Date().toISOString();
 
-					const now = new Date().toISOString();
+				setElapsedTime((prev) => prev + 1);
 
-					setTasks((prevTasks) => {
-						const updatedTasks = [...prevTasks];
-						const task = updatedTasks[currentTaskIndex];
+				setTasks((prevTasks) => {
+					const updatedTasks = [...prevTasks];
+					const task = updatedTasks[currentTaskIndex];
 
-						if (task?.history?.[today]) {
-							task.history[today].endAt = now;
-						}
+					if (task?.history?.[today]) {
+						task.history[today].endAt = now;
+					}
 
-						return updatedTasks;
-					});
-
-					return newTime;
+					return updatedTasks;
 				});
 			}, 1000);
 		}
