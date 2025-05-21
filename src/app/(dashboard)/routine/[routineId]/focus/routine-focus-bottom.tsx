@@ -32,12 +32,12 @@ export function RoutineFocusBottom({
 	const currentTask = tasks[currentTaskIndex];
 
 	useEffect(() => {
-		let timer: NodeJS.Timeout | null = null;
+		let intervalId: NodeJS.Timeout | null = null;
 
 		if (isRunning) {
 			setElapsedTime(0);
 
-			timer = setInterval(() => {
+			intervalId = setInterval(() => {
 				setElapsedTime((prev) => {
 					const newTime = prev + 1;
 
@@ -60,8 +60,8 @@ export function RoutineFocusBottom({
 		}
 
 		return () => {
-			if (timer !== null) {
-				clearInterval(timer);
+			if (intervalId !== null) {
+				clearInterval(intervalId);
 			}
 		};
 	}, [isRunning, setElapsedTime, today, currentTaskIndex, setTasks]);
