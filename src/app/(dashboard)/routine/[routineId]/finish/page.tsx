@@ -9,12 +9,45 @@ import {
 import { useTasks } from '@/lib/task/task.context';
 import clsx from 'clsx';
 import { FinishTaskRow } from '@/app/(dashboard)/routine/[routineId]/finish/FinishTaskRow';
+import { useEffect } from 'react';
+import confetti from 'canvas-confetti';
 
 export default function FinishPage() {
 	const { tasks } = useTasks();
 	const today = new Date().toISOString().split('T')[0];
 
 	const hasNoHistory = tasks.every((task) => !getHistory(task, today));
+
+	useEffect(() => {
+		if (!hasNoHistory) return;
+
+		const duration = 10 * 1000;
+		const interval = 500;
+		const end = Date.now() + duration;
+
+		const intervalId = setInterval(() => {
+			if (Date.now() > end) {
+				clearInterval(intervalId);
+				return;
+			}
+
+			// Confetti from left
+			confetti({
+				particleCount: 7,
+				angle: 60,
+				spread: 55,
+				origin: { x: 0 },
+			});
+
+			// Confetti from right
+			confetti({
+				particleCount: 7,
+				angle: 120,
+				spread: 55,
+				origin: { x: 1 },
+			});
+		}, interval);
+	}, [hasNoHistory]);
 
 	if (hasNoHistory) {
 		return <div>no history</div>;
@@ -28,18 +61,22 @@ export default function FinishPage() {
 		<div className="flex flex-col gap-3">
 			<div className="flex justify-center pb-7">
 				<div className="flex flex-col items-center gap-2">
-					<Heading>Your time:</Heading>
-					<span className="font-semibold text-2xl text-red-500">
+					<Heading className="pb-5">Congratulations!</Heading>
+
+					<span className="font-semibold text-lg text-black dark:text-white">Your time:</span>
+					<span className="font-semibold text-3xl text-red-500">
 						{formatSeconds(getTotalElapsedTime(tasks, today))}
 					</span>
 
-					<Heading>Time expected:</Heading>
-					<Heading>{formatSeconds(getTotalExpectedTime(tasks))}</Heading>
+					<span className="font-semibold text-lg text-black dark:text-white">Time expected:</span>
+					<span className="font-semibold text-lg text-black dark:text-white">
+						{formatSeconds(getTotalExpectedTime(tasks))}
+					</span>
 
-					<Heading>Difference:</Heading>
+					<span className="font-semibold text-lg text-black dark:text-white">Difference:</span>
 					<span
 						className={clsx(
-							'font-semibold text-2xl',
+							'font-semibold text-lg',
 							deltaTime > 0 ? 'text-green-500' : 'text-red-500',
 						)}
 					>

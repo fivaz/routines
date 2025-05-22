@@ -24,14 +24,16 @@ export function FinishTaskRow({ task, date, index }: { index: number; task: Task
 					height={200}
 				/>
 				<div className="flex flex-col">
+					<Text>complete in:</Text>
+					<span className="text-red-500">{formatSeconds(actualTime)}</span>
+
 					<Text>time expected:</Text>
 					<Text>{formatSeconds(expectedTime)}</Text>
 
-					<Text>complete in:</Text>
-					<Text>{formatSeconds(actualTime)}</Text>
-
 					<Text>difference:</Text>
-					<span className={clsx(deltaTime > 0 ? 'text-green-500' : 'text-red-500')}>
+					<span
+						className={clsx('font-semibold', deltaTime > 0 ? 'text-green-500' : 'text-red-500')}
+					>
 						{formatSeconds(Math.abs(deltaTime))} {deltaTime > 0 ? 'ahead' : 'late'}
 					</span>
 				</div>
