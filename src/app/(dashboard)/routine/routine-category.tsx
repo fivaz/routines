@@ -19,22 +19,23 @@ export function RoutineCategory({
 		accept: ['item', 'column'],
 	});
 
-	const style = isDropTarget ? { background: '#00000030' } : undefined;
+	const style = isDropTarget ? { background: 'oklch(96.7% 0.003 264.542)' } : undefined;
 
 	return (
 		<div
-			className="flex gap-2 flex-col p-4 border border-gray-200 rounded-lg"
+			className="flex gap-2 flex-col p-4 border bg-gray-50 border-gray-200 rounded-lg"
 			style={style}
 			ref={ref}
 		>
 			<div className="flex gap-2 items-center">
 				<Button
-					className="touch-none dark cursor-grab"
+					outline
+					className="touch-none cursor-grab bg-white p-1"
 					onClick={(e: MouseEvent<HTMLButtonElement>) => {
 						e.stopPropagation(); // Prevent link click when button is clicked
 					}}
 				>
-					<GripVerticalIcon className="size-5" />
+					<GripVerticalIcon className="size-4" />
 				</Button>
 
 				<Subheading className="text-yellow-600 first-letter:uppercase">{category.name}</Subheading>
