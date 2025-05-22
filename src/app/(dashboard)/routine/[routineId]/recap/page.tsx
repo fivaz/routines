@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Task } from '@/lib/task/task.type';
 import { Heading } from '@/components/base/heading';
 import { Text } from '@/components/base/text';
@@ -8,14 +8,18 @@ import { TaskHistoryCarousel } from '@/app/(dashboard)/routine/[routineId]/recap
 import { ChevronDownIcon, ChevronUpIcon, UndoIcon } from 'lucide-react';
 import { Button } from '@/components/base/button';
 import { useTasks } from '@/lib/task/task.context';
-import Image from 'next/image';
 import clsx from 'clsx';
 import { useParams } from 'next/navigation';
+import Image from 'next/image';
 
 export default function RoutineRecapPage() {
 	const [date, setDate] = useState<string>(new Date().toISOString().split('T')[0]);
 	const { tasks } = useTasks();
 	const { routineId } = useParams<{ routineId: string }>();
+
+	useEffect(() => {
+		console.log(tasks);
+	}, [tasks]);
 
 	function getDurationFromDate(task: Task, date: string) {
 		const history = getHistory(task, date);

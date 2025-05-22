@@ -12,6 +12,7 @@ import { parseErrors, register, validateFields } from '../login/service';
 import { minidenticon } from 'minidenticons';
 import { Banner } from '@/components/base/banner';
 import { Button } from '@/components/base/button';
+import Image from 'next/image';
 
 export default function RegisterPage() {
 	const router = useRouter();
@@ -80,7 +81,13 @@ export default function RegisterPage() {
 								<h3 className="block text-center text-sm font-medium leading-6 text-gray-900">
 									Your Avatar
 								</h3>
-								<img className="h-10 w-auto" alt="your avatar" src={photoURL} />
+								<Image
+									className="h-10 w-auto"
+									width={40}
+									height={40}
+									alt="your avatar"
+									src={photoURL}
+								/>
 							</div>
 						)}
 						<div>

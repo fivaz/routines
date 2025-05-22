@@ -1,16 +1,34 @@
 import { withSentryConfig } from '@sentry/nextjs';
 import type { NextConfig } from 'next';
+//
+// const nextConfig: NextConfig = {
+// 	images: {
+// 		remotePatterns: [
+// 			new URL('https://firebasestorage.googleapis.com/**'),
+// 			new URL('https://storage.googleapis.com/**'),
+// 			new URL('https://img.recraft.ai/**'),
+// 		],
+// 	},
+// };
 
 const nextConfig: NextConfig = {
 	images: {
+		domains: ['storage.googleapis.com'],
 		remotePatterns: [
 			{
 				protocol: 'https',
+				hostname: 'storage.googleapis.com',
+				pathname: '/**',
+			},
+			{
+				protocol: 'https',
 				hostname: 'firebasestorage.googleapis.com',
+				pathname: '/**',
 			},
 			{
 				protocol: 'https',
 				hostname: 'img.recraft.ai',
+				pathname: '/**',
 			},
 		],
 	},
