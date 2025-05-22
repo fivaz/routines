@@ -11,10 +11,14 @@ import clsx from 'clsx';
 import { FinishTaskRow } from '@/app/(dashboard)/routine/[routineId]/finish/FinishTaskRow';
 import { useEffect } from 'react';
 import confetti from 'canvas-confetti';
+import { Button } from '@/components/base/button';
+import { UndoIcon } from 'lucide-react';
+import { useParams } from 'next/navigation';
 
 export default function FinishPage() {
 	const { tasks } = useTasks();
 	const today = new Date().toISOString().split('T')[0];
+	const { routineId } = useParams<{ routineId: string }>();
 
 	const hasNoHistory = tasks.every((task) => !getHistory(task, today));
 
@@ -58,7 +62,12 @@ export default function FinishPage() {
 	const deltaTime = totalExpectedTime - totalElapsedTime;
 
 	return (
-		<div className="flex flex-col gap-3">
+		<div className="flex flex-col gap-3 relative">
+			<div className="absolute top-0 right-0">
+				<Button outline href={`/routine/${routineId}`}>
+					<UndoIcon className="size-5" />
+				</Button>
+			</div>
 			<div className="flex justify-center pb-7">
 				<div className="flex flex-col items-center gap-2">
 					<Heading className="pb-5">Congratulations!</Heading>
