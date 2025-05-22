@@ -1,4 +1,4 @@
-import { formatSeconds, getDurationFromDate } from '@/lib/task/task.utils';
+import { formatSeconds, getTotalElapsedTime, getTotalExpectedTime } from '@/lib/task/task.utils';
 import { ChevronLeft, ChevronRight, CircleStop, Play } from 'lucide-react';
 import { persistTask } from '@/lib/task/task.repository';
 import { useAuth } from '@/lib/user/auth-context';
@@ -63,7 +63,7 @@ export function RoutineFocusBottom({
 	}, [isRunning, setElapsedTime, today, currentTaskIndex, setTasks]);
 
 	const totalElapsedTime = useMemo(
-		() => formatSeconds(tasks.reduce((total, task) => total + getDurationFromDate(task, today), 0)),
+		() => formatSeconds(getTotalElapsedTime(tasks, today)),
 		[tasks, today],
 	);
 
@@ -72,7 +72,7 @@ export function RoutineFocusBottom({
 	}
 
 	function totalExpectedTime() {
-		return formatSeconds(tasks.reduce((total, task) => total + task.durationInSeconds, 0));
+		return formatSeconds(getTotalExpectedTime(tasks));
 	}
 
 	async function handleStart() {

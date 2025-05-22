@@ -49,10 +49,6 @@ export function getHistory(task: Task, date: string) {
 	}
 }
 
-export function sortTasks(tasks: Task[]) {
-	return tasks.toSorted((a, b) => a.order - b.order);
-}
-
 export function latestTime(task: Task) {
 	const histories = Object.keys(task.history);
 	if (!histories.length) {
@@ -78,4 +74,12 @@ export function getDurationFromDate(task: Task, date: string) {
 	} else {
 		return getDuration(history.startAt, history.endAt);
 	}
+}
+
+export function getTotalExpectedTime(tasks: Task[]): number {
+	return tasks.reduce((total, task) => total + task.durationInSeconds, 0);
+}
+
+export function getTotalElapsedTime(tasks: Task[], date: string): number {
+	return tasks.reduce((total, task) => total + getDurationFromDate(task, date), 0);
 }
