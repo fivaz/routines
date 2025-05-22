@@ -18,5 +18,5 @@ export const noCategory: Category = {
 	id: UNCATEGORIZED_KEY,
 	name: UNCATEGORIZED_KEY,
 	order: 0,
-	createdAt: new Date().toISOString(),
+	createdAt: '',
 };

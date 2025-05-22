@@ -7,14 +7,14 @@ import { emptyRoutine, type Routine } from '@/lib/routine/routine.type';
 
 import { PlusIcon } from 'lucide-react';
 import { useRoutines } from '@/lib/routine/routine.context';
-import { RoutineCategory } from '@/app/(dashboard)/routine/routine-category';
-import { RoutineRow } from '@/app/(dashboard)/routine/routine-row';
-import { DragDropProvider } from '@dnd-kit/react';
 import { move } from '@dnd-kit/helpers';
 import { useBackendStatus } from '@/lib/use-backend-status';
 import { useCategories } from '@/lib/category/category.context';
 import { flattenRoutinesByCategory, groupRoutinesByCategory } from '@/lib/category/category.utils';
-import { Category } from '@/lib/category/category.type';
+import { Category, noCategory, UNCATEGORIZED_KEY } from '@/lib/category/category.type';
+import { DragDropProvider } from '@dnd-kit/react';
+import { RoutineCategory } from '@/app/(dashboard)/routine/routine-category';
+import { RoutineRow } from '@/app/(dashboard)/routine/routine-row';
 
 export default function Routines() {
 	const [routineForm, setRoutineForm] = useState<Routine | null>(null);
@@ -26,9 +26,11 @@ export default function Routines() {
 	const [sortedCategories, setSortedCategories] = useState<Category[]>([]);
 
 	useEffect(() => {
-		setSortedCategories(categories);
+		const fullCategories = [...categories, noCategory];
 
-		setRoutinesByCategories(groupRoutinesByCategory(routines, categories));
+		setSortedCategories(fullCategories);
+
+		setRoutinesByCategories(groupRoutinesByCategory(routines, fullCategories));
 	}, [categories, routines]);
 
 	function handleAddRoutine() {
@@ -58,7 +60,7 @@ export default function Routines() {
 		setSortedCategories(resortedCategories);
 
 		//persist category order
-		handleCategorySort(resortedCategories);
+		handleCategorySort(resortedCategories.filter((category) => category.id !== UNCATEGORIZED_KEY));
 	}
 
 	return (
@@ -69,7 +71,7 @@ export default function Routines() {
 				<div className="flex flex-col gap-2">
 					{sortedCategories.map((category, categoryIndex) => (
 						<RoutineCategory key={category.id} category={category} index={categoryIndex}>
-							{routinesByCategories[category.id].map((routine, index) => (
+							{routinesByCategories[category.id]?.map((routine, index) => (
 								<RoutineRow
 									categoryId={category.id}
 									index={index}
