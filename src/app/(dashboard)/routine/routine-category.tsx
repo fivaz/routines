@@ -2,14 +2,15 @@ import { PropsWithChildren } from 'react';
 import { Subheading } from '@/components/base/heading';
 import { CollisionPriority } from '@dnd-kit/abstract';
 import { useSortable } from '@dnd-kit/react/sortable';
+import { Category } from '@/lib/category/category.type';
 
-export function RoutineGroup({
-	group,
+export function RoutineCategory({
+	category,
 	index,
 	children,
-}: PropsWithChildren<{ group: string; index: number }>) {
+}: PropsWithChildren<{ category: Category; index: number }>) {
 	const { isDropTarget, ref } = useSortable({
-		id: group,
+		id: category.id,
 		index,
 		type: 'column',
 		collisionPriority: CollisionPriority.Low,
@@ -20,7 +21,9 @@ export function RoutineGroup({
 
 	return (
 		<div className="p-4 border border-gray-200 rounded-lg" style={style} ref={ref}>
-			<Subheading className="mb-3 text-yellow-600 first-letter:uppercase">{group}</Subheading>
+			<Subheading className="mb-3 text-yellow-600 first-letter:uppercase">
+				{category.name}
+			</Subheading>
 			<div className="flex flex-col gap-2 min-h-45">{children}</div>
 		</div>
 	);

@@ -12,14 +12,14 @@ import { ImageWaitingSkeleton } from '@/components/task/ImageWaitingSkeleton';
 export function RoutineRow({
 	routine,
 	index,
-	group,
-}: PropsWithChildren<{ routine: Routine; index: number; group: string }>) {
+	categoryId,
+}: PropsWithChildren<{ routine: Routine; index: number; categoryId: string }>) {
 	const { ref, isDragging } = useSortable({
 		id: routine.id,
 		index,
 		type: 'item',
 		accept: 'item',
-		group: group,
+		group: categoryId,
 	});
 
 	return (

@@ -7,13 +7,13 @@ import { emptyRoutine, type Routine } from '@/lib/routine/routine.type';
 
 import { PlusIcon } from 'lucide-react';
 import { useRoutines } from '@/lib/routine/routine.context';
-import { RoutineGroup } from '@/app/(dashboard)/routine/routine-group';
+import { RoutineCategory } from '@/app/(dashboard)/routine/routine-category';
 import { RoutineRow } from '@/app/(dashboard)/routine/routine-row';
 import { DragDropProvider } from '@dnd-kit/react';
 import { move } from '@dnd-kit/helpers';
 import { useBackendStatus } from '@/lib/use-backend-status';
 import { useCategories } from '@/lib/category/category.context';
-import { groupRoutinesByCategory } from '@/lib/category/category.utils';
+import { flattenRoutinesByCategory, groupRoutinesByCategory } from '@/lib/category/category.utils';
 import { Category } from '@/lib/category/category.type';
 
 export default function Routines() {
@@ -35,16 +35,6 @@ export default function Routines() {
 		setRoutinesByCategories(categoryRoutineMap);
 	}, [categories, routines]);
 
-	function flattenGroupedRoutines(routineMap: Record<string, Routine[]>): Routine[] {
-		return Object.entries(routineMap).flatMap(([group, routines]) =>
-			routines.map((routine, index) => ({
-				...routine,
-				category: group,
-				order: index,
-			})),
-		);
-	}
-
 	function handleAddRoutine() {
 		setRoutineForm({ ...emptyRoutine, createdAt: new Date().toISOString() });
 	}
@@ -54,7 +44,12 @@ export default function Routines() {
 
 		if (source?.type === 'column') return;
 
-		setRoutinesByCategories((items) => move(items, event));
+		const sortedRoutinesByCategories = move(routinesByCategories, event);
+
+		setRoutinesByCategories(sortedRoutinesByCategories);
+
+		//persist routines order
+		handleRoutinesSort(flattenRoutinesByCategory(sortedRoutinesByCategories, categories));
 	}
 
 	function handleDragEnd(event: Parameters<typeof move>[1] & { canceled: boolean }) {
@@ -62,15 +57,12 @@ export default function Routines() {
 
 		if (event.canceled || source?.type !== 'column') return;
 
-		setSortedCategories((columns) => {
-			const reorderColumns = move(columns, event);
+		const resortedCategories = move(sortedCategories, event);
 
-			return reorderColumns;
-		});
+		setSortedCategories(resortedCategories);
 
-		//persist update
-		const flat = flattenGroupedRoutines(routinesByCategories);
-		handleRoutinesSort(flat);
+		//persist category order
+		handleCategorySort(resortedCategories);
 	}
 
 	return (
@@ -79,12 +71,17 @@ export default function Routines() {
 
 			<DragDropProvider onDragOver={handleDragOver} onDragEnd={handleDragEnd}>
 				<div className="flex flex-col gap-2">
-					{sortedCategories.map((group, groupIndex) => (
-						<RoutineGroup key={group} group={group} index={groupIndex}>
-							{routinesByCategories[group].map((routine, index) => (
-								<RoutineRow group={group} index={index} routine={routine} key={routine.id} />
+					{sortedCategories.map((category, categoryIndex) => (
+						<RoutineCategory key={category.id} category={category} index={categoryIndex}>
+							{routinesByCategories[category.id].map((routine, index) => (
+								<RoutineRow
+									categoryId={category.id}
+									index={index}
+									routine={routine}
+									key={routine.id}
+								/>
 							))}
-						</RoutineGroup>
+						</RoutineCategory>
 					))}
 				</div>
 			</DragDropProvider>

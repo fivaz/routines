@@ -44,9 +44,10 @@ export async function deleteCategory(userId: string, categoryId: string) {
 
 export async function updateCategories(userId: string, categories: Category[]) {
 	const batch = writeBatch(db);
-	categories.forEach((cat) => {
-		const ref = doc(db, getCategoryPath(userId), cat.id);
-		batch.update(ref, { order: cat.order });
+	categories.forEach((category, index) => {
+		const ref = doc(db, getCategoryPath(userId), category.id);
+		const categoryProps: Pick<Category, 'order'> = { order: index };
+		batch.update(ref, categoryProps);
 	});
 
 	try {
