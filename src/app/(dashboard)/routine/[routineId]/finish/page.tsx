@@ -25,7 +25,7 @@ export default function FinishPage() {
 	const deltaTime = totalExpectedTime - totalElapsedTime;
 
 	return (
-		<div className="flex flex-col gap-3 divide-y divide-gray-200">
+		<div className="flex flex-col gap-3">
 			<div className="flex justify-center pb-7">
 				<div className="flex flex-col items-center gap-2">
 					<Heading>Your time:</Heading>
@@ -49,9 +49,9 @@ export default function FinishPage() {
 			</div>
 
 			<ul role="list" className="gap-3 flex flex-wrap justify-between">
-				{tasks.map((task) => (
+				{tasks.map((task, index) => (
 					<div key={task.id} className="w-full md:w-[32%]">
-						<FinishTaskRow task={task} date={today} />
+						<FinishTaskRow index={index + 1} task={task} date={today} />
 					</div>
 				))}
 			</ul>
