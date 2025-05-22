@@ -20,10 +20,10 @@ export default function FinishPage() {
 	const today = new Date().toISOString().split('T')[0];
 	const { routineId } = useParams<{ routineId: string }>();
 
-	const hasNoHistory = tasks.every((task) => !getHistory(task, today));
+	const hasHistory = tasks.some((task) => getHistory(task, today));
 
 	useEffect(() => {
-		if (!hasNoHistory) return;
+		if (!hasHistory) return;
 
 		const duration = 10 * 1000;
 		const interval = 500;
@@ -51,11 +51,9 @@ export default function FinishPage() {
 				origin: { x: 1 },
 			});
 		}, interval);
-	}, [hasNoHistory]);
 
-	if (hasNoHistory) {
-		return <div>no history</div>;
-	}
+		return () => clearInterval(intervalId);
+	}, [hasHistory]);
 
 	const totalExpectedTime = getTotalExpectedTime(tasks);
 	const totalElapsedTime = getTotalElapsedTime(tasks, today);
@@ -68,39 +66,47 @@ export default function FinishPage() {
 					<UndoIcon className="size-5" />
 				</Button>
 			</div>
-			<div className="flex justify-center pb-7">
-				<div className="flex flex-col items-center gap-2">
-					<Heading className="pb-5">Congratulations!</Heading>
+			{hasHistory ? (
+				<>
+					<div className="flex justify-center pb-7">
+						<div className="flex flex-col items-center gap-2">
+							<Heading className="pb-5">Congratulations!</Heading>
 
-					<span className="font-semibold text-lg text-black dark:text-white">Your time:</span>
-					<span className="font-semibold text-3xl text-red-500">
-						{formatSeconds(getTotalElapsedTime(tasks, today))}
-					</span>
+							<span className="font-semibold text-lg text-black dark:text-white">Your time:</span>
+							<span className="font-semibold text-3xl text-red-500">
+								{formatSeconds(getTotalElapsedTime(tasks, today))}
+							</span>
 
-					<span className="font-semibold text-lg text-black dark:text-white">Time expected:</span>
-					<span className="font-semibold text-lg text-black dark:text-white">
-						{formatSeconds(getTotalExpectedTime(tasks))}
-					</span>
+							<span className="font-semibold text-lg text-black dark:text-white">
+								Time expected:
+							</span>
+							<span className="font-semibold text-lg text-black dark:text-white">
+								{formatSeconds(getTotalExpectedTime(tasks))}
+							</span>
 
-					<span className="font-semibold text-lg text-black dark:text-white">Difference:</span>
-					<span
-						className={clsx(
-							'font-semibold text-lg',
-							deltaTime > 0 ? 'text-green-500' : 'text-red-500',
-						)}
-					>
-						{formatSeconds(Math.abs(deltaTime))} {deltaTime > 0 ? 'ahead' : 'late'}
-					</span>
-				</div>
-			</div>
-
-			<ul role="list" className="gap-3 flex flex-wrap justify-between">
-				{tasks.map((task, index) => (
-					<div key={task.id} className="w-full md:w-[32%]">
-						<FinishTaskRow index={index + 1} task={task} date={today} />
+							<span className="font-semibold text-lg text-black dark:text-white">Difference:</span>
+							<span
+								className={clsx(
+									'font-semibold text-lg',
+									deltaTime > 0 ? 'text-green-500' : 'text-red-500',
+								)}
+							>
+								{formatSeconds(Math.abs(deltaTime))} {deltaTime > 0 ? 'ahead' : 'late'}
+							</span>
+						</div>
 					</div>
-				))}
-			</ul>
+
+					<ul role="list" className="gap-3 flex flex-wrap justify-between">
+						{tasks.map((task, index) => (
+							<div key={task.id} className="w-full md:w-[32%]">
+								<FinishTaskRow index={index + 1} task={task} date={today} />
+							</div>
+						))}
+					</ul>
+				</>
+			) : (
+				<div>no history</div>
+			)}
 		</div>
 	);
 }
