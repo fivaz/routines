@@ -26,13 +26,9 @@ export default function Routines() {
 	const [sortedCategories, setSortedCategories] = useState<Category[]>([]);
 
 	useEffect(() => {
-		const localSortedCategories = categories.sort((a, b) => a.order - b.order);
+		setSortedCategories(categories);
 
-		setSortedCategories(localSortedCategories);
-
-		const categoryRoutineMap = groupRoutinesByCategory(routines, localSortedCategories);
-
-		setRoutinesByCategories(categoryRoutineMap);
+		setRoutinesByCategories(groupRoutinesByCategory(routines, categories));
 	}, [categories, routines]);
 
 	function handleAddRoutine() {
