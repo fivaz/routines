@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Task } from '@/lib/task/task.type';
 import { Heading } from '@/components/base/heading';
 import { Text } from '@/components/base/text';
@@ -16,10 +16,6 @@ export default function RoutineRecapPage() {
 	const [date, setDate] = useState<string>(new Date().toISOString().split('T')[0]);
 	const { tasks } = useTasks();
 	const { routineId } = useParams<{ routineId: string }>();
-
-	useEffect(() => {
-		console.log(tasks);
-	}, [tasks]);
 
 	function getDurationFromDate(task: Task, date: string) {
 		const history = getHistory(task, date);
@@ -67,7 +63,7 @@ export default function RoutineRecapPage() {
 		<div className="flex flex-col">
 			<div className="flex justify-between items-center">
 				<Heading className="pb-4">Recap</Heading>
-				<Button outline href={`routine/${routineId}`}>
+				<Button outline href={`/routine/${routineId}`}>
 					<UndoIcon className="size-5" />
 				</Button>
 			</div>

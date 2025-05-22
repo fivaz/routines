@@ -1,9 +1,10 @@
-import Link from 'next/link';
+import { Heading } from '@/components/base/heading';
 
 export default function FinishPage() {
 	return (
-		<div>
-			congrats !<Link href="/routine/UEeSbTpOVWuPFGXiptXD">back </Link>
+		<div className="flex justify-center">
+			<Heading>Your time:</Heading>
+			<Heading></Heading>
 		</div>
 	);
 }
