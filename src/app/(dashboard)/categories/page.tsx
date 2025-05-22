@@ -1,31 +1,17 @@
 'use client';
 
 import { useState } from 'react';
-import { PencilIcon, PlusIcon, Trash2 } from 'lucide-react';
+import { ArchiveIcon, PlusIcon } from 'lucide-react';
 import { useCategories } from '@/lib/category/category.context';
-import { useCategoryActions } from '@/lib/category/category.hooks';
 import { type Category, emptyCategory } from '@/lib/category/category.type';
 import { Heading } from '@/components/base/heading';
 import { Button } from '@/components/base/button';
-import { usePrompt } from '@/lib/prompt-context';
 import { CategoryForm } from '@/app/(dashboard)/categories/category-form';
+import { CategoryRow } from '@/app/(dashboard)/categories/category-row';
 
 export default function CategoryPage() {
 	const { categories } = useCategories();
-	const { deleteCategory } = useCategoryActions();
 	const [categoryForm, setCategoryForm] = useState<Category | null>(null);
-	const { createPrompt } = usePrompt();
-
-	async function handleDelete(category: Category) {
-		const confirm = await createPrompt({
-			title: 'Delete Category',
-			message: `Are you sure you want to delete category "${category.name}"?`,
-		});
-
-		if (confirm) {
-			await deleteCategory(category.id);
-		}
-	}
 
 	function handleAddCategory() {
 		setCategoryForm({ ...emptyCategory, createdAt: new Date().toISOString() });
@@ -41,22 +27,28 @@ export default function CategoryPage() {
 				</Button>
 			</div>
 
+			{categories.length === 0 && (
+				<div className="md:pt-28 pt-32 flex justify-center items-center flex-col">
+					<ArchiveIcon className="size-12 text-gray-400" />
+					<h2 className="mt-2 text-base font-semibold dark:text-white text-gray-900">
+						Add categories
+					</h2>
+					<p className="mt-1 text-sm text-gray-500">You haven’t added any category yet.</p>
+					<Button onClick={handleAddCategory} color="green" className="mt-2">
+						<PlusIcon className="size-5" />
+						Add Category
+					</Button>
+				</div>
+			)}
+
 			<ul className="grid gap-2">
-				{categories.map((category) => (
-					<li
+				{categories.map((category, index) => (
+					<CategoryRow
+						index={index}
+						category={category}
 						key={category.id}
-						className="p-4 border border-green-100 dark:border-green-600 rounded-md flex justify-between items-center bg-green-500 dark:bg-green-800"
-					>
-						<span className="text-white">{category.name}</span>
-						<div className="flex gap-2">
-							<Button outline onClick={() => setCategoryForm(category)}>
-								<PencilIcon className="size-5 text-white" />
-							</Button>
-							<Button outline onClick={() => handleDelete(category)}>
-								<Trash2 className="size-5 text-white" />
-							</Button>
-						</div>
-					</li>
+						setCategoryForm={setCategoryForm}
+					/>
 				))}
 			</ul>
 

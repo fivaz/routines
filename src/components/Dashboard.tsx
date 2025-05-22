@@ -35,7 +35,10 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 import { BackEndStatus } from '@/components/BackEndStatus';
 import { Tooltip } from '@/components/base/tooltip';
 
-const navItems = [{ label: 'Home', url: '/' }];
+const navItems = [
+	{ label: 'Routines', url: '/' },
+	{ label: 'Categories', url: '/categories' },
+];
 
 export function Dashboard({ children }: React.PropsWithChildren) {
 	const { user } = useAuth();
