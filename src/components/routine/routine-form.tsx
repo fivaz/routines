@@ -4,9 +4,8 @@ import { Field, FieldGroup, Fieldset, Label } from '@/components/base/fieldset';
 import { Input } from '@/components/base/input';
 import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
 import { Routine } from '@/lib/routine/routine.type';
-import { addRoutine, editRoutine } from '@/lib/routine/routine.repository';
-import { useAuth } from '@/lib/user/auth-context';
 import { RoutineImageForm } from '@/components/RoutineImageForm';
+import { useRoutineActions } from '@/lib/routine/routine.hooks';
 
 export function RoutineForm({
 	routineIn,
@@ -17,7 +16,7 @@ export function RoutineForm({
 }) {
 	const [imageFile, setImageFile] = useState<File | null>(null);
 
-	const { user } = useAuth();
+	const { editRoutine, addRoutine } = useRoutineActions();
 
 	function close() {
 		setImageFile(null);
@@ -26,11 +25,12 @@ export function RoutineForm({
 
 	async function handleSubmit(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault();
-		if (!user || !routineIn) return;
+		if (!routineIn) return;
+
 		if (routineIn.id) {
-			void editRoutine(user.uid, routineIn, imageFile);
+			void editRoutine(routineIn, imageFile);
 		} else {
-			void addRoutine(user.uid, routineIn, imageFile);
+			void addRoutine(routineIn, imageFile);
 		}
 		close();
 	}
@@ -58,10 +58,6 @@ export function RoutineForm({
 										<Field>
 											<Label>Name</Label>
 											<Input value={routineIn.name} name="name" onChange={handleChange} />
-										</Field>
-										<Field>
-											<Label>Group</Label>
-											<Input value={routineIn.group} name="group" onChange={handleChange} />
 										</Field>
 										<RoutineImageForm
 											close={close}

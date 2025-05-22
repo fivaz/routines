@@ -1,3 +1,5 @@
+import { Category } from '@/lib/category/category.type';
+
 export type Routine = {
 	id: string;
 	name: string;
@@ -6,7 +8,7 @@ export type Routine = {
 	order: number;
 	totalDuration: number;
 	taskCount: number;
-	group: string;
+	category: Category | null;
 };
 
 export const emptyRoutine: Routine = {
@@ -14,7 +16,7 @@ export const emptyRoutine: Routine = {
 	taskCount: 0,
 	totalDuration: 0,
 	name: '',
-	group: '',
+	category: null,
 	image: '',
 	order: 0,
 	createdAt: new Date().toISOString(),

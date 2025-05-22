@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { LoaderCircle } from 'lucide-react';
 import { RoutineProvider } from '@/lib/routine/routine.context';
 import { TaskProvider } from '@/lib/task/task.context';
+import { CategoryProvider } from '@/lib/category/category.context';
 
 export default function Layout({
 	children,
@@ -38,7 +39,9 @@ export default function Layout({
 	return (
 		<RoutineProvider>
 			<TaskProvider>
-				<Dashboard>{children}</Dashboard>
+				<CategoryProvider>
+					<Dashboard>{children}</Dashboard>
+				</CategoryProvider>
 			</TaskProvider>
 		</RoutineProvider>
 	);

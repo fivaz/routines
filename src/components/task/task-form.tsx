@@ -2,7 +2,14 @@ import { Button } from '@/components/base/button';
 import { Dialog, DialogActions, DialogBody, DialogTitle } from '@/components/base/dialog';
 import { Field, FieldGroup, Fieldset, Label } from '@/components/base/fieldset';
 import { Input } from '@/components/base/input';
-import { ChangeEvent, Dispatch, PropsWithChildren, SetStateAction, useState } from 'react';
+import {
+	ChangeEvent,
+	Dispatch,
+	FormEvent,
+	PropsWithChildren,
+	SetStateAction,
+	useState,
+} from 'react';
 import { ImageFocus, Task } from '@/lib/task/task.type';
 import { addSeconds, format, isValid, parse, startOfDay } from 'date-fns';
 import { mmss } from '@/lib/consts';
@@ -32,7 +39,8 @@ export function TaskForm({
 		setTaskIn(null);
 	}
 
-	async function handleSubmit() {
+	async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+		event.preventDefault();
 		if (!taskIn) return;
 
 		try {

@@ -6,10 +6,10 @@ import { safeThrowUnauthorized } from '@/lib/error-handle';
 
 const RoutineContext = createContext<{
 	routines: Routine[];
-	handleSort: (routines: Routine[]) => void;
+	handleRoutinesSort: (routines: Routine[]) => void;
 }>({
 	routines: [],
-	handleSort: () => {},
+	handleRoutinesSort: () => {},
 });
 
 export function RoutineProvider({ children }: PropsWithChildren) {
@@ -27,7 +27,7 @@ export function RoutineProvider({ children }: PropsWithChildren) {
 		return () => unsubscribe();
 	}, [user]);
 
-	function handleSort(routines: Routine[]) {
+	function handleRoutinesSort(routines: Routine[]) {
 		if (!user?.uid) {
 			return safeThrowUnauthorized();
 		}
@@ -35,7 +35,9 @@ export function RoutineProvider({ children }: PropsWithChildren) {
 	}
 
 	return (
-		<RoutineContext.Provider value={{ routines, handleSort }}>{children}</RoutineContext.Provider>
+		<RoutineContext.Provider value={{ routines, handleRoutinesSort }}>
+			{children}
+		</RoutineContext.Provider>
 	);
 }
 

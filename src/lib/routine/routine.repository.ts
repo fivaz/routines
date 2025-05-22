@@ -76,7 +76,7 @@ export async function updateRoutines(userId: string, routines: Routine[]) {
 
 	routines.forEach((routine) => {
 		const routineRef = doc(db, getRoutinePath(userId), routine.id);
-		batch.update(routineRef, { order: routine.order, group: routine.group });
+		batch.update(routineRef, { order: routine.order, group: routine.category });
 	});
 
 	try {

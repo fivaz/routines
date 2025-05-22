@@ -12,47 +12,41 @@ import { RoutineRow } from '@/app/(dashboard)/routine/routine-row';
 import { DragDropProvider } from '@dnd-kit/react';
 import { move } from '@dnd-kit/helpers';
 import { useBackendStatus } from '@/lib/use-backend-status';
+import { useCategories } from '@/lib/category/category.context';
+import { groupRoutinesByCategory } from '@/lib/category/category.utils';
+import { Category } from '@/lib/category/category.type';
 
 export default function Routines() {
 	const [routineForm, setRoutineForm] = useState<Routine | null>(null);
-	const { routines, handleSort } = useRoutines();
+	const { routines, handleRoutinesSort } = useRoutines();
+	const { categories, handleCategorySort } = useCategories();
 	const { status } = useBackendStatus();
 
-	const [groupedRoutines, setGroupedRoutines] = useState<Record<string, Routine[]>>({});
-
-	const [groupOrder, setGroupOrder] = useState(() => Object.keys(groupedRoutines));
+	const [routinesByCategories, setRoutinesByCategories] = useState<Record<string, Routine[]>>({});
+	const [sortedCategories, setSortedCategories] = useState<Category[]>([]);
 
 	useEffect(() => {
-		const routineMap = routines.reduce(
-			(acc, routine) => {
-				const group = routine.group || '';
-				if (!acc[group]) acc[group] = [];
-				acc[group].push(routine);
-				return acc;
-			},
-			{} as Record<string, Routine[]>,
-		);
+		const localSortedCategories = categories.sort((a, b) => a.order - b.order);
 
-		setGroupedRoutines(() => {
-			console.log(routineMap);
-			return routineMap;
-		});
+		setSortedCategories(localSortedCategories);
 
-		setGroupOrder(() => Object.keys(routineMap));
-	}, [routines]);
+		const categoryRoutineMap = groupRoutinesByCategory(routines, localSortedCategories);
+
+		setRoutinesByCategories(categoryRoutineMap);
+	}, [categories, routines]);
 
 	function flattenGroupedRoutines(routineMap: Record<string, Routine[]>): Routine[] {
 		return Object.entries(routineMap).flatMap(([group, routines]) =>
 			routines.map((routine, index) => ({
 				...routine,
-				group,
+				category: group,
 				order: index,
 			})),
 		);
 	}
 
 	function handleAddRoutine() {
-		setRoutineForm({ ...emptyRoutine });
+		setRoutineForm({ ...emptyRoutine, createdAt: new Date().toISOString() });
 	}
 
 	function handleDragOver(event: Parameters<typeof move>[1]) {
@@ -60,7 +54,7 @@ export default function Routines() {
 
 		if (source?.type === 'column') return;
 
-		setGroupedRoutines((items) => move(items, event));
+		setRoutinesByCategories((items) => move(items, event));
 	}
 
 	function handleDragEnd(event: Parameters<typeof move>[1] & { canceled: boolean }) {
@@ -68,15 +62,15 @@ export default function Routines() {
 
 		if (event.canceled || source?.type !== 'column') return;
 
-		setGroupOrder((columns) => {
+		setSortedCategories((columns) => {
 			const reorderColumns = move(columns, event);
 
 			return reorderColumns;
 		});
 
 		//persist update
-		const flat = flattenGroupedRoutines(groupedRoutines);
-		handleSort(flat);
+		const flat = flattenGroupedRoutines(routinesByCategories);
+		handleRoutinesSort(flat);
 	}
 
 	return (
@@ -85,9 +79,9 @@ export default function Routines() {
 
 			<DragDropProvider onDragOver={handleDragOver} onDragEnd={handleDragEnd}>
 				<div className="flex flex-col gap-2">
-					{groupOrder.map((group, groupIndex) => (
+					{sortedCategories.map((group, groupIndex) => (
 						<RoutineGroup key={group} group={group} index={groupIndex}>
-							{groupedRoutines[group].map((routine, index) => (
+							{routinesByCategories[group].map((routine, index) => (
 								<RoutineRow group={group} index={index} routine={routine} key={routine.id} />
 							))}
 						</RoutineGroup>

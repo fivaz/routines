@@ -11,6 +11,7 @@ export const DB_PATH = {
 	ROUTINES: 'routines',
 	TASKS: 'tasks',
 	USERS: 'users',
+	CATEGORIES: 'categories',
 };
 
 export const yyyyMMdd = 'yyyy-MM-dd';
