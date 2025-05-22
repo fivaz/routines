@@ -11,15 +11,15 @@ export function FinishTaskRow({ task, date }: { task: Task; date: string }) {
 	const deltaTime = expectedTime - actualTime;
 
 	return (
-		<li className="gap-2 flex flex-col pt-3 pb-4">
+		<li className="gap-2 flex flex-col p-4 border border-gray-200 rounded-md">
 			<Subheading>{task.name}</Subheading>
 			<div className="flex gap-3">
 				<Image
 					src={task.image}
 					alt="task"
 					className="h-auto w-1/2 rounded-md"
-					width={100}
-					height={100}
+					width={200}
+					height={200}
 				/>
 				<div className="flex flex-col gap-2">
 					<Text>time expected:</Text>
@@ -28,7 +28,7 @@ export function FinishTaskRow({ task, date }: { task: Task; date: string }) {
 					<Text>complete in:</Text>
 					<Text>{formatSeconds(actualTime)}</Text>
 
-					<Text>difference :</Text>
+					<Text>difference:</Text>
 					<span className={clsx(deltaTime > 0 ? 'text-green-500' : 'text-red-500')}>
 						{formatSeconds(Math.abs(deltaTime))} {deltaTime > 0 ? 'ahead' : 'late'}
 					</span>

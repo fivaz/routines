@@ -26,14 +26,16 @@ export default function FinishPage() {
 
 	return (
 		<div className="flex flex-col gap-3 divide-y divide-gray-200">
-			<div className="flex justify-center pb-3">
-				<div className="flex flex-col gap-2 items-center">
+			<div className="flex justify-center pb-7">
+				<div className="flex flex-col items-center gap-2">
 					<Heading>Your time:</Heading>
 					<span className="font-semibold text-2xl text-red-500">
 						{formatSeconds(getTotalElapsedTime(tasks, today))}
 					</span>
+
 					<Heading>Time expected:</Heading>
 					<Heading>{formatSeconds(getTotalExpectedTime(tasks))}</Heading>
+
 					<Heading>Difference:</Heading>
 					<span
 						className={clsx(
@@ -46,9 +48,11 @@ export default function FinishPage() {
 				</div>
 			</div>
 
-			<ul role="list" className=" divide-y divide-gray-200">
+			<ul role="list" className="gap-3 flex flex-wrap justify-between">
 				{tasks.map((task) => (
-					<FinishTaskRow task={task} key={task.id} date={today} />
+					<div key={task.id} className="w-full md:w-[32%]">
+						<FinishTaskRow task={task} date={today} />
+					</div>
 				))}
 			</ul>
 		</div>
