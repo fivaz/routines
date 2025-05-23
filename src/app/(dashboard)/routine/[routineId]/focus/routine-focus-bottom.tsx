@@ -177,11 +177,8 @@ export function RoutineFocusBottom({
 				{/* Controls */}
 				<div className="relative bg-transparent z-10 w-1/6 flex">
 					{currentTaskIndex > 0 && (
-						<button
-							className="h-full w-full flex justify-center items-center"
-							onClick={handlePrevTask}
-						>
-							<ChevronLeft className="w-7 h-7" />
+						<button className="size-full flex justify-center items-center" onClick={handlePrevTask}>
+							<ChevronLeft className="size-7" />
 						</button>
 					)}
 				</div>
@@ -191,14 +188,14 @@ export function RoutineFocusBottom({
 						onClick={handleStop}
 						className="bg-transparent z-10 p-3 w-4/6 flex justify-center"
 					>
-						<CircleStop className="w-7 h-7" />
+						<CircleStop className="size-7" />
 					</button>
 				) : (
 					<button
 						onClick={handleStart}
 						className="bg-transparent z-10 p-3 w-4/6 flex justify-center"
 					>
-						<Play className="w-7 h-7" />
+						<Play className="size-7" />
 					</button>
 				)}
 
@@ -208,7 +205,7 @@ export function RoutineFocusBottom({
 						onClick={handleNextTask}
 						disabled={isRunning}
 					>
-						<ChevronRight className="w-7 h-7" />
+						<ChevronRight className="size-7" />
 					</button>
 				</div>
 			</div>
