@@ -30,16 +30,6 @@ export function formatSecondsSmall(seconds: number) {
 	}
 }
 
-export function getDuration(startAt: string, endAt: string): number {
-	try {
-		const startDate = new Date(startAt);
-		const endDate = new Date(endAt);
-		return Math.abs((endDate.getTime() - startDate.getTime()) / 1000);
-	} catch {
-		return 0;
-	}
-}
-
 export function getHistory(task: Task, date: string) {
 	const history = task.history?.[date];
 	if (history?.endAt && history?.startAt) {
@@ -64,4 +54,27 @@ export function getTotalExpectedTime(tasks: Task[]): number {
 
 export function getTotalElapsedTime(tasks: Task[], date: string): number {
 	return tasks.reduce((total, task) => total + getDurationFromDate(task, date), 0);
+}
+
+export function getCurrentTotalElapsedTime(tasks: Task[]): number {
+	return tasks.reduce((total, task) => total + getCurrentSessionDuration(task), 0);
+}
+
+export function getCurrentSessionDuration(task: Task) {
+	const session = task.currentSession;
+	if (!session) {
+		return 0;
+	} else {
+		return getDuration(session.startAt, session.endAt);
+	}
+}
+
+export function getDuration(startAt: string, endAt: string): number {
+	try {
+		const startDate = new Date(startAt);
+		const endDate = new Date(endAt);
+		return Math.abs((endDate.getTime() - startDate.getTime()) / 1000);
+	} catch {
+		return 0;
+	}
 }

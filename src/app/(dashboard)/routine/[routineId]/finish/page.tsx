@@ -14,10 +14,11 @@ import confetti from 'canvas-confetti';
 import { Button } from '@/components/base/button';
 import { UndoIcon } from 'lucide-react';
 import { useParams } from 'next/navigation';
+import { getToday } from '@/lib/session/session.utils';
 
 export default function FinishPage() {
 	const { tasks } = useTasks();
-	const today = new Date().toISOString().split('T')[0];
+	const today = getToday();
 	const { routineId } = useParams<{ routineId: string }>();
 
 	const hasHistory = tasks.some((task) => getHistory(task, today));

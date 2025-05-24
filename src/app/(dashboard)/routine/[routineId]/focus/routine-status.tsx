@@ -3,16 +3,16 @@ import { formatSeconds } from '@/lib/task/task.utils';
 import { ChevronDown, ChevronsDown, ChevronsUp, ChevronUp } from 'lucide-react';
 import clsx from 'clsx';
 
-export default function RoutineStatus({ tasks, today }: { tasks: Task[]; today: string }) {
-	function getRoutineDelta(tasks: Task[], today: string): number {
+export default function RoutineStatus({ tasks }: { tasks: Task[] }) {
+	function getRoutineDelta(tasks: Task[]): number {
 		let totalDelta = 0;
 
 		for (const task of tasks) {
-			const history = task.history?.[today];
-			if (!history || !history.startAt || !history.endAt) continue;
+			const session = task.currentSession;
+			if (!session || !session.startAt || !session.endAt) continue;
 
-			const start = new Date(history.startAt).getTime();
-			const end = new Date(history.endAt).getTime();
+			const start = new Date(session.startAt).getTime();
+			const end = new Date(session.endAt).getTime();
 
 			const actualDuration = (end - start) / 1000; // in seconds
 			const expectedDuration = task.durationInSeconds;
@@ -24,7 +24,7 @@ export default function RoutineStatus({ tasks, today }: { tasks: Task[]; today: 
 		return totalDelta;
 	}
 
-	const deltaInSeconds = getRoutineDelta(tasks, today);
+	const deltaInSeconds = getRoutineDelta(tasks);
 
 	const isLate = deltaInSeconds > 0;
 	const isSlight = Math.abs(deltaInSeconds) < 60;

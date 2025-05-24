@@ -13,9 +13,7 @@ export function RoutineTasksSummary({
 	setCurrentTaskIndex: Dispatch<SetStateAction<number>>;
 }) {
 	function hasHistory(index: number) {
-		const today = new Date().toISOString().split('T')[0];
-
-		return tasks[index].history?.[today];
+		return tasks[index].currentSession;
 	}
 
 	function changeTaskIndex(index: number) {

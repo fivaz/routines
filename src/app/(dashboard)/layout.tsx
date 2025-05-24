@@ -1,6 +1,6 @@
 'use client';
 import { Dashboard } from '@/components/Dashboard';
-import { useEffect } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { Routes } from '@/lib/consts';
 import { useAuth } from '@/lib/user/auth-context';
 import { useRouter } from 'next/navigation';
@@ -12,7 +12,7 @@ import { CategoryProvider } from '@/lib/category/category.context';
 export default function Layout({
 	children,
 }: Readonly<{
-	children: React.ReactNode;
+	children: ReactNode;
 }>) {
 	const { user, loading } = useAuth();
 
