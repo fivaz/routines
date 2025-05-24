@@ -2,8 +2,10 @@ import { Task } from '@/lib/task/task.type';
 import { formatSeconds } from '@/lib/task/task.utils';
 import { ChevronDown, ChevronsDown, ChevronsUp, ChevronUp } from 'lucide-react';
 import clsx from 'clsx';
+import { useTasks } from '@/lib/task/task.context';
 
-export default function RoutineStatus({ tasks }: { tasks: Task[] }) {
+export default function RoutineStatus() {
+	const { tasks } = useTasks();
 	function getRoutineDelta(tasks: Task[]): number {
 		let totalDelta = 0;
 

@@ -157,7 +157,7 @@ export function RoutineFocusBottom({
 					<h2 className="first-letter:capitalize text-xl font-bold text-green-600 dark:text-green-500">
 						{currentTask.name}
 					</h2>
-					<RoutineStatus tasks={tasks} />
+					<RoutineStatus />
 				</div>
 
 				<div className="flex justify-between items-end">

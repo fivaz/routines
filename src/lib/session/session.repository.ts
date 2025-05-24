@@ -5,7 +5,6 @@ import {
 	getDocs,
 	limit,
 	onSnapshot,
-	orderBy,
 	query,
 	setDoc,
 	where,
@@ -18,6 +17,10 @@ import { getToday } from '@/lib/session/session.utils';
 
 export function getSessionPath(userId: string, routineId: string, taskId: string) {
 	return `${DB_PATH.USERS}/${userId}/${DB_PATH.ROUTINES}/${routineId}/${DB_PATH.TASKS}/${taskId}/${DB_PATH.SESSIONS}`;
+}
+
+export function getNewSessionPath(userId: string, routineId: string) {
+	return `${DB_PATH.USERS}/${userId}/${DB_PATH.ROUTINES}/${routineId}/${DB_PATH.SESSIONS}`;
 }
 
 export async function startSession(userId: string, routineId: string, taskId: string) {
@@ -98,13 +101,19 @@ export async function fetchSessionsForToday(
 export function fetchSessions(
 	userId: string,
 	routineId: string,
-	taskId: string,
+	tasks: Task[],
 	setSessions: (sessions: Session[]) => void,
 ) {
 	console.log('fetchSessions');
+
 	const sessionsCollectionRef = query(
-		collection(db, getSessionPath(userId, routineId, taskId)),
-		orderBy('order'),
+		collection(db, getNewSessionPath(userId, routineId)),
+		where('date', '==', getToday()),
+		where(
+			'taskId',
+			'in',
+			tasks.map((task) => task.id),
+		),
 	);
 
 	return onSnapshot(sessionsCollectionRef, (snapshot) => {

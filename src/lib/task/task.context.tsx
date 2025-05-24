@@ -30,7 +30,10 @@ export function TaskProvider({ children }: PropsWithChildren) {
 	const [tasks, setTasks] = useState<Task[]>([]);
 
 	useEffect(() => {
-		if (!user?.uid || !routineId) return;
+		if (!user?.uid || !routineId) {
+			setTasks([]);
+			return;
+		}
 
 		const unsubscribe = fetchTasks(user.uid, routineId, setTasks);
 
