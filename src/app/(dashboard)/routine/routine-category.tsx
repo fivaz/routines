@@ -5,6 +5,7 @@ import { useSortable } from '@dnd-kit/react/sortable';
 import { Category } from '@/lib/category/category.type';
 import { GripVerticalIcon } from 'lucide-react';
 import { Button } from '@/components/base/button';
+import clsx from 'clsx';
 
 export function RoutineCategory({
 	category,
@@ -19,18 +20,20 @@ export function RoutineCategory({
 		accept: ['item', 'column'],
 	});
 
-	const style = isDropTarget ? { background: 'oklch(96.7% 0.003 264.542)' } : undefined;
+	const bgClass = isDropTarget ? 'bg-gray-200 dark:bg-gray-800' : 'bg-gray-50 dark:bg-gray-950';
 
 	return (
 		<div
-			className="flex gap-2 flex-col p-4 border bg-gray-50 border-gray-200 rounded-lg"
-			style={style}
+			className={clsx(
+				bgClass,
+				'flex gap-2 flex-col p-4 border dark:border-gray-800 border-gray-200 rounded-lg',
+			)}
 			ref={ref}
 		>
 			<div className="flex gap-2 items-center">
 				<Button
 					outline
-					className="touch-none cursor-grab bg-white p-1"
+					className="touch-none bg-white dark:bg-gray-900 cursor-grab p-1"
 					onClick={(e: MouseEvent<HTMLButtonElement>) => {
 						e.stopPropagation(); // Prevent link click when button is clicked
 					}}

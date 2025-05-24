@@ -6,10 +6,9 @@ import { ChangeEvent, Dispatch, FormEvent, SetStateAction, useState } from 'reac
 import { Routine } from '@/lib/routine/routine.type';
 import { RoutineImageForm } from '@/components/RoutineImageForm';
 import { useRoutineActions } from '@/lib/routine/routine.hooks';
-import { Select } from '@/components/base/select/select';
-import { SelectItem } from '@/components/base/select/select-item';
 import { useCategories } from '@/lib/category/category.context';
 import { Category } from '@/lib/category/category.type';
+import { Listbox, ListboxLabel, ListboxOption } from '../base/listbox';
 
 export function RoutineForm({
 	routineIn,
@@ -47,7 +46,6 @@ export function RoutineForm({
 
 	const handleSelect = (category: Category | null) => {
 		if (!routineIn) return;
-		console.log(category);
 		setRoutineIn({ ...routineIn, category });
 	};
 
@@ -71,19 +69,19 @@ export function RoutineForm({
 											<Input value={routineIn.name} name="name" onChange={handleChange} />
 										</Field>
 										<Field>
-											<Select<Category | null>
-												value={routineIn.category}
+											<Label>Category</Label>
+											<Listbox
+												className="mt-4"
 												name="category"
+												defaultValue={routineIn.category}
 												onChange={handleSelect}
-												label="Category"
-												header={routineIn.category?.name || 'no category'}
 											>
 												{categories.map((category) => (
-													<SelectItem value={category} key={category.id}>
-														{category.name}
-													</SelectItem>
+													<ListboxOption value={category} key={category.id}>
+														<ListboxLabel>{category.name}</ListboxLabel>
+													</ListboxOption>
 												))}
-											</Select>
+											</Listbox>
 										</Field>
 										<RoutineImageForm
 											close={close}
