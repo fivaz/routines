@@ -1,3 +1,5 @@
+import { Session } from '@/lib/session/session.type';
+
 export type Task = {
 	id: string;
 	name: string;
@@ -5,13 +7,7 @@ export type Task = {
 	durationInSeconds: number;
 	order: number;
 	createdAt: string;
-	history: Record<
-		string,
-		{
-			startAt: string;
-			endAt: string;
-		}
-	>;
+	currentSession?: Session;
 };
 
 export const emptyTask: Task = {
@@ -21,7 +17,6 @@ export const emptyTask: Task = {
 	image: '',
 	durationInSeconds: 5 * 60,
 	createdAt: new Date().toISOString(),
-	history: {},
 };
 
 export type ImageFocus = 'person' | 'object';

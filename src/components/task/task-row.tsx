@@ -6,7 +6,7 @@ import { Ellipsis, GripVerticalIcon } from 'lucide-react';
 import { useTaskActions } from '@/lib/task/task.hooks';
 import { TaskForm } from '@/components/task/task-form';
 import { useSortable } from '@dnd-kit/react/sortable';
-import { formatSeconds, latestTime } from '@/lib/task/task.utils';
+import { formatSeconds } from '@/lib/task/task.utils';
 import { usePrompt } from '@/lib/prompt-context';
 import { Button } from '@/components/base/button';
 import { ImageWaitingSkeleton } from '@/components/task/ImageWaitingSkeleton';
@@ -77,9 +77,7 @@ export function TaskRow({
 			>
 				<span className="first-letter:uppercase p-0.5 group-hover:underline">{task.name}</span>
 
-				<span className="p-0.5 group-hover:underline">
-					{latestTime(task)} / {formatSeconds(task.durationInSeconds)}
-				</span>
+				<span className="p-0.5 group-hover:underline">{formatSeconds(task.durationInSeconds)}</span>
 			</div>
 
 			<div className="absolute inset-0 bg-black/25 rounded-lg"></div>

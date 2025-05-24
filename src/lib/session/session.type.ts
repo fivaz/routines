@@ -3,6 +3,7 @@ export type Session = {
 	date: string;
 	startAt: string;
 	endAt: string;
+	taskId: string;
 };
 
 export const emptySession: Session = {
@@ -10,4 +11,5 @@ export const emptySession: Session = {
 	date: '',
 	startAt: '',
 	endAt: '',
+	taskId: '',
 };

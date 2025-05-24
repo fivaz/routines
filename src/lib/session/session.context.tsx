@@ -8,7 +8,7 @@ const SessionContext = createContext<{
 	sessions: [],
 	handleSessionsSort: () => {},
 });
-
+//
 // export function SessionProvider({ children }: PropsWithChildren) {
 // 	const { user } = useAuth();
 // 	const [sessions, setSessions] = useState<Session[]>([]);

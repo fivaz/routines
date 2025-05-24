@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { Ellipsis } from 'lucide-react';
-import { getDuration, getHistory } from '@/lib/task/task.utils';
+import { getDuration } from '@/lib/task/task.utils';
 import { Dropdown, DropdownButton, DropdownItem, DropdownMenu } from '@/components/base/dropdown';
 import { RoutineTasksSummary } from '@/app/(dashboard)/routine/[routineId]/focus/routine-tasks-summary';
 import { RoutineFocusBottom } from '@/app/(dashboard)/routine/[routineId]/focus/routine-focus-bottom';
@@ -24,10 +24,10 @@ export default function RoutineFocusPage() {
 
 	useEffect(() => {
 		if (currentTask) {
-			const today = new Date().toISOString().split('T')[0];
-			const todayHistory = getHistory(currentTask, today);
-			if (todayHistory) {
-				setElapsedTime(getDuration(todayHistory.startAt, todayHistory.endAt));
+			if (currentTask.currentSession) {
+				setElapsedTime(
+					getDuration(currentTask.currentSession.startAt, currentTask.currentSession.endAt),
+				);
 			} else {
 				setElapsedTime(0);
 			}

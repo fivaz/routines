@@ -1,32 +1,80 @@
-import { collection, deleteDoc, doc, onSnapshot, orderBy, query, setDoc } from 'firebase/firestore';
+import {
+	collection,
+	deleteDoc,
+	doc,
+	getDocs,
+	limit,
+	onSnapshot,
+	orderBy,
+	query,
+	setDoc,
+	where,
+} from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Session } from '@/lib/session/session.type';
 import { DB_PATH } from '@/lib/consts';
+import { Task } from '../task/task.type';
 
-export function getSessionPath(userId: string, taskId: string) {
-	return `${DB_PATH.USERS}/${userId}/${DB_PATH.TASKS}/${taskId}/${DB_PATH.SESSIONS}`;
+export function getSessionPath(userId: string, routineId: string, taskId: string) {
+	return `${DB_PATH.USERS}/${userId}/${DB_PATH.ROUTINES}/${routineId}/${DB_PATH.TASKS}/${taskId}/${DB_PATH.SESSIONS}`;
 }
 
-export async function addSession(userId: string, taskId: string, session: Session) {
-	const newSessionRef = doc(collection(db, getSessionPath(userId, taskId)));
+export async function addSession(
+	userId: string,
+	routineId: string,
+	taskId: string,
+	session: Session,
+) {
+	const newSessionRef = doc(collection(db, getSessionPath(userId, routineId, taskId)));
 
 	void setDoc(newSessionRef, session);
 }
 
-export async function editSession(userId: string, taskId: string, session: Session) {
-	const sessionRef = doc(db, getSessionPath(userId, taskId), session.id);
+export async function editSession(
+	userId: string,
+	routineId: string,
+	taskId: string,
+	session: Session,
+) {
+	const sessionRef = doc(db, getSessionPath(userId, routineId, taskId), session.id);
 
 	void setDoc(sessionRef, session);
 }
 
+export async function fetchSessionsForToday(
+	userId: string,
+	routineId: string,
+	tasks: Task[],
+	date: string,
+	setTasks: (tasks: Task[]) => void,
+) {
+	const updatedTasks: Task[] = [];
+
+	for (const task of tasks) {
+		const sessionsRef = collection(db, getSessionPath(userId, routineId, task.id));
+
+		const q = query(sessionsRef, where('date', '==', date), limit(1));
+
+		const sessionSnap = await getDocs(q);
+		const session = sessionSnap.docs[0]?.data() as Session;
+		updatedTasks.push({
+			...task,
+			currentSession: session,
+		});
+	}
+
+	setTasks(updatedTasks);
+}
+
 export function fetchSessions(
 	userId: string,
+	routineId: string,
 	taskId: string,
 	setSessions: (sessions: Session[]) => void,
 ) {
 	console.log('fetchSessions');
 	const sessionsCollectionRef = query(
-		collection(db, getSessionPath(userId, taskId)),
+		collection(db, getSessionPath(userId, routineId, taskId)),
 		orderBy('order'),
 	);
 
@@ -40,6 +88,11 @@ export function fetchSessions(
 	});
 }
 
-export function deleteSession(userId: string, taskId: string, sessionId: string) {
-	deleteDoc(doc(db, getSessionPath(userId, taskId), sessionId));
+export function deleteSession(
+	userId: string,
+	routineId: string,
+	taskId: string,
+	sessionId: string,
+) {
+	deleteDoc(doc(db, getSessionPath(userId, routineId, taskId), sessionId));
 }

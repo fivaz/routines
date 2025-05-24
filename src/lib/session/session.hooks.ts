@@ -1,6 +1,3 @@
-import { useSessions } from './session.context';
-import { useParams } from 'next/navigation';
-import { useMemo } from 'react';
 import { useAuth } from '@/lib/user/auth-context';
 import {
 	addSession as addSessionRepo,
@@ -9,14 +6,9 @@ import {
 } from './session.repository';
 import { Session } from '@/lib/session/session.type';
 import { safeThrowUnauthorized } from '@/lib/error-handle';
+import { Task } from '@/lib/task/task.type';
 
-export function useSession() {
-	const { sessions } = useSessions();
-	const { sessionId } = useParams<{ sessionId: string }>();
-	return useMemo(() => {
-		return sessions.find((session) => session.id === sessionId);
-	}, [sessionId, sessions]);
-}
+export function useSessions(tasks: Task[]) {}
 
 export function useSessionActions(taskId: string) {
 	const { user } = useAuth();

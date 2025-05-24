@@ -16,6 +16,7 @@ import { ImageFocus, Task } from '@/lib/task/task.type';
 import { Routine } from '@/lib/routine/routine.type';
 import { getRoutinePath } from '@/lib/routine/routine.repository';
 import { FirebaseError } from 'firebase/app';
+import { fetchSessionsForToday } from '@/lib/session/session.repository';
 
 export function getTaskPath(userId: string, routineId: string) {
 	return `${DB_PATH.USERS}/${userId}/${DB_PATH.ROUTINES}/${routineId}/${DB_PATH.TASKS}`;
@@ -23,6 +24,7 @@ export function getTaskPath(userId: string, routineId: string) {
 
 export function fetchTasks(userId: string, routineId: string, setTasks: (tasks: Task[]) => void) {
 	console.log('fetchTasks');
+
 	const tasksCollectionRef = query(
 		collection(db, getTaskPath(userId, routineId)),
 		orderBy('order'),
@@ -34,7 +36,9 @@ export function fetchTasks(userId: string, routineId: string, setTasks: (tasks: 
 			tasks.push({ ...doc.data(), id: doc.id } as Task);
 		});
 
-		setTasks(tasks);
+		const today = new Date().toISOString().split('T')[0];
+
+		void fetchSessionsForToday(userId, routineId, tasks, today, setTasks);
 	});
 }
 

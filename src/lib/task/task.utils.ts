@@ -49,24 +49,6 @@ export function getHistory(task: Task, date: string) {
 	}
 }
 
-export function latestTime(task: Task) {
-	const histories = Object.keys(task.history);
-	if (!histories.length) {
-		return '-';
-	}
-
-	const latestKey = histories.sort().pop();
-	if (!latestKey) {
-		console.error("no key found in history, this shouldn't happen");
-		return '-';
-	}
-	const duration = getDurationFromDate(task, latestKey);
-	if (!duration) {
-		return '-';
-	}
-	return formatSeconds(duration);
-}
-
 export function getDurationFromDate(task: Task, date: string) {
 	const history = getHistory(task, date);
 	if (!history) {
