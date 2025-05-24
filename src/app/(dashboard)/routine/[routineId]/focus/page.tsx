@@ -25,9 +25,13 @@ export default function RoutineFocusPage() {
 	useEffect(() => {
 		if (currentTask) {
 			if (currentTask.currentSession) {
+				console.log(currentTask.currentSession);
 				setElapsedTime(
 					getDuration(currentTask.currentSession.startAt, currentTask.currentSession.endAt),
 				);
+				if (!currentTask.currentSession.endAt) {
+					setIsRunning(true);
+				}
 			} else {
 				setElapsedTime(0);
 			}

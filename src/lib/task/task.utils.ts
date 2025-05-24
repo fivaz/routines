@@ -72,7 +72,7 @@ export function getCurrentSessionDuration(task: Task) {
 export function getDuration(startAt: string, endAt: string): number {
 	try {
 		const startDate = new Date(startAt);
-		const endDate = new Date(endAt);
+		const endDate = endAt ? new Date(endAt) : new Date();
 		return Math.abs((endDate.getTime() - startDate.getTime()) / 1000);
 	} catch {
 		return 0;

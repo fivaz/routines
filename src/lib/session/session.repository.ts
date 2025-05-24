@@ -81,7 +81,11 @@ export async function fetchSessionsForToday(
 		const q = query(sessionsRef, where('date', '==', date), limit(1));
 
 		const sessionSnap = await getDocs(q);
-		const session = sessionSnap.docs[0]?.data() as Session;
+		const session = {
+			...sessionSnap.docs[0]?.data(),
+			id: sessionSnap.docs[0]?.id,
+		} as Session;
+
 		updatedTasks.push({
 			...task,
 			currentSession: session,
