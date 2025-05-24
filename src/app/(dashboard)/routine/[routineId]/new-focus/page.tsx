@@ -7,6 +7,7 @@ import { TaskImage } from '@/app/(dashboard)/routine/[routineId]/new-focus/TaskI
 import { FocusFooter } from '@/app/(dashboard)/routine/[routineId]/new-focus/focus-footer/FocusFooter';
 import { Task } from '@/lib/task/task.type';
 import { useTasks } from '@/lib/task/task.context';
+import { FocusController } from '@/app/(dashboard)/routine/[routineId]/new-focus/focus-controller/FocusController';
 
 export default function RoutineFocusPage() {
 	const routine = useRoutine();
@@ -23,6 +24,8 @@ export default function RoutineFocusPage() {
 			<TaskImage task={task} taskIndex={taskIndex} />
 
 			<FocusFooter task={task} />
+
+			<FocusController taskIndex={taskIndex} setTaskIndex={setTaskIndex} task={task} />
 		</div>
 	);
 }

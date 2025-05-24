@@ -26,6 +26,7 @@
 		"date-fns": "^4.1.0",
 		"firebase": "^11.2.0",
 		"framer-motion": "^12.4.0",
+		"jotai": "^2.12.4",
 		"lucide-react": "^0.474.0",
 		"minidenticons": "^4.2.1",
 		"next": "^15.3.2",

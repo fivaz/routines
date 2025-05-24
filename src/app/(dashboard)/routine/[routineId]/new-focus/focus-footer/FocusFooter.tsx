@@ -3,19 +3,28 @@ import { Skeleton } from '@/components/Skeleton';
 import RoutineStatus from '../../focus/routine-status';
 import { formatSeconds, getTotalExpectedTime } from '@/lib/task/task.utils';
 import { useTasks } from '@/lib/task/task.context';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useSessions } from '@/lib/session/session.context';
-import { getCurrentTotalElapsedTime } from '@/app/(dashboard)/routine/[routineId]/new-focus/focus-footer/service';
+import {
+	getCurrentTotalElapsedTime,
+	getSessionDuration,
+} from '@/app/(dashboard)/routine/[routineId]/new-focus/focus-footer/service';
+import { useAtom } from 'jotai/index';
+import { elapsedTimeAtom } from '@/app/(dashboard)/routine/[routineId]/new-focus/service';
 
 export function FocusFooter({ task }: { task?: Task }) {
 	const { tasks } = useTasks();
 	const { sessions } = useSessions();
+	const [elapsedTime, setElapsedTime] = useAtom(elapsedTimeAtom);
 
-	const [elapsedTime, setElapsedTime] = useState(0);
+	const currentSession = useMemo(
+		() => sessions.find((session) => session.taskId == task?.id),
+		[task, sessions],
+	);
 
 	useEffect(() => {
-		console.log(getCurrentTotalElapsedTime(sessions));
-	}, [sessions]);
+		setElapsedTime(getSessionDuration(currentSession));
+	}, [currentSession, setElapsedTime]);
 
 	const totalElapsedTime = useMemo(
 		() => formatSeconds(getCurrentTotalElapsedTime(sessions)),
