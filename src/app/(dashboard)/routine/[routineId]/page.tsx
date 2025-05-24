@@ -13,7 +13,8 @@ import { usePrompt } from '@/lib/prompt-context';
 import { ListIcon } from '@/components/icons/ListIcon';
 import { useTasks } from '@/lib/task/task.context';
 import { useRoutine, useRoutineActions } from '@/lib/routine/routine.hooks';
-import { Heading, Subheading } from '@/components/base/heading';
+import { Heading } from '@/components/base/heading';
+import { Text } from '@/components/base/text';
 import { DragDropProvider } from '@dnd-kit/react';
 import { formatSeconds } from '@/lib/task/task.utils';
 import { useBackendStatus } from '@/lib/use-backend-status';
@@ -24,8 +25,8 @@ export default function RoutinePage() {
 	const [routineForm, setRoutineForm] = useState<Routine | null>(null);
 	const [taskForm, setTaskForm] = useState<Task | null>(null);
 
-	const { handleSort, tasks } = useTasks();
 	const routine = useRoutine();
+	const { handleSort, tasks } = useTasks();
 	const { status } = useBackendStatus();
 	const { routineId } = useParams<{ routineId: string }>();
 	const { createPrompt } = usePrompt();
@@ -61,10 +62,10 @@ export default function RoutinePage() {
 	return (
 		<div className="flex flex-col gap-5">
 			<div className="flex justify-between items-center">
-				<div className="flex gap-2 items-center">
-					{routine ? <Heading>{routine.name}</Heading> : <Skeleton />}
+				<div className="flex flex-col">
+					{routine ? <Heading className="mb-0">{routine.name}</Heading> : <Skeleton />}
 					{routine ? (
-						<Subheading>({formatSeconds(routine.totalDuration)})</Subheading>
+						<Text className="text-xs">{formatSeconds(routine.totalDuration)}</Text>
 					) : (
 						<Skeleton className="w-10" />
 					)}
