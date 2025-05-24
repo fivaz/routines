@@ -3,6 +3,7 @@ export const Routes = {
 	ROUTINE: `/routine`,
 	LOGIN: '/login',
 	REGISTER: '/register',
+	CATEGORIES: '/categories',
 };
 
 // firebase paths
@@ -12,6 +13,7 @@ export const DB_PATH = {
 	TASKS: 'tasks',
 	USERS: 'users',
 	CATEGORIES: 'categories',
+	SESSIONS: 'sessions',
 };
 
 export const yyyyMMdd = 'yyyy-MM-dd';

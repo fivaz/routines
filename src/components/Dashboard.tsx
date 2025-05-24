@@ -36,8 +36,8 @@ import { BackEndStatus } from '@/components/BackEndStatus';
 import { Tooltip } from '@/components/base/tooltip';
 
 const navItems = [
-	{ label: 'Routines', url: '/' },
-	{ label: 'Categories', url: '/categories' },
+	{ label: 'Routines', url: Routes.ROOT },
+	{ label: 'Categories', url: Routes.CATEGORIES },
 ];
 
 export function Dashboard({ children }: React.PropsWithChildren) {
