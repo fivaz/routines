@@ -2,14 +2,9 @@
 
 import React, { useEffect, useState } from 'react';
 import { ArrowLeft, ArrowRight, Play, RotateCcw, Square } from 'lucide-react';
+import { differenceInSeconds, format, parseISO } from 'date-fns';
 
-type Task = {
-	id: number;
-	title: string;
-	expectedDuration: number;
-	startTime?: string; // ISO string
-	endTime?: string; // ISO string
-};
+const getToday = () => format(new Date(), 'yyyy-MM-dd');
 
 const formatTime = (seconds: number): string => {
 	const m = Math.floor(seconds / 60)
@@ -19,6 +14,19 @@ const formatTime = (seconds: number): string => {
 	return `${m}:${s}`;
 };
 
+type Session = {
+	date: string; // 'YYYY-MM-DD'
+	startTime: string; // ISO
+	endTime?: string; // ISO
+};
+
+type Task = {
+	id: number;
+	title: string;
+	expectedDuration: number;
+	sessions: Session[];
+};
+
 type TaskItemProps = {
 	task: Task;
 	isCurrent: boolean;
@@ -26,7 +34,6 @@ type TaskItemProps = {
 	onStart: () => void;
 	onStop: () => void;
 	onRestart: () => void;
-	onContinue: () => void;
 };
 
 const TaskItem: React.FC<TaskItemProps> = ({
@@ -36,46 +43,39 @@ const TaskItem: React.FC<TaskItemProps> = ({
 	onStart,
 	onStop,
 	onRestart,
-	onContinue,
 }) => {
-	const hasStarted = !!task.startTime;
-	const hasEnded = !!task.endTime;
-	const isRunning = hasStarted && !hasEnded;
+	const today = getToday();
+	const todaySession = task.sessions.find((s) => s.date === today);
+	const isRunning = !!todaySession?.startTime && !todaySession?.endTime;
+	const hasEnded = !!todaySession?.endTime;
 
-	const formatTimeString = (iso?: string) => (iso ? new Date(iso).toLocaleTimeString() : '-');
+	const formatTimeString = (iso?: string) => (iso ? format(parseISO(iso), 'HH:mm:ss') : '-');
 
 	return (
 		<div className={`p-4 border rounded shadow ${isCurrent ? 'bg-blue-50' : ''}`}>
 			<h2 className="text-lg font-bold">{task.title}</h2>
 			<p>Expected: {task.expectedDuration} min</p>
-			<p>Start: {formatTimeString(task.startTime)}</p>
-			<p>End: {formatTimeString(task.endTime)}</p>
+			<p>Start: {formatTimeString(todaySession?.startTime)}</p>
+			<p>End: {formatTimeString(todaySession?.endTime)}</p>
 
 			{isRunning && <p className="text-green-600 font-mono">⏱ {formatTime(elapsed)}</p>}
 
 			{isCurrent && (
 				<div className="mt-3 flex gap-3">
-					{!hasStarted && (
+					{!todaySession && (
 						<button onClick={onStart} title="Start">
 							<Play className="text-green-600 hover:scale-110" />
 						</button>
 					)}
-
 					{isRunning && (
 						<button onClick={onStop} title="Stop">
 							<Square className="text-red-600 hover:scale-110" />
 						</button>
 					)}
-
-					{hasStarted && hasEnded && (
-						<>
-							<button onClick={onContinue} title="Continue">
-								<Play className="text-blue-600 hover:scale-110" />
-							</button>
-							<button onClick={onRestart} title="Restart">
-								<RotateCcw className="text-yellow-600 hover:scale-110" />
-							</button>
-						</>
+					{todaySession && todaySession.startTime && todaySession.endTime && (
+						<button onClick={onRestart} title="Restart">
+							<RotateCcw className="text-yellow-600 hover:scale-110" />
+						</button>
 					)}
 				</div>
 			)}
@@ -89,17 +89,19 @@ const TasksList: React.FC = () => {
 			id: 1,
 			title: 'Task 1',
 			expectedDuration: 25,
-			startTime: '2025-05-23T10:18:35.882Z',
+			sessions: [],
 		},
 		{
 			id: 2,
 			title: 'Task 2',
 			expectedDuration: 15,
+			sessions: [],
 		},
 		{
 			id: 3,
 			title: 'Task 3',
 			expectedDuration: 30,
+			sessions: [],
 		},
 	]);
 
@@ -107,15 +109,17 @@ const TasksList: React.FC = () => {
 	const [elapsedSeconds, setElapsedSeconds] = useState(0);
 
 	const currentTask = tasks[currentIndex];
+	const today = getToday();
+	const todaySession = currentTask.sessions.find((s) => s.date === today);
 
 	useEffect(() => {
 		let interval: NodeJS.Timeout;
 
-		if (currentTask?.startTime && !currentTask?.endTime) {
+		if (todaySession?.startTime && !todaySession?.endTime) {
 			const updateElapsed = () => {
-				const now = Date.now();
-				const start = new Date(currentTask.startTime!).getTime();
-				setElapsedSeconds(Math.floor((now - start) / 1000));
+				const now = new Date();
+				const start = parseISO(todaySession.startTime);
+				setElapsedSeconds(differenceInSeconds(now, start));
 			};
 
 			updateElapsed();
@@ -124,35 +128,41 @@ const TasksList: React.FC = () => {
 			setElapsedSeconds(0);
 		}
 
-		console.log(tasks);
-
 		return () => clearInterval(interval);
-	}, [currentTask.startTime, currentTask?.endTime, currentIndex, tasks]);
+	}, [todaySession?.startTime, todaySession?.endTime, currentIndex]);
 
-	const updateTask = (index: number, update: Partial<Task>) => {
+	const updateTask = (index: number, updatedSessions: Session[]) => {
 		const updated = [...tasks];
-		updated[index] = { ...updated[index], ...update };
+		updated[index] = { ...updated[index], sessions: updatedSessions };
 		setTasks(updated);
 	};
 
-	const nowISO = () => new Date().toISOString();
-
-	const startTask = (index: number) => {
-		updateTask(index, { startTime: nowISO(), endTime: undefined });
+	const startTask = () => {
+		const now = new Date().toISOString();
+		const sessions = [...currentTask.sessions];
+		const existing = sessions.find((s) => s.date === today);
+		if (!existing) {
+			sessions.push({ date: today, startTime: now });
+			updateTask(currentIndex, sessions);
+		}
 	};
 
-	const stopTask = (index: number) => {
-		updateTask(index, { endTime: nowISO() });
+	const stopTask = () => {
+		const now = new Date().toISOString();
+		const sessions = currentTask.sessions.map((s) =>
+			s.date === today ? { ...s, endTime: now } : s,
+		);
+		updateTask(currentIndex, sessions);
 		setElapsedSeconds(0);
 	};
 
-	const restartTask = (index: number) => {
-		updateTask(index, { startTime: nowISO(), endTime: undefined });
+	const restartTask = () => {
+		const now = new Date().toISOString();
+		const sessions = currentTask.sessions.map((s) =>
+			s.date === today ? { date: today, startTime: now } : s,
+		);
+		updateTask(currentIndex, sessions);
 		setElapsedSeconds(0);
-	};
-
-	const continueTask = (index: number) => {
-		updateTask(index, { endTime: undefined });
 	};
 
 	const prevTask = () => {
@@ -184,10 +194,9 @@ const TasksList: React.FC = () => {
 					task={task}
 					isCurrent={index === currentIndex}
 					elapsed={index === currentIndex ? elapsedSeconds : 0}
-					onStart={() => startTask(index)}
-					onStop={() => stopTask(index)}
-					onRestart={() => restartTask(index)}
-					onContinue={() => continueTask(index)}
+					onStart={startTask}
+					onStop={stopTask}
+					onRestart={restartTask}
 				/>
 			))}
 		</div>
