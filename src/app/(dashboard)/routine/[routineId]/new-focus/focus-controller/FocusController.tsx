@@ -1,57 +1,48 @@
-import { Task } from '@/lib/task/task.type';
 import { ChevronLeft, ChevronRight, CircleStop, Play } from 'lucide-react';
-import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
+import { useEffect } from 'react';
 import { safeThrow } from '@/lib/error-handle';
-import { useAtom } from 'jotai';
-import { elapsedTimeAtom } from '@/app/(dashboard)/routine/[routineId]/new-focus/service';
+import { useAtom, useAtomValue } from 'jotai';
+import {
+	currentSessionAtom,
+	currentTaskAtom,
+	elapsedTimeAtom,
+	sessionsAtom,
+	taskIndexAtom,
+} from '@/app/(dashboard)/routine/[routineId]/new-focus/service';
 import { useParams, useRouter } from 'next/navigation';
 import { Routes } from '@/lib/consts';
-import { useTasks } from '@/lib/task/task.context';
 import { useSessionActions } from '@/lib/session/session.hooks';
 import { usePrompt } from '@/lib/prompt-context';
-import { useSessions } from '@/lib/session/session.context';
-import { differenceInSeconds, parseISO } from 'date-fns';
+import { tasksAtom } from '@/lib/task/task.type';
+import { getSessionDuration } from '@/lib/session/session.utils';
 
-export function FocusController({
-	task,
-	taskIndex,
-	setTaskIndex,
-}: {
-	taskIndex: number;
-	task?: Task;
-	setTaskIndex: Dispatch<SetStateAction<number>>;
-}) {
-	const [isRunning, setIsRunning] = useState(false);
+export function FocusController() {
+	const task = useAtomValue(currentTaskAtom);
+	const tasks = useAtomValue(tasksAtom);
+	const [taskIndex, setTaskIndex] = useAtom(taskIndexAtom);
 	const [elapsedTime, setElapsedTime] = useAtom(elapsedTimeAtom);
+	const sessions = useAtomValue(sessionsAtom);
+	const currentSession = useAtomValue(currentSessionAtom);
+
 	const router = useRouter();
-	const { tasks } = useTasks();
 	const { routineId } = useParams<{ routineId: string }>();
 	const { startSession, stopSession } = useSessionActions(routineId, task?.id);
-	const { sessions } = useSessions();
 	const { createPrompt } = usePrompt();
 
-	const currentSession = useMemo(
-		() => sessions.find((session) => session.taskId == task?.id),
-		[sessions, task?.id],
-	);
+	const isRunning = !!currentSession?.startAt && !currentSession?.endAt;
 
 	useEffect(() => {
-		let interval: NodeJS.Timeout;
+		const tick = () => {
+			// console.log('sessions', sessions);
+			const x = getSessionDuration(currentSession);
+			setElapsedTime(x);
+		};
 
-		if (currentSession?.startAt && !currentSession.endAt) {
-			const updateElapsed = () => {
-				const now = Date();
-				const start = parseISO(currentSession.startAt);
-				setElapsedTime(differenceInSeconds(now, start));
-			};
-			updateElapsed();
-			interval = setInterval(updateElapsed, 1000);
-		} else {
-			setElapsedTime(0);
-		}
+		tick(); // run immediately
+		const interval = setInterval(tick, 1000);
 
 		return () => clearInterval(interval);
-	}, [currentSession?.endAt, currentSession?.startAt, setElapsedTime]);
+	}, [currentSession, setElapsedTime]);
 
 	const progressBarSize = () => {
 		if (!task) return { width: `0%` };
@@ -87,17 +78,20 @@ export function FocusController({
 	};
 
 	const handleStart = async () => {
-		if (task) {
+		console.log('1');
+		if (currentSession?.startAt) {
+			console.log('2');
 			if (
 				!(await createPrompt({
 					title: 'Task already accomplished today',
 					message: 'Are you sure you wanna to override it ?',
 				}))
 			) {
+				console.log('3');
 				return;
 			}
 		}
-		setIsRunning(true);
+		console.log('4');
 		void startSession();
 	};
 
@@ -107,7 +101,6 @@ export function FocusController({
 		}
 
 		void stopSession(currentSession);
-		setIsRunning(false);
 		handleNextTask();
 	}
 

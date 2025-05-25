@@ -3,9 +3,23 @@ import {
 	addTask as addTaskRepo,
 	deleteTask as deleteTaskRepo,
 	editTask as editTaskRepo,
+	fetchTasks,
 	generateTaskImage as generateTaskImageRepo,
 } from './task.repository';
-import { ImageFocus, Task } from './task.type';
+import { ImageFocus, Task, tasksAtom } from './task.type';
+import { useSetAtom } from 'jotai';
+import { useEffect } from 'react';
+
+export function useFetchTasks(userId?: string, routineId?: string) {
+	const setTasks = useSetAtom(tasksAtom);
+
+	useEffect(() => {
+		if (!userId || !routineId) return;
+
+		const unsubscribe = fetchTasks(userId, routineId, setTasks);
+		return () => unsubscribe();
+	}, [userId, routineId, setTasks]);
+}
 
 export function useTaskActions() {
 	const { user } = useAuth();

@@ -1,30 +1,20 @@
-import { Task } from '@/lib/task/task.type';
 import { Skeleton } from '@/components/Skeleton';
-import RoutineStatus from '../../focus/routine-status';
 import { formatSeconds, getTotalExpectedTime } from '@/lib/task/task.utils';
-import { useTasks } from '@/lib/task/task.context';
-import { useEffect, useMemo } from 'react';
-import { useSessions } from '@/lib/session/session.context';
+import { useMemo } from 'react';
+import { getCurrentTotalElapsedTime } from '@/app/(dashboard)/routine/[routineId]/new-focus/focus-footer/service';
+import { useAtomValue } from 'jotai';
 import {
-	getCurrentTotalElapsedTime,
-	getSessionDuration,
-} from '@/app/(dashboard)/routine/[routineId]/new-focus/focus-footer/service';
-import { useAtom } from 'jotai/index';
-import { elapsedTimeAtom } from '@/app/(dashboard)/routine/[routineId]/new-focus/service';
+	currentTaskAtom,
+	elapsedTimeAtom,
+	sessionsAtom,
+} from '@/app/(dashboard)/routine/[routineId]/new-focus/service';
+import { tasksAtom } from '@/lib/task/task.type';
 
-export function FocusFooter({ task }: { task?: Task }) {
-	const { tasks } = useTasks();
-	const { sessions } = useSessions();
-	const [elapsedTime, setElapsedTime] = useAtom(elapsedTimeAtom);
-
-	const currentSession = useMemo(
-		() => sessions.find((session) => session.taskId == task?.id),
-		[task, sessions],
-	);
-
-	useEffect(() => {
-		setElapsedTime(getSessionDuration(currentSession));
-	}, [currentSession, setElapsedTime]);
+export function FocusFooter() {
+	const task = useAtomValue(currentTaskAtom);
+	const elapsedTime = useAtomValue(elapsedTimeAtom);
+	const sessions = useAtomValue(sessionsAtom);
+	const tasks = useAtomValue(tasksAtom);
 
 	const totalElapsedTime = useMemo(
 		() => formatSeconds(getCurrentTotalElapsedTime(sessions)),
@@ -53,7 +43,7 @@ export function FocusFooter({ task }: { task?: Task }) {
 					<h2 className="first-letter:capitalize text-xl font-bold text-green-600 dark:text-green-500">
 						{task.name}
 					</h2>
-					<RoutineStatus />
+					{/*<RoutineStatus />*/}
 				</div>
 
 				<div className="flex justify-between items-end">

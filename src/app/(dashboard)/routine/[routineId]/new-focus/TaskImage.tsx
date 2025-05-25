@@ -1,8 +1,16 @@
-import { Task } from '@/lib/task/task.type';
 import { ImageIcon } from 'lucide-react';
 import Image from 'next/image';
 
-export function TaskImage({ task, taskIndex }: { task?: Task; taskIndex: number }) {
+import { useAtom } from 'jotai';
+import {
+	currentTaskAtom,
+	taskIndexAtom,
+} from '@/app/(dashboard)/routine/[routineId]/new-focus/service';
+
+export function TaskImage() {
+	const [task] = useAtom(currentTaskAtom);
+	const [taskIndex] = useAtom(taskIndexAtom);
+
 	if (!task) {
 		return (
 			<div className="flex justify-center items-center">

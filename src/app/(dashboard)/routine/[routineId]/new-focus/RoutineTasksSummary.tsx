@@ -1,20 +1,19 @@
-import { useSessions } from '@/lib/session/session.context';
-import { useTasks } from '@/lib/task/task.context';
 import { Skeleton } from '@/components/Skeleton';
+import { useAtom } from 'jotai';
+import {
+	sessionsAtom,
+	taskIndexAtom,
+} from '@/app/(dashboard)/routine/[routineId]/new-focus/service';
+import { Task, tasksAtom } from '@/lib/task/task.type';
 
-export function RoutineTasksSummary({
-	currentIndex,
-	setTaskIndex,
-}: {
-	currentIndex: number;
-	setTaskIndex: (taskIndex: number) => void;
-}) {
-	const { tasks } = useTasks();
-	const { sessions } = useSessions();
+export function RoutineTasksSummary() {
+	const [tasks] = useAtom(tasksAtom);
+	const [sessions] = useAtom(sessionsAtom);
+	const [currentIndex, setTaskIndex] = useAtom(taskIndexAtom);
 
 	const hasSession = (index: number) => {
-		const currentTask = tasks[index];
-		return sessions.find((session) => session.taskId === currentTask.id);
+		const task: Task | undefined = tasks[index];
+		return sessions.find((session) => session.taskId === task?.id);
 	};
 
 	const changeTaskIndex = (index: number) => setTaskIndex(index);

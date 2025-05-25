@@ -1,4 +1,5 @@
 import { Category } from '@/lib/category/category.type';
+import { atom } from 'jotai/index';
 
 export type Routine = {
 	id: string;
@@ -21,3 +22,5 @@ export const emptyRoutine: Routine = {
 	order: 0,
 	createdAt: new Date().toISOString(),
 };
+
+export const routineIdAtom = atom<string>('');

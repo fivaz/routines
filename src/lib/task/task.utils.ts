@@ -30,30 +30,8 @@ export function formatSecondsSmall(seconds: number) {
 	}
 }
 
-export function getHistory(task: Task, date: string) {
-	const history = task.history?.[date];
-	if (history?.endAt && history?.startAt) {
-		return history;
-	} else {
-		return undefined;
-	}
-}
-
-export function getDurationFromDate(task: Task, date: string) {
-	const history = getHistory(task, date);
-	if (!history) {
-		return 0;
-	} else {
-		return getDuration(history.startAt, history.endAt);
-	}
-}
-
 export function getTotalExpectedTime(tasks: Task[]): number {
 	return tasks.reduce((total, task) => total + task.durationInSeconds, 0);
-}
-
-export function getTotalElapsedTime(tasks: Task[], date: string): number {
-	return tasks.reduce((total, task) => total + getDurationFromDate(task, date), 0);
 }
 
 export function getCurrentTotalElapsedTime(tasks: Task[]): number {

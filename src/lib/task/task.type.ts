@@ -1,4 +1,5 @@
 import { Session } from '@/lib/session/session.type';
+import { atom } from 'jotai';
 
 export type Task = {
 	id: string;
@@ -20,3 +21,5 @@ export const emptyTask: Task = {
 };
 
 export type ImageFocus = 'person' | 'object';
+
+export const tasksAtom = atom<Task[]>([]);
