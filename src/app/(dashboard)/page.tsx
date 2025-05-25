@@ -3,10 +3,9 @@ import { useEffect, useState } from 'react';
 import { Button } from '@/components/base/button';
 import { Heading } from '@/components/base/heading';
 import { RoutineForm } from '@/components/routine/routine-form';
-import { emptyRoutine, type Routine } from '@/lib/routine/routine.type';
+import { emptyRoutine, type Routine, routinesAtom } from '@/lib/routine/routine.type';
 
 import { PlusIcon } from 'lucide-react';
-import { useRoutines } from '@/lib/routine/routine.context';
 import { move } from '@dnd-kit/helpers';
 import { useBackendStatus } from '@/lib/use-backend-status';
 import { useCategories } from '@/lib/category/category.context';
@@ -15,12 +14,15 @@ import { Category, noCategory, UNCATEGORIZED_KEY } from '@/lib/category/category
 import { DragDropProvider } from '@dnd-kit/react';
 import { RoutineCategory } from '@/app/(dashboard)/routine/routine-category';
 import { RoutineRow } from '@/app/(dashboard)/routine/routine-row';
+import { useAtom } from 'jotai';
+import { useRoutineActions } from '@/lib/routine/routine.hooks';
 
 export default function Routines() {
 	const [routineForm, setRoutineForm] = useState<Routine | null>(null);
-	const { routines, handleRoutinesSort } = useRoutines();
+	const [routines, setRoutines] = useAtom(routinesAtom);
 	const { categories, handleCategorySort } = useCategories();
 	const { status } = useBackendStatus();
+	const { updateRoutines } = useRoutineActions();
 
 	const [routinesByCategories, setRoutinesByCategories] = useState<Record<string, Routine[]>>({});
 	const [sortedCategories, setSortedCategories] = useState<Category[]>([]);
@@ -46,8 +48,10 @@ export default function Routines() {
 
 		setRoutinesByCategories(sortedRoutinesByCategories);
 
+		const newRoutines = flattenRoutinesByCategory(sortedRoutinesByCategories, categories);
+		setRoutines(newRoutines);
 		//persist routines order
-		handleRoutinesSort(flattenRoutinesByCategory(sortedRoutinesByCategories, categories));
+		void updateRoutines(newRoutines);
 	}
 
 	function handleDragEnd(event: Parameters<typeof move>[1] & { canceled: boolean }) {
@@ -84,7 +88,7 @@ export default function Routines() {
 				</div>
 			</DragDropProvider>
 
-			<div className="fixed bottom-2 m-auto left-1/2 -translate-x-1/2 z-20">
+			<div className="fixed bottom-2 left-1/2 z-20 m-auto -translate-x-1/2">
 				<Button
 					isLoading={status === 'loading'}
 					disabled={status === 'loading'}
@@ -93,7 +97,7 @@ export default function Routines() {
 					type="button"
 					onClick={handleAddRoutine}
 				>
-					<PlusIcon className="w-5 h-5" />
+					<PlusIcon className="h-5 w-5" />
 					Routine
 				</Button>
 			</div>

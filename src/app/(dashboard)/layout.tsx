@@ -5,8 +5,9 @@ import { Routes } from '@/lib/consts';
 import { useAuth } from '@/lib/user/auth-context';
 import { useRouter } from 'next/navigation';
 import { LoaderCircle } from 'lucide-react';
-import { RoutineProvider } from '@/lib/routine/routine.context';
 import { CategoryProvider } from '@/lib/category/category.context';
+import { routinesAtomEffect } from '@/lib/routine/routine.hooks';
+import { useAtom } from 'jotai/index';
 
 export default function Layout({
 	children,
@@ -14,6 +15,8 @@ export default function Layout({
 	children: ReactNode;
 }>) {
 	const { user, loading } = useAuth();
+
+	useAtom(routinesAtomEffect);
 
 	const router = useRouter();
 
@@ -36,10 +39,8 @@ export default function Layout({
 	}
 
 	return (
-		<RoutineProvider>
-			<CategoryProvider>
-				<Dashboard>{children}</Dashboard>
-			</CategoryProvider>
-		</RoutineProvider>
+		<CategoryProvider>
+			<Dashboard>{children}</Dashboard>
+		</CategoryProvider>
 	);
 }

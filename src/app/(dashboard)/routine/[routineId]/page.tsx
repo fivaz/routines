@@ -1,6 +1,6 @@
 'use client';
 import { useParams, useRouter } from 'next/navigation';
-import { type Routine } from '@/lib/routine/routine.type';
+import { type Routine, routineAtom } from '@/lib/routine/routine.type';
 import { Dropdown, DropdownButton, DropdownItem, DropdownMenu } from '@/components/base/dropdown';
 import { Ellipsis, PlusIcon, ScrollTextIcon, ZapIcon } from 'lucide-react';
 import { Routes } from '@/lib/consts';
@@ -11,7 +11,7 @@ import { RoutineForm } from '@/components/routine/routine-form';
 import { TaskForm } from '@/components/task/task-form';
 import { usePrompt } from '@/lib/prompt-context';
 import { ListIcon } from '@/components/icons/ListIcon';
-import { useRoutine, useRoutineActions } from '@/lib/routine/routine.hooks';
+import { useRoutineActions } from '@/lib/routine/routine.hooks';
 import { Heading } from '@/components/base/heading';
 import { Text } from '@/components/base/text';
 import { DragDropProvider } from '@dnd-kit/react';
@@ -22,12 +22,13 @@ import { Skeleton } from '@/components/Skeleton';
 import { useAtom } from 'jotai';
 import { move } from '@dnd-kit/helpers';
 import { useTaskActions } from '@/lib/task/task.hooks';
+import { useAtomValue } from 'jotai/index';
 
 export default function RoutinePage() {
 	const [routineForm, setRoutineForm] = useState<Routine | null>(null);
 	const [taskForm, setTaskForm] = useState<Task | null>(null);
 
-	const routine = useRoutine();
+	const routine = useAtomValue(routineAtom);
 	const [tasks, setTasks] = useAtom(tasksAtom);
 	const { status } = useBackendStatus();
 	const { routineId } = useParams<{ routineId: string }>();

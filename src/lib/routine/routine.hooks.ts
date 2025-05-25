@@ -1,22 +1,29 @@
-import { useRoutines } from './routine.context';
-import { useParams } from 'next/navigation';
-import { useMemo } from 'react';
 import { useAuth } from '@/lib/user/auth-context';
 import {
 	addRoutine as addRoutineRepo,
 	deleteRoutine as deleteRoutineRepo,
 	editRoutine as editRoutineRepo,
+	fetchRoutines,
+	updateRoutines as updateRoutinesRepo,
 } from './routine.repository';
-import { Routine } from '@/lib/routine/routine.type';
+import { Routine, routinesAtom } from '@/lib/routine/routine.type';
 import { safeThrowUnauthorized } from '@/lib/error-handle';
+import { atomEffect } from 'jotai-effect';
+import { currentUserAtom } from '@/lib/user/user.type';
+import { tasksAtom } from '@/lib/task/task.type';
 
-export function useRoutine() {
-	const { routines } = useRoutines();
-	const { routineId } = useParams<{ routineId: string }>();
-	return useMemo(() => {
-		return routines.find((routine) => routine.id === routineId);
-	}, [routineId, routines]);
-}
+export const routinesAtomEffect = atomEffect((get, set) => {
+	const user = get(currentUserAtom);
+
+	if (!user?.uid) {
+		set(tasksAtom, []);
+		return;
+	}
+
+	const unsubscribe = fetchRoutines(user.uid, (routines) => set(routinesAtom, routines));
+
+	return () => unsubscribe();
+});
 
 export function useRoutineActions() {
 	const { user } = useAuth();
@@ -35,6 +42,13 @@ export function useRoutineActions() {
 		return editRoutineRepo(user.uid, routine, imageFile);
 	}
 
+	async function updateRoutines(routines: Routine[]) {
+		if (!user?.uid) {
+			return safeThrowUnauthorized();
+		}
+		return updateRoutinesRepo(user.uid, routines);
+	}
+
 	async function addRoutine(routine: Routine, imageFile: File | null) {
 		if (!user?.uid) {
 			return safeThrowUnauthorized();
@@ -42,5 +56,5 @@ export function useRoutineActions() {
 		return addRoutineRepo(user.uid, routine, imageFile);
 	}
 
-	return { deleteRoutine, editRoutine, addRoutine };
+	return { deleteRoutine, editRoutine, addRoutine, updateRoutines };
 }

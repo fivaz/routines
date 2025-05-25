@@ -1,10 +1,13 @@
 import { Heading } from '@/components/base/heading';
 import { Skeleton } from '@/components/Skeleton';
 import { Ellipsis, UndoIcon } from 'lucide-react';
-import { Routine } from '@/lib/routine/routine.type';
+import { routineAtom } from '@/lib/routine/routine.type';
 import { Button } from '@/components/base/button';
+import { useAtomValue } from 'jotai/index';
 
-export function RoutineInfo({ routine }: { routine?: Routine }) {
+export function RoutineInfo() {
+	const routine = useAtomValue(routineAtom);
+
 	if (!routine) {
 		return (
 			<div className="flex items-center justify-between">

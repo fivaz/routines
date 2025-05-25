@@ -23,4 +23,12 @@ export const emptyRoutine: Routine = {
 	createdAt: new Date().toISOString(),
 };
 
+export const routinesAtom = atom<Routine[]>([]);
+
 export const routineIdAtom = atom<string>('');
+
+export const routineAtom = atom((get) => {
+	const routines = get(routinesAtom);
+	const routineId = get(routineIdAtom);
+	return routines.find((routine) => routine.id === routineId);
+});

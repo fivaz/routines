@@ -14,10 +14,11 @@ import { ImageFocus, Task } from '@/lib/task/task.type';
 import { addSeconds, format, isValid, parse, startOfDay } from 'date-fns';
 import { mmss } from '@/lib/consts';
 import { Listbox, ListboxOption } from '@/components/base/listbox';
-import { useRoutines } from '@/lib/routine/routine.context';
 import { TaskImageForm } from '@/components/TaskImageForm';
 import { useTaskActions } from '@/lib/task/task.hooks';
 import { safeThrow } from '@/lib/error-handle';
+import { routinesAtom } from '@/lib/routine/routine.type';
+import { useAtomValue } from 'jotai';
 
 export function TaskForm({
 	setTaskIn,
@@ -28,7 +29,7 @@ export function TaskForm({
 	routineId: string;
 	taskIn: Task | null;
 }>) {
-	const { routines } = useRoutines();
+	const routines = useAtomValue(routinesAtom);
 	const [newRoutineId, setNewRoutineId] = useState<string>(routineId);
 	const [imageFile, setImageFile] = useState<File | null>(null);
 	const [focus, setFocus] = useState<ImageFocus>('person');
