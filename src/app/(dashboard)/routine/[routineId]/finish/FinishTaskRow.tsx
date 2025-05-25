@@ -7,7 +7,7 @@ import clsx from 'clsx';
 import { useAtomValue } from 'jotai/index';
 import { sessionsAtom } from '@/app/(dashboard)/routine/[routineId]/focus/service';
 
-export function FinishTaskRow({ task, date, index }: { index: number; task: Task; date: string }) {
+export function FinishTaskRow({ task, index }: { index: number; task: Task; date: string }) {
 	const expectedTime = task.durationInSeconds;
 	const sessions = useAtomValue(sessionsAtom);
 	const actualTime = getDurationFromDate(task, sessions);
