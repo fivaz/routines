@@ -7,19 +7,23 @@ import {
 	generateTaskImage as generateTaskImageRepo,
 } from './task.repository';
 import { ImageFocus, Task, tasksAtom } from './task.type';
-import { useSetAtom } from 'jotai';
-import { useEffect } from 'react';
+import { atomEffect } from 'jotai-effect';
+import { currentUserAtom } from '@/lib/user/user.type';
+import { routineIdAtom } from '@/lib/routine/routine.type';
 
-export function useFetchTasks(userId?: string, routineId?: string) {
-	const setTasks = useSetAtom(tasksAtom);
+export const tasksAtomEffect = atomEffect((get, set) => {
+	const user = get(currentUserAtom);
+	const routineId = get(routineIdAtom);
 
-	useEffect(() => {
-		if (!userId || !routineId) return;
+	if (!user?.uid || !routineId) {
+		set(tasksAtom, []);
+		return;
+	}
 
-		const unsubscribe = fetchTasks(userId, routineId, setTasks);
-		return () => unsubscribe();
-	}, [userId, routineId, setTasks]);
-}
+	const unsubscribe = fetchTasks(user.uid, routineId, (tasks) => set(tasksAtom, tasks));
+
+	return () => unsubscribe();
+});
 
 export function useTaskActions() {
 	const { user } = useAuth();
