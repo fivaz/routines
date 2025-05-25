@@ -51,8 +51,6 @@ export function Dashboard({ children }: PropsWithChildren) {
 		void router.push(Routes.LOGIN);
 	}
 
-	if (!user) return;
-
 	return (
 		<StackedLayout
 			navbar={
@@ -79,7 +77,7 @@ export function Dashboard({ children }: PropsWithChildren) {
 						<ThemeToggle />
 						<Dropdown>
 							<DropdownButton as={NavbarItem}>
-								<Avatar src={user.photoURL} square />
+								<Avatar src={user?.photoURL} square />
 							</DropdownButton>
 							<DropdownMenu className="min-w-64" anchor="bottom end">
 								<DropdownItem href="/my-profile">
