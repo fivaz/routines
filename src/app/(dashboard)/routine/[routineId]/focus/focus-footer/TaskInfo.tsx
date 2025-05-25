@@ -10,7 +10,7 @@ import {
 import { tasksAtom } from '@/lib/task/task.type';
 import RoutineStatus from '../../focus/routine-status';
 
-export function FocusFooter() {
+export function TaskInfo() {
 	const task = useAtomValue(currentTaskAtom);
 	const elapsedTime = useAtomValue(currentElapsedTimeAtom);
 	const tasks = useAtomValue(tasksAtom);

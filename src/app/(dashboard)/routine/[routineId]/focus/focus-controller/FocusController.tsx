@@ -109,7 +109,7 @@ export function FocusController() {
 	};
 
 	return (
-		<div className="relative flex h-14 rounded-lg bg-linear-to-r/srgb from-indigo-500 to-teal-400 text-white dark:bg-gray-200">
+		<div className="relative flex h-14 rounded-lg bg-linear-to-r/srgb from-indigo-500 to-teal-400 text-white md:h-20 dark:bg-gray-200">
 			{/* Progress Bar */}
 			<div
 				style={progressBarSize()}
@@ -117,7 +117,7 @@ export function FocusController() {
 			/>
 
 			{/* Controls */}
-			<div className="z-10 flex grow">
+			<div className="z-10 flex h-full grow">
 				<div className="flex flex-1">
 					{taskIndex > 0 && (
 						<button className="flex grow items-center justify-center" onClick={handlePrevTask}>

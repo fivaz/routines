@@ -4,10 +4,10 @@ import { Ellipsis, UndoIcon } from 'lucide-react';
 import { Routine } from '@/lib/routine/routine.type';
 import { Button } from '@/components/base/button';
 
-export function FocusHeader({ routine }: { routine?: Routine }) {
+export function RoutineInfo({ routine }: { routine?: Routine }) {
 	if (!routine) {
 		return (
-			<div className="flex justify-between items-center">
+			<div className="flex items-center justify-between">
 				<Skeleton />
 				<Button outline disabled>
 					<Ellipsis />
@@ -17,7 +17,7 @@ export function FocusHeader({ routine }: { routine?: Routine }) {
 	}
 
 	return (
-		<div className="flex justify-between items-center">
+		<div className="flex items-center justify-between">
 			<Heading className="first-letter:capitalize">{routine.name}</Heading>
 
 			<Button outline href={`/routine/${routine.id}`}>
