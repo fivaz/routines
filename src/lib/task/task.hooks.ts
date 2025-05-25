@@ -1,4 +1,3 @@
-import { useAuth } from '@/lib/user/auth-context';
 import {
 	addTask as addTaskRepo,
 	deleteTask as deleteTaskRepo,
@@ -12,6 +11,7 @@ import { atomEffect } from 'jotai-effect';
 import { currentUserAtom } from '@/lib/user/user.type';
 import { routineIdAtom } from '@/lib/routine/routine.type';
 import { safeThrow, safeThrowUnauthorized } from '@/lib/error-handle';
+import { useAtomValue } from 'jotai/index';
 
 export const tasksAtomEffect = atomEffect((get, set) => {
 	const user = get(currentUserAtom);
@@ -28,7 +28,7 @@ export const tasksAtomEffect = atomEffect((get, set) => {
 });
 
 export function useTaskActions(routineId: string) {
-	const { user } = useAuth();
+	const user = useAtomValue(currentUserAtom);
 
 	async function deleteTask(routineId: string, taskId: string) {
 		if (!user?.uid) {

@@ -1,4 +1,3 @@
-import { useAuth } from '@/lib/user/auth-context';
 import {
 	continueSession as continueSessionRepo,
 	resetSession as resetSessionRepo,
@@ -7,14 +6,14 @@ import {
 } from './session.repository';
 import { Session } from '@/lib/session/session.type';
 import { safeThrow, safeThrowUnauthorized } from '@/lib/error-handle';
+import { useAtomValue } from 'jotai/index';
+import { currentUserAtom } from '@/lib/user/user.type';
 
 export function useSessionActions(routineId?: string, taskId?: string) {
-	const { user } = useAuth();
+	const user = useAtomValue(currentUserAtom);
 
 	function startSession() {
-		if (!user?.uid) {
-			return safeThrowUnauthorized();
-		}
+		if (!user?.uid) return safeThrowUnauthorized();
 		if (!routineId || !taskId) {
 			return safeThrow('routine id or task id is missing');
 		}
@@ -22,9 +21,7 @@ export function useSessionActions(routineId?: string, taskId?: string) {
 	}
 
 	function stopSession(session: Session) {
-		if (!user?.uid) {
-			return safeThrowUnauthorized();
-		}
+		if (!user?.uid) return safeThrowUnauthorized();
 		if (!routineId) {
 			return safeThrow('routine id is missing');
 		}
@@ -32,9 +29,7 @@ export function useSessionActions(routineId?: string, taskId?: string) {
 	}
 
 	function continueSession(session: Session) {
-		if (!user?.uid) {
-			return safeThrowUnauthorized();
-		}
+		if (!user?.uid) return safeThrowUnauthorized();
 		if (!routineId) {
 			return safeThrow('routine id is missing');
 		}
@@ -42,9 +37,7 @@ export function useSessionActions(routineId?: string, taskId?: string) {
 	}
 
 	function resetSession(session: Session) {
-		if (!user?.uid) {
-			return safeThrowUnauthorized();
-		}
+		if (!user?.uid) return safeThrowUnauthorized();
 		if (!routineId) {
 			return safeThrow('routine id is missing');
 		}

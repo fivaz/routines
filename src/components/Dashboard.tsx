@@ -25,7 +25,6 @@ import {
 } from '@/components/base/sidebar';
 import { StackedLayout } from '@/components/base/stacked-layout';
 import { ArrowRightStartOnRectangleIcon, UserIcon } from '@heroicons/react/16/solid';
-import { useAuth } from '@/lib/user/auth-context';
 import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { APP_NAME, Routes } from '@/lib/consts';
@@ -34,14 +33,17 @@ import { Logo } from '@/components/Logo';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { BackEndStatus } from '@/components/BackEndStatus';
 import { Tooltip } from '@/components/base/tooltip';
+import { useAtomValue } from 'jotai/index';
+import { currentUserAtom } from '@/lib/user/user.type';
+import { PropsWithChildren } from 'react';
 
 const navItems = [
 	{ label: 'Routines', url: Routes.ROOT },
 	{ label: 'Categories', url: Routes.CATEGORIES },
 ];
 
-export function Dashboard({ children }: React.PropsWithChildren) {
-	const { user } = useAuth();
+export function Dashboard({ children }: PropsWithChildren) {
+	const user = useAtomValue(currentUserAtom);
 	const router = useRouter();
 
 	async function handleSignOut() {
@@ -58,7 +60,7 @@ export function Dashboard({ children }: React.PropsWithChildren) {
 					<Dropdown>
 						<Tooltip text={process.env.NEXT_PUBLIC_COMMIT_HASH as string}>
 							<DropdownButton as={NavbarItem} className="max-lg:hidden">
-								<Logo className="text-green-500 size-5" />
+								<Logo className="size-5 text-green-500" />
 								<NavbarLabel>{APP_NAME}</NavbarLabel>
 							</DropdownButton>
 						</Tooltip>
@@ -100,7 +102,7 @@ export function Dashboard({ children }: React.PropsWithChildren) {
 						<Dropdown>
 							<Tooltip text={process.env.NEXT_PUBLIC_COMMIT_HASH as string}>
 								<DropdownButton as={NavbarItem} className="lg:mb-2.5">
-									<Logo className="text-green-500 size-5" />
+									<Logo className="size-5 text-green-500" />
 									<NavbarLabel>{APP_NAME}</NavbarLabel>
 								</DropdownButton>
 							</Tooltip>

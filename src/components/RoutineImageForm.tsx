@@ -3,11 +3,12 @@ import { Routine } from '@/lib/routine/routine.type';
 import { ImageDialogButton } from '@/components/ImageDialogButton';
 import { Dispatch, SetStateAction } from 'react';
 import { editRoutine, generateRoutineImage } from '@/lib/routine/routine.repository';
-import { useAuth } from '@/lib/user/auth-context';
 import { Button } from '@/components/base/button';
 import { ImageIcon } from 'lucide-react';
 import { useBackendStatus } from '@/lib/use-backend-status';
 import { Input } from '@/components/base/input';
+import { useAtomValue } from 'jotai/index';
+import { currentUserAtom } from '@/lib/user/user.type';
 
 export function RoutineImageForm({
 	routineIn,
@@ -20,7 +21,7 @@ export function RoutineImageForm({
 	setImageFile: Dispatch<SetStateAction<File | null>>;
 	close: () => void;
 }) {
-	const { user } = useAuth();
+	const user = useAtomValue(currentUserAtom);
 	const { status } = useBackendStatus();
 
 	async function handleImageGeneration() {
@@ -56,10 +57,10 @@ export function RoutineImageForm({
 	}
 
 	return (
-		<div className="grid grid-cols-3 md:gap-2 gap-6">
+		<div className="grid grid-cols-3 gap-6 md:gap-2">
 			<Field className={routineIn.id ? 'col-span-3 md:col-span-2' : 'col-span-3'}>
 				<Label>
-					<div className="flex justify-between items-center">
+					<div className="flex items-center justify-between">
 						<span>Upload Image</span>
 						{routineIn.image && <ImageDialogButton image={routineIn.image} />}
 					</div>
@@ -73,7 +74,7 @@ export function RoutineImageForm({
 				/>
 			</Field>
 			{routineIn.id && (
-				<Field className="col-span-3 md:col-span-1 flex flex-col gap-2 justify-between">
+				<Field className="col-span-3 flex flex-col justify-between gap-2 md:col-span-1">
 					<Label>Or generate image</Label>
 					<Button
 						isLoading={status === 'loading'}
