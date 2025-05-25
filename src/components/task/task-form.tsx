@@ -8,6 +8,7 @@ import {
 	FormEvent,
 	PropsWithChildren,
 	SetStateAction,
+	useEffect,
 	useState,
 } from 'react';
 import { ImageFocus, Task } from '@/lib/task/task.type';
@@ -34,6 +35,10 @@ export function TaskForm({
 	const [imageFile, setImageFile] = useState<File | null>(null);
 	const [focus, setFocus] = useState<ImageFocus>('person');
 	const { addTask, editTask } = useTaskActions(routineId);
+
+	useEffect(() => {
+		setNewRoutineId(routineId);
+	}, [routineId]);
 
 	function close() {
 		setImageFile(null);
@@ -99,10 +104,6 @@ export function TaskForm({
 		return format(date, mmss); // Format to mm:ss
 	}
 
-	function handleSelect(routineId: string) {
-		setNewRoutineId(routineId);
-	}
-
 	return (
 		<Dialog open={taskIn !== null} onClose={close}>
 			<form onSubmit={handleSubmit}>
@@ -126,7 +127,7 @@ export function TaskForm({
 												className="mt-3"
 												name="routineId"
 												value={newRoutineId}
-												onChange={handleSelect}
+												onChange={setNewRoutineId}
 											>
 												{routines.map((routine) => (
 													<ListboxOption key={routine.id} value={routine.id}>

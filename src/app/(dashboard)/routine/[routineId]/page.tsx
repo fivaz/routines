@@ -2,7 +2,7 @@
 import { useParams, useRouter } from 'next/navigation';
 import { type Routine, routineAtom } from '@/lib/routine/routine.type';
 import { Dropdown, DropdownButton, DropdownItem, DropdownMenu } from '@/components/base/dropdown';
-import { Ellipsis, PlusIcon, ScrollTextIcon, ZapIcon } from 'lucide-react';
+import { Ellipsis, LoaderCircleIcon, PlusIcon, ScrollTextIcon, ZapIcon } from 'lucide-react';
 import { Routes } from '@/lib/consts';
 import { TaskRow } from '@/components/task/task-row';
 import { emptyTask, Task, tasksAtom } from '@/lib/task/task.type';
@@ -66,16 +66,40 @@ export default function RoutinePage() {
 		void updateTasks(newTasks);
 	};
 
+	if (!routine) {
+		return (
+			<>
+				<div className="flex flex-col gap-5">
+					<div className="flex items-center justify-between">
+						<div className="flex flex-col gap-3">
+							<Skeleton />
+							<Skeleton className="w-10" />
+						</div>
+
+						<div className="flex gap-3">
+							<Button outline disabled>
+								<LoaderCircleIcon className="size-5 animate-spin" />
+							</Button>
+						</div>
+					</div>
+				</div>
+
+				<div className="fixed bottom-4 left-1/2 z-20 -translate-x-1/2">
+					<Button disabled color="green">
+						<LoaderCircleIcon className="size-5 animate-spin" />
+						Enter Focus
+					</Button>
+				</div>
+			</>
+		);
+	}
+
 	return (
 		<div className="flex flex-col gap-5">
 			<div className="flex items-center justify-between">
 				<div className="flex flex-col">
-					{routine ? <Heading className="mb-0">{routine.name}</Heading> : <Skeleton />}
-					{routine ? (
-						<Text className="text-xs">{formatSeconds(routine.totalDuration)}</Text>
-					) : (
-						<Skeleton className="w-10" />
-					)}
+					<Heading className="mb-0">{routine.name}</Heading>
+					<Text className="text-xs">{formatSeconds(routine.totalDuration)}</Text>
 				</div>
 
 				<div className="flex gap-3">
@@ -116,7 +140,7 @@ export default function RoutinePage() {
 				</div>
 			</div>
 
-			{routine && tasks.length > 0 ? (
+			{tasks.length > 0 ? (
 				<DragDropProvider onDragEnd={handleDragEnd}>
 					{tasks.map((task, index) => (
 						<TaskRow index={index} key={task.id} task={task} routine={routine} />
@@ -137,13 +161,13 @@ export default function RoutinePage() {
 			)}
 
 			<div className="fixed bottom-4 left-1/2 z-20 -translate-x-1/2">
-				<Button disabled={tasks.length === 0} color="green" href={`/routine/${routineId}/focus`}>
-					<ZapIcon />
+				<Button disabled={tasks.length === 0} color="green" href={Routes.FOCUS(routineId)}>
+					<ZapIcon className="size-5" />
 					Enter Focus
 				</Button>
 			</div>
 
-			{routine && <TaskForm routineId={routine.id} taskIn={taskForm} setTaskIn={setTaskForm} />}
+			<TaskForm routineId={routine.id} taskIn={taskForm} setTaskIn={setTaskForm} />
 
 			<RoutineForm routineIn={routineForm} setRoutineIn={setRoutineForm} />
 		</div>

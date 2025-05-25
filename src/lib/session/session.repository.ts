@@ -13,11 +13,12 @@ export function fetchSessions(
 	userId: string,
 	routineId: string,
 	tasks: Task[],
+	date: string,
 	setSessions: (sessions: Session[]) => void,
 ) {
 	const q = query(
 		collection(db, getSessionPath(userId, routineId)),
-		where('date', '==', getToday()),
+		where('date', '==', date),
 		where(
 			'taskId',
 			'in',

@@ -1,13 +1,36 @@
 import {
 	continueSession as continueSessionRepo,
+	fetchSessions,
 	resetSession as resetSessionRepo,
 	startSession as startSessionRepo,
 	stopSession as stopSessionRepo,
 } from './session.repository';
-import { Session } from '@/lib/session/session.type';
+import { dateAtom, Session } from '@/lib/session/session.type';
 import { safeThrow, safeThrowUnauthorized } from '@/lib/error-handle';
 import { useAtomValue } from 'jotai/index';
 import { currentUserAtom } from '@/lib/user/user.type';
+import { atomEffect } from 'jotai-effect';
+import { tasksAtom } from '@/lib/task/task.type';
+import { routineIdAtom } from '@/lib/routine/routine.type';
+import { sessionsAtom } from '@/app/(dashboard)/routine/[routineId]/focus/service';
+
+export const sessionsAtomEffect = atomEffect((get, set) => {
+	const date = get(dateAtom);
+	const tasks = get(tasksAtom);
+	const user = get(currentUserAtom);
+	const routineId = get(routineIdAtom);
+
+	if (!user?.uid || tasks.length === 0 || !routineId) {
+		set(sessionsAtom, []);
+		return;
+	}
+
+	const unsubscribe = fetchSessions(user.uid, routineId, tasks, date, (sessions) =>
+		set(sessionsAtom, sessions),
+	);
+
+	return () => unsubscribe();
+});
 
 export function useSessionActions(routineId?: string, taskId?: string) {
 	const user = useAtomValue(currentUserAtom);

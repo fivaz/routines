@@ -2,7 +2,7 @@
 import { PropsWithChildren, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { tasksAtomEffect } from '@/lib/task/task.hooks';
-import { sessionsAtomEffect } from '@/lib/session/session.utils';
+import { sessionsAtomEffect } from '@/lib/session/session.hooks';
 import { useAtom, useSetAtom } from 'jotai';
 import { routineIdAtom } from '@/lib/routine/routine.type';
 
