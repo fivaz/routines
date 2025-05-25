@@ -7,12 +7,13 @@ import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { Routes } from '@/lib/consts';
 import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { ChangeEvent, useMemo, useState } from 'react';
 import { parseErrors, register, validateFields } from '../login/service';
 import { minidenticon } from 'minidenticons';
 import { Banner } from '@/components/base/banner';
 import { Button } from '@/components/base/button';
 import Image from 'next/image';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 export default function RegisterPage() {
 	const router = useRouter();
@@ -42,7 +43,7 @@ export default function RegisterPage() {
 		}
 	}
 
-	async function handleSubmit(event: React.ChangeEvent<HTMLFormElement>) {
+	async function handleSubmit(event: ChangeEvent<HTMLFormElement>) {
 		event.preventDefault();
 		setErrorMessage(validateFields(email, password));
 		if (errorMessage) {
@@ -62,7 +63,10 @@ export default function RegisterPage() {
 
 	return (
 		<>
-			<div className="bg-white dark:bg-gray-600 flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+			<div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+				<div className="absolute top-6 right-6">
+					<ThemeToggle />
+				</div>
 				<div className="sm:mx-auto sm:w-full sm:max-w-sm">
 					<Logo className="mx-auto h-10 w-auto text-green-500" />
 					<h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900 dark:text-white">
@@ -78,7 +82,7 @@ export default function RegisterPage() {
 					<form className="space-y-6" onSubmit={handleSubmit}>
 						{email && (
 							<div className="flex flex-col justify-center">
-								<h3 className="block text-center text-sm font-medium leading-6 text-gray-900">
+								<h3 className="block text-center text-sm leading-6 font-medium text-gray-900">
 									Your Avatar
 								</h3>
 								<Image
@@ -104,7 +108,7 @@ export default function RegisterPage() {
 									type="text"
 									required
 									onChange={(e) => setName(e.target.value)}
-									className="block w-full rounded-md bg-white dark:bg-white/5 px-3 py-1.5 text-base text-gray-900 dark:text-white outline-1 -outline-offset-1 outline-gray-300 dark:outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-green-500 sm:text-sm/6"
+									className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-green-500 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10"
 								/>
 							</div>
 						</div>
@@ -123,7 +127,7 @@ export default function RegisterPage() {
 									onChange={(e) => setEmail(e.target.value)}
 									required
 									autoComplete="email"
-									className="block w-full rounded-md bg-white dark:bg-white/5 px-3 py-1.5 text-base text-gray-900 dark:text-white outline-1 -outline-offset-1 outline-gray-300 dark:outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-green-500 sm:text-sm/6"
+									className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-green-500 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10"
 								/>
 							</div>
 						</div>
@@ -145,7 +149,7 @@ export default function RegisterPage() {
 									type="password"
 									required
 									autoComplete="current-password"
-									className="block w-full rounded-md bg-white dark:bg-white/5 px-3 py-1.5 text-base text-gray-900 dark:text-white outline-1 -outline-offset-1 outline-gray-300 dark:outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-green-500 sm:text-sm/6"
+									className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-green-500 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10"
 								/>
 							</div>
 						</div>
@@ -177,7 +181,7 @@ export default function RegisterPage() {
 							<Button
 								outline
 								onClick={handleGoogleProvider}
-								className="flex w-full items-center justify-center gap-3 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50 focus-visible:ring-transparent"
+								className="flex w-full items-center justify-center gap-3 rounded-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50 focus-visible:ring-transparent"
 							>
 								<GoogleIcon />
 								<span className="text-sm/6 font-semibold">Google</span>
@@ -185,7 +189,7 @@ export default function RegisterPage() {
 
 							<Button
 								outline
-								className="flex w-full items-center justify-center gap-3 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50 focus-visible:ring-transparent"
+								className="flex w-full items-center justify-center gap-3 rounded-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50 focus-visible:ring-transparent"
 							>
 								<GithubIcon />
 								<span className="text-sm/6 font-semibold">GitHub</span>

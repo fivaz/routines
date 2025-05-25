@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { parseErrors, validateFields } from './service';
 import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
@@ -12,6 +12,7 @@ import { Logo } from '@/components/Logo';
 import { Button } from '@/components/base/button';
 import { Banner } from '@/components/base/banner';
 import Link from 'next/link';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 export default function Login() {
 	const [email, setEmail] = useState('');
@@ -46,7 +47,7 @@ export default function Login() {
 		}
 	}
 
-	async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+	async function onSubmit(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault();
 		setIsLoading({ ...isLoading, email: true });
 
@@ -68,6 +69,9 @@ export default function Login() {
 	return (
 		<>
 			<div className="flex min-h-full flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8">
+				<div className="absolute top-6 right-6">
+					<ThemeToggle />
+				</div>
 				<div className="sm:mx-auto sm:w-full sm:max-w-md">
 					<Logo className="mx-auto h-10 w-auto text-green-500" />
 					<h2 className="mt-6 text-center text-2xl/9 font-bold tracking-tight text-gray-900 dark:text-white">
@@ -78,14 +82,14 @@ export default function Login() {
 				{/*<InstallPrompt />*/}
 
 				<div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
-					<div className="dark:bg-zinc-900 bg-white px-6  shadow-sm sm:rounded-lg sm:px-12">
+					<div className="bg-white px-6 shadow-sm sm:rounded-lg sm:px-12 dark:bg-zinc-900">
 						<Banner setMessage={setErrorMessage}>{errorMessage}</Banner>
 						<div className="py-12">
 							<form className="space-y-6" onSubmit={onSubmit}>
 								<div>
 									<label
 										htmlFor="email"
-										className="block text-sm/6 font-medium dark:text-white text-gray-900"
+										className="block text-sm/6 font-medium text-gray-900 dark:text-white"
 									>
 										Email address
 									</label>
@@ -105,7 +109,7 @@ export default function Login() {
 								<div>
 									<label
 										htmlFor="password"
-										className="block text-sm/6 font-medium dark:text-white text-gray-900"
+										className="block text-sm/6 font-medium text-gray-900 dark:text-white"
 									>
 										Password
 									</label>
@@ -117,7 +121,7 @@ export default function Login() {
 											type="password"
 											required
 											autoComplete="current-password"
-											className="block w-full rounded-md bg-white px-3 py-1.5 text-base  text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-green-600 sm:text-sm/6"
+											className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-green-600 sm:text-sm/6"
 										/>
 									</div>
 								</div>
@@ -156,7 +160,7 @@ export default function Login() {
 										</div>
 										<label
 											htmlFor="remember-me"
-											className="block text-sm/6 dark:text-white text-gray-900"
+											className="block text-sm/6 text-gray-900 dark:text-white"
 										>
 											Remember me
 										</label>
@@ -196,7 +200,7 @@ export default function Login() {
 									<Button
 										outline
 										onClick={handleGoogleProvider}
-										className="flex w-full items-center justify-center gap-3 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50 focus-visible:ring-transparent"
+										className="flex w-full items-center justify-center gap-3 rounded-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50 focus-visible:ring-transparent"
 									>
 										<GoogleIcon />
 										<span className="text-sm/6 font-semibold">Google</span>
@@ -204,10 +208,9 @@ export default function Login() {
 
 									<Button
 										outline
-										disabled
-										className="flex w-full items-center justify-center gap-3 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50 focus-visible:ring-transparent"
+										className="flex w-full items-center justify-center gap-3 rounded-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50 focus-visible:ring-transparent"
 									>
-										<GithubIcon />
+										<GithubIcon className="text-white" />
 										<span className="text-sm/6 font-semibold">GitHub</span>
 									</Button>
 								</div>

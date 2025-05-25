@@ -1,7 +1,9 @@
-export function GithubIcon() {
+import clsx from 'clsx';
+
+export function GithubIcon({ className }: { className?: string }) {
 	return (
 		<svg
-			className="h-5 w-5 fill-[#24292F]"
+			className={clsx(className, 'size-5 fill-[#24292F] dark:fill-white')}
 			aria-hidden="true"
 			fill="currentColor"
 			viewBox="0 0 20 20"

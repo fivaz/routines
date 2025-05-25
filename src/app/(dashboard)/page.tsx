@@ -15,6 +15,8 @@ import {
 	noCategory,
 	UNCATEGORIZED_KEY,
 } from '@/lib/category/category.type';
+
+import { collection, deleteField, getDocs, getFirestore, writeBatch } from 'firebase/firestore';
 import { DragDropProvider } from '@dnd-kit/react';
 import { RoutineCategory } from '@/app/(dashboard)/routine/routine-category';
 import { RoutineRow } from '@/app/(dashboard)/routine/routine-row';
@@ -22,6 +24,9 @@ import { useAtom } from 'jotai';
 import { useRoutineActions } from '@/lib/routine/routine.hooks';
 import { useCategoryActions } from '@/lib/category/category.hooks';
 import { RoutineListSkeleton } from '@/app/(dashboard)/RoutineListSkeleton';
+import { getTaskPath } from '@/lib/task/task.repository';
+import { useAtomValue } from 'jotai/index';
+import { currentUserAtom } from '@/lib/user/user.type';
 
 export default function Routines() {
 	const [routineForm, setRoutineForm] = useState<Routine | null>(null);
@@ -30,6 +35,7 @@ export default function Routines() {
 	const { status } = useBackendStatus();
 	const { updateRoutines } = useRoutineActions();
 	const { updateCategories } = useCategoryActions();
+	const user = useAtomValue(currentUserAtom);
 
 	const [routinesByCategories, setRoutinesByCategories] = useState<Record<string, Routine[]>>({});
 	const [sortedCategories, setSortedCategories] = useState<Category[]>([]);
@@ -78,8 +84,34 @@ export default function Routines() {
 		void updateCategories(newCategories);
 	}
 
+	async function removeHistoryFromTasks(userId: string, routine: Routine) {
+		const db = getFirestore();
+		const tasksRef = collection(db, getTaskPath(userId, routine.id));
+		const snapshot = await getDocs(tasksRef);
+
+		const batch = writeBatch(db);
+
+		snapshot.forEach((taskDoc) => {
+			batch.update(taskDoc.ref, {
+				history: deleteField(),
+			});
+		});
+
+		await batch.commit();
+	}
+
+	async function handleRemoveAllHistory() {
+		if (!user?.uid) return;
+		console.log('x');
+		console.log(routines.length);
+		for (const routine of routines) {
+			await removeHistoryFromTasks(user.uid, routine);
+		}
+	}
+
 	return (
 		<>
+			<Button onClick={handleRemoveAllHistory}>delete</Button>
 			<Heading className="mb-4">Routines</Heading>
 
 			<RoutineListSkeleton />
