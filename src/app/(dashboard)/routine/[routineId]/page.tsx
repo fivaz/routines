@@ -10,12 +10,11 @@ import { Button } from '@/components/base/button';
 import { RoutineForm } from '@/components/routine/routine-form';
 import { TaskForm } from '@/components/task/task-form';
 import { usePrompt } from '@/lib/prompt-context';
-import { ListIcon } from '@/components/icons/ListIcon';
 import { useRoutineActions } from '@/lib/routine/routine.hooks';
 import { Heading } from '@/components/base/heading';
 import { Text } from '@/components/base/text';
 import { DragDropProvider } from '@dnd-kit/react';
-import { formatSeconds } from '@/lib/task/task.utils';
+import { formatSeconds, getRoutineExpectedTime } from '@/lib/task/task.utils';
 import { useBackendStatus } from '@/lib/use-backend-status';
 import { useState } from 'react';
 import { Skeleton } from '@/components/Skeleton';
@@ -23,6 +22,7 @@ import { useAtom } from 'jotai';
 import { move } from '@dnd-kit/helpers';
 import { useTaskActions } from '@/lib/task/task.hooks';
 import { useAtomValue } from 'jotai/index';
+import { EmptyTasks } from '@/app/(dashboard)/routine/[routineId]/EmptyTasks';
 
 export default function RoutinePage() {
 	const [routineForm, setRoutineForm] = useState<Routine | null>(null);
@@ -99,7 +99,7 @@ export default function RoutinePage() {
 			<div className="flex items-center justify-between">
 				<div className="flex flex-col">
 					<Heading className="mb-0">{routine.name}</Heading>
-					<Text className="text-xs">{formatSeconds(routine.totalDuration)}</Text>
+					<Text className="text-xs">{formatSeconds(getRoutineExpectedTime(tasks))}</Text>
 				</div>
 
 				<div className="flex gap-3">
@@ -147,17 +147,7 @@ export default function RoutinePage() {
 					))}
 				</DragDropProvider>
 			) : (
-				<div className="flex flex-col items-center justify-center pt-32 md:pt-28">
-					<ListIcon className="size-12 text-gray-400" />
-					<h2 className="mt-2 text-base font-semibold text-gray-900 dark:text-white">Add tasks</h2>
-					<p className="mt-1 text-sm text-gray-500">
-						You haven’t added any task to your routine yet.
-					</p>
-					<Button onClick={handleAddTask} color="green" className="mt-2">
-						<PlusIcon className="size-5" />
-						Add Task
-					</Button>
-				</div>
+				<EmptyTasks handleAddTask={handleAddTask} />
 			)}
 
 			<div className="fixed bottom-4 left-1/2 z-20 -translate-x-1/2">

@@ -13,7 +13,6 @@ import {
 import { db, storage } from '@/lib/firebase';
 import { deleteObject, getDownloadURL, getMetadata, ref, uploadBytes } from 'firebase/storage';
 import { ImageFocus, Task } from '@/lib/task/task.type';
-import { Routine } from '@/lib/routine/routine.type';
 import { getRoutinePath } from '@/lib/routine/routine.repository';
 import { FirebaseError } from 'firebase/app';
 
@@ -161,24 +160,10 @@ export async function addTask({
 
 		// Update task and routine summary in a transaction
 		await runTransaction(db, async (transaction) => {
-			const routineRef = doc(db, getRoutinePath(userId), routineId);
-			const routineDoc = await transaction.get(routineRef);
-
 			// Add the task
 			transaction.set(newTaskRef, newTask);
 
 			// TODO sum the value of taskCount and taskDuration everytime instead of just getting the difference when something is deleted
-			// Update routine summary
-			if (routineDoc.exists()) {
-				const currentTaskCount = (routineDoc.data() as Routine).taskCount || 0;
-				const currentDuration = (routineDoc.data() as Routine).totalDuration || 0;
-
-				transaction.update(routineRef, {
-					taskCount: currentTaskCount + 1,
-					totalDuration: currentDuration + (task.durationInSeconds || 0),
-					lastUpdated: serverTimestamp(),
-				});
-			}
 		});
 
 		return { success: true };
@@ -217,36 +202,6 @@ export async function editTask({
 		// If moving to a different routine
 		if (routineId !== newRoutineId) {
 			await runTransaction(db, async (transaction) => {
-				// Update old routine summary
-				const oldRoutineRef = doc(db, getRoutinePath(userId), routineId);
-				const oldRoutineDoc = await transaction.get(oldRoutineRef);
-
-				const newRoutineRef = doc(db, getRoutinePath(userId), newRoutineId);
-				const newRoutineDoc = await transaction.get(newRoutineRef);
-
-				if (oldRoutineDoc.exists()) {
-					const oldTaskCount = (oldRoutineDoc.data() as Routine).taskCount || 0;
-					const oldDuration = (oldRoutineDoc.data() as Routine).totalDuration || 0;
-
-					transaction.update(oldRoutineRef, {
-						taskCount: Math.max(0, oldTaskCount - 1),
-						totalDuration: Math.max(0, oldDuration - (task.durationInSeconds || 0)),
-						lastUpdated: serverTimestamp(),
-					});
-				}
-
-				// Update new routine summary
-				if (newRoutineDoc.exists()) {
-					const newTaskCount = (oldRoutineDoc.data() as Routine).taskCount || 0;
-					const newDuration = (oldRoutineDoc.data() as Routine).totalDuration || 0;
-
-					transaction.update(newRoutineRef, {
-						taskCount: newTaskCount + 1,
-						totalDuration: newDuration + (task.durationInSeconds || 0),
-						lastUpdated: serverTimestamp(),
-					});
-				}
-
 				// Move the task
 				const oldTaskRef = doc(db, getTaskPath(userId, routineId), task.id);
 				const newTaskRef = doc(db, getTaskPath(userId, newRoutineId), task.id);
@@ -272,11 +227,7 @@ export async function editTask({
 						const routineDoc = await transaction.get(routineRef);
 
 						if (routineDoc.exists()) {
-							const currentTotalDuration = (routineDoc.data() as Routine).totalDuration || 0;
-							const durationDiff = newDuration - oldDuration;
-
 							transaction.update(routineRef, {
-								totalDuration: currentTotalDuration + durationDiff,
 								lastUpdated: serverTimestamp(),
 							});
 						}
@@ -315,17 +266,6 @@ export async function deleteTask(
 			// Update routine summary
 			const routineRef = doc(db, getRoutinePath(userId), routineId);
 			const routineDoc = await transaction.get(routineRef);
-
-			if (routineDoc.exists()) {
-				const currentTaskCount = (routineDoc.data() as Routine).taskCount || 0;
-				const currentDuration = (routineDoc.data() as Routine).totalDuration || 0;
-
-				transaction.update(routineRef, {
-					taskCount: Math.max(0, currentTaskCount - 1),
-					totalDuration: Math.max(0, currentDuration - (taskData.durationInSeconds || 0)),
-					lastUpdated: serverTimestamp(),
-				});
-			}
 
 			// Delete the task
 			transaction.delete(taskRef);

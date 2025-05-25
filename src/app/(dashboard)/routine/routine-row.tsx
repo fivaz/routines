@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { useSortable } from '@dnd-kit/react/sortable';
 import { GripVerticalIcon } from 'lucide-react';
 import { Button } from '@/components/base/button';
-import { formatSeconds } from '@/lib/task/task.utils';
 import { ImageWaitingSkeleton } from '@/components/task/ImageWaitingSkeleton';
 
 export function RoutineRow({
@@ -46,15 +45,11 @@ export function RoutineRow({
 				href={Routes.ROUTINE(routine.id)}
 				className="z-20 grid h-full w-full grid-cols-2 grid-rows-2 p-4"
 			>
-				<div className="col-span-1 col-start-2 row-span-1 row-start-1 justify-self-end p-0.5 text-white group-hover:underline first-letter:uppercase">
-					{formatSeconds(routine.totalDuration || 0) || '0 s'}
-				</div>
+				<div className="col-span-1 col-start-2 row-span-1 row-start-1 justify-self-end p-0.5 text-white group-hover:underline first-letter:uppercase"></div>
 				<div className="col-span-1 col-start-1 row-span-1 row-start-2 self-end p-0.5 text-white group-hover:underline first-letter:uppercase">
 					{routine.name}
 				</div>
-				<div className="col-span-1 col-start-2 row-span-1 row-start-2 self-end justify-self-end p-0.5 text-white group-hover:underline first-letter:uppercase">
-					{routine.taskCount || 0} tasks
-				</div>
+				<div className="col-span-1 col-start-2 row-span-1 row-start-2 self-end justify-self-end p-0.5 text-white group-hover:underline first-letter:uppercase"></div>
 			</Link>
 
 			<div className="absolute inset-0 rounded-lg bg-black/10 group-hover:bg-black/25"></div>
