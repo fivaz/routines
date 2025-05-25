@@ -1,14 +1,14 @@
 import { Skeleton } from '@/components/Skeleton';
-import { formatSeconds, getTotalExpectedTime } from '@/lib/task/task.utils';
+import { formatSeconds, getRoutineExpectedTime } from '@/lib/task/task.utils';
 import { useMemo } from 'react';
 import { useAtomValue } from 'jotai';
 import {
 	currentElapsedTimeAtom,
 	currentTaskAtom,
 	totalElapsedTimeAtom,
-} from '@/app/(dashboard)/routine/[routineId]/new-focus/service';
+} from '@/app/(dashboard)/routine/[routineId]/focus/service';
 import { tasksAtom } from '@/lib/task/task.type';
-import RoutineStatus from '../../focus/routine-status';
+import RoutineStatus from '@/app/(dashboard)/routine/[routineId]/focus/task-info/RoutineStatus';
 
 export function TaskInfo() {
 	const task = useAtomValue(currentTaskAtom);
@@ -16,7 +16,7 @@ export function TaskInfo() {
 	const tasks = useAtomValue(tasksAtom);
 	const totalElapsedTime = useAtomValue(totalElapsedTimeAtom);
 
-	const totalExpectedTime = useMemo(() => formatSeconds(getTotalExpectedTime(tasks)), [tasks]);
+	const totalExpectedTime = useMemo(() => formatSeconds(getRoutineExpectedTime(tasks)), [tasks]);
 
 	if (!task) {
 		return (

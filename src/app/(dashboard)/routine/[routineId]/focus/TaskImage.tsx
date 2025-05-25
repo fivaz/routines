@@ -5,7 +5,7 @@ import { useAtom } from 'jotai';
 import {
 	currentTaskAtom,
 	taskIndexAtom,
-} from '@/app/(dashboard)/routine/[routineId]/new-focus/service';
+} from '@/app/(dashboard)/routine/[routineId]/focus/service';
 
 export function TaskImage() {
 	const [task] = useAtom(currentTaskAtom);

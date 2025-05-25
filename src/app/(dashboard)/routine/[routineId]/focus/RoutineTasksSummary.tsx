@@ -1,9 +1,6 @@
 import { Skeleton } from '@/components/Skeleton';
 import { useAtom } from 'jotai';
-import {
-	sessionsAtom,
-	taskIndexAtom,
-} from '@/app/(dashboard)/routine/[routineId]/new-focus/service';
+import { sessionsAtom, taskIndexAtom } from '@/app/(dashboard)/routine/[routineId]/focus/service';
 import { Task, tasksAtom } from '@/lib/task/task.type';
 
 export function RoutineTasksSummary() {
@@ -23,12 +20,12 @@ export function RoutineTasksSummary() {
 	}
 
 	return (
-		<div className="flex w-full md:gap-2 gap-1">
+		<div className="flex w-full gap-1 md:gap-2">
 			{tasks.map((_, index) => (
 				<button
 					onClick={() => changeTaskIndex(index)}
 					key={index}
-					className={`cursor-pointer grow h-2 rounded ${index === currentIndex ? 'bg-blue-500' : hasSession(index) ? 'bg-green-500' : 'bg-gray-300'}`}
+					className={`h-2 grow cursor-pointer rounded ${index === currentIndex ? 'bg-blue-500' : hasSession(index) ? 'bg-green-500' : 'bg-gray-300'}`}
 				/>
 			))}
 		</div>

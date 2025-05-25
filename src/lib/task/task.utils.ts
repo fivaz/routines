@@ -1,5 +1,7 @@
 import { intervalToDuration } from 'date-fns';
 import { Task } from '@/lib/task/task.type';
+import { Session } from '@/lib/session/session.type';
+import { getSessionDuration } from '@/lib/session/session.utils';
 
 export function formatSeconds(seconds: number) {
 	if (seconds === 0) {
@@ -22,29 +24,38 @@ export function formatSeconds(seconds: number) {
 	return parts.join(' ');
 }
 
-export function getTotalExpectedTime(tasks: Task[]): number {
+export function formatSecondsSmall(seconds: number) {
+	if (seconds === 0) {
+		return '-';
+	}
+
+	const duration = intervalToDuration({ start: 0, end: seconds * 1000 });
+
+	const { hours = 0, minutes = 0, seconds: secs = 0 } = duration;
+
+	if (hours > 0) {
+		return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+	} else {
+		return `${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+	}
+}
+
+export function getCurrentRoutineExpectedTime(tasks: Task[], sessions: Session[]): number {
+	return sessions.reduce((sum, session) => {
+		const task = tasks.find((t) => t.id === session.taskId);
+		if (!task) return sum;
+		return sum + task.durationInSeconds;
+	}, 0);
+}
+
+export function getRoutineExpectedTime(tasks: Task[]): number {
 	return tasks.reduce((total, task) => total + task.durationInSeconds, 0);
 }
 
-export function getCurrentTotalElapsedTime(tasks: Task[]): number {
-	return tasks.reduce((total, task) => total + getCurrentSessionDuration(task), 0);
-}
+export function getDurationFromDate(task: Task, sessions: Session[]) {
+	if (sessions.length === 0) return 0;
 
-export function getCurrentSessionDuration(task: Task) {
-	const session = task.currentSession;
-	if (!session) {
-		return 0;
-	} else {
-		return getDuration(session.startAt, session.endAt);
-	}
-}
+	const session = sessions.find((s) => s.taskId === task.id);
 
-export function getDuration(startAt: string, endAt: string): number {
-	try {
-		const startDate = new Date(startAt);
-		const endDate = endAt ? new Date(endAt) : new Date();
-		return Math.abs((endDate.getTime() - startDate.getTime()) / 1000);
-	} catch {
-		return 0;
-	}
+	return getSessionDuration(session);
 }

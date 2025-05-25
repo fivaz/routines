@@ -11,8 +11,9 @@ import {
 	currentElapsedTimeAtom,
 	currentSessionAtom,
 	currentTaskAtom,
+	sessionsAtom,
 	taskIndexAtom,
-} from '@/app/(dashboard)/routine/[routineId]/new-focus/service';
+} from '@/app/(dashboard)/routine/[routineId]/focus/service';
 import { useParams, useRouter } from 'next/navigation';
 import { Routes } from '@/lib/consts';
 import { useSessionActions } from '@/lib/session/session.hooks';
@@ -29,6 +30,7 @@ export function FocusController() {
 
 	const router = useRouter();
 	const { routineId } = useParams<{ routineId: string }>();
+	const sessions = useAtomValue(sessionsAtom);
 	const { startSession, stopSession, continueSession, resetSession } = useSessionActions(
 		routineId,
 		task?.id,
@@ -150,13 +152,17 @@ export function FocusController() {
 					</>
 				)}
 
-				<button
-					className="flex flex-1 items-center justify-center"
-					onClick={handleNextTask}
-					disabled={isRunning}
-				>
-					<ChevronRightIcon className="size-7" />
-				</button>
+				<div className="flex flex-1">
+					{sessions.length > 0 && (
+						<button
+							className="flex flex-1 items-center justify-center"
+							onClick={handleNextTask}
+							disabled={isRunning}
+						>
+							<ChevronRightIcon className="size-7" />
+						</button>
+					)}
+				</div>
 			</div>
 		</div>
 	);

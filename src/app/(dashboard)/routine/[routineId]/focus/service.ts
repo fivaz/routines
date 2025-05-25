@@ -2,6 +2,7 @@ import { atom } from 'jotai';
 import { Task, tasksAtom } from '@/lib/task/task.type';
 import { Session } from '@/lib/session/session.type';
 import { getSessionDuration, getTotalElapsedTime } from '@/lib/session/session.utils';
+import { getCurrentRoutineExpectedTime, getRoutineExpectedTime } from '@/lib/task/task.utils';
 
 export const taskIndexAtom = atom(0);
 
@@ -45,16 +46,19 @@ export const totalElapsedTimeAtom = atom((get) => {
 	return getTotalElapsedTime(sessions);
 });
 
-export const routineDeltaAtom = atom((get) => {
+export const currentRoutineDeltaAtom = atom((get) => {
 	const totalElapsed = get(totalElapsedTimeAtom);
 	const sessions = get(sessionsAtom);
 	const tasks = get(tasksAtom);
+	const expectedTotal = getCurrentRoutineExpectedTime(tasks, sessions);
+	return totalElapsed - expectedTotal;
+});
 
-	const expectedTotal = sessions.reduce((sum, session) => {
-		const task = tasks.find((t) => t.id === session.taskId);
-		if (!task) return sum;
-		return sum + task.durationInSeconds;
-	}, 0);
+export const routineDeltaAtom = atom((get) => {
+	const totalElapsed = get(totalElapsedTimeAtom);
+	const tasks = get(tasksAtom);
+
+	const expectedTotal = getRoutineExpectedTime(tasks);
 
 	return totalElapsed - expectedTotal;
 });
