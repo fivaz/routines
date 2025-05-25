@@ -5,24 +5,33 @@ import {
 	fetchRoutines,
 	updateRoutines as updateRoutinesRepo,
 } from './routine.repository';
-import { Routine, routinesAtom } from '@/lib/routine/routine.type';
+import { Routine, routinesAtom, routinesLoadingAtom } from '@/lib/routine/routine.type';
 import { safeThrowUnauthorized } from '@/lib/error-handle';
 import { atomEffect } from 'jotai-effect';
 import { currentUserAtom } from '@/lib/user/user.type';
-import { tasksAtom } from '@/lib/task/task.type';
 import { useAtomValue } from 'jotai';
 
 export const routinesAtomEffect = atomEffect((get, set) => {
 	const user = get(currentUserAtom);
 
 	if (!user?.uid) {
-		set(tasksAtom, []);
+		set(routinesAtom, []);
+		set(routinesLoadingAtom, false);
 		return;
 	}
 
-	const unsubscribe = fetchRoutines(user.uid, (routines) => set(routinesAtom, routines));
+	// ⏳ Start loading
+	set(routinesLoadingAtom, true);
 
-	return () => unsubscribe();
+	const unsubscribe = fetchRoutines(user.uid, (routines) => {
+		set(routinesAtom, routines);
+		set(routinesLoadingAtom, false); // ✅ Done loading
+	});
+
+	return () => {
+		unsubscribe();
+		set(routinesLoadingAtom, false); // Optional: cleanup resets loading
+	};
 });
 
 export function useRoutineActions() {

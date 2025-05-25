@@ -28,3 +28,5 @@ export const routineAtom = atom((get) => {
 	const routineId = get(routineIdAtom);
 	return routines.find((routine) => routine.id === routineId);
 });
+
+export const routinesLoadingAtom = atom(true);

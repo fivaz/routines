@@ -21,6 +21,7 @@ import { RoutineRow } from '@/app/(dashboard)/routine/routine-row';
 import { useAtom } from 'jotai';
 import { useRoutineActions } from '@/lib/routine/routine.hooks';
 import { useCategoryActions } from '@/lib/category/category.hooks';
+import { RoutineListSkeleton } from '@/app/(dashboard)/RoutineListSkeleton';
 
 export default function Routines() {
 	const [routineForm, setRoutineForm] = useState<Routine | null>(null);
@@ -80,6 +81,8 @@ export default function Routines() {
 	return (
 		<>
 			<Heading className="mb-4">Routines</Heading>
+
+			<RoutineListSkeleton />
 
 			<DragDropProvider onDragOver={handleDragOver} onDragEnd={handleDragEnd}>
 				<div className="flex flex-col gap-2">
