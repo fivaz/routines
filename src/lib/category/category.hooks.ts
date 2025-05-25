@@ -1,17 +1,29 @@
-import { useCategories } from './category.context';
 import { useAuth } from '@/lib/user/auth-context';
 import {
 	addCategory as addCategoryRepo,
 	deleteCategory as deleteCategoryRepo,
 	editCategory as editCategoryRepo,
+	fetchCategories,
+	updateCategories as updateCategoriesRepo,
 } from './category.repository';
-import { Category } from './category.type';
+import { categoriesAtom, Category } from './category.type';
 import { safeThrowUnauthorized } from '@/lib/error-handle';
+import { atomEffect } from 'jotai-effect';
+import { currentUserAtom } from '@/lib/user/user.type';
+import { tasksAtom } from '@/lib/task/task.type';
 
-export function useCategory(categoryId: string) {
-	const { categories } = useCategories();
-	return categories.find((cat) => cat.id === categoryId);
-}
+export const categoriesAtomEffect = atomEffect((get, set) => {
+	const user = get(currentUserAtom);
+
+	if (!user?.uid) {
+		set(tasksAtom, []);
+		return;
+	}
+
+	const unsubscribe = fetchCategories(user.uid, (categories) => set(categoriesAtom, categories));
+
+	return () => unsubscribe();
+});
 
 export function useCategoryActions() {
 	const { user } = useAuth();
@@ -31,5 +43,10 @@ export function useCategoryActions() {
 		return deleteCategoryRepo(user.uid, categoryId);
 	}
 
-	return { addCategory, editCategory, deleteCategory };
+	async function updateCategories(routines: Category[]) {
+		if (!user?.uid) return safeThrowUnauthorized();
+		return updateCategoriesRepo(user.uid, routines);
+	}
+
+	return { addCategory, editCategory, deleteCategory, updateCategories };
 }

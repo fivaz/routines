@@ -5,9 +5,9 @@ import { Routes } from '@/lib/consts';
 import { useAuth } from '@/lib/user/auth-context';
 import { useRouter } from 'next/navigation';
 import { LoaderCircle } from 'lucide-react';
-import { CategoryProvider } from '@/lib/category/category.context';
 import { routinesAtomEffect } from '@/lib/routine/routine.hooks';
 import { useAtom } from 'jotai/index';
+import { categoriesAtomEffect } from '@/lib/category/category.hooks';
 
 export default function Layout({
 	children,
@@ -17,6 +17,7 @@ export default function Layout({
 	const { user, loading } = useAuth();
 
 	useAtom(routinesAtomEffect);
+	useAtom(categoriesAtomEffect);
 
 	const router = useRouter();
 
@@ -38,9 +39,5 @@ export default function Layout({
 		return null; // Don't render anything if user is not authenticated
 	}
 
-	return (
-		<CategoryProvider>
-			<Dashboard>{children}</Dashboard>
-		</CategoryProvider>
-	);
+	return <Dashboard>{children}</Dashboard>;
 }

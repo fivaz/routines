@@ -6,9 +6,9 @@ import { ChangeEvent, Dispatch, FormEvent, SetStateAction, useState } from 'reac
 import { Routine } from '@/lib/routine/routine.type';
 import { RoutineImageForm } from '@/components/RoutineImageForm';
 import { useRoutineActions } from '@/lib/routine/routine.hooks';
-import { useCategories } from '@/lib/category/category.context';
-import { Category } from '@/lib/category/category.type';
+import { categoriesAtom, Category } from '@/lib/category/category.type';
 import { Listbox, ListboxLabel, ListboxOption } from '../base/listbox';
+import { useAtomValue } from 'jotai/index';
 
 export function RoutineForm({
 	routineIn,
@@ -20,7 +20,8 @@ export function RoutineForm({
 	const [imageFile, setImageFile] = useState<File | null>(null);
 
 	const { editRoutine, addRoutine } = useRoutineActions();
-	const { categories } = useCategories();
+
+	const categories = useAtomValue(categoriesAtom);
 
 	function close() {
 		setImageFile(null);

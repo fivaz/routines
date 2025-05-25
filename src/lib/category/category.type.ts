@@ -1,3 +1,5 @@
+import { atom } from 'jotai/index';
+
 export type Category = {
 	id: string;
 	name: string;
@@ -20,3 +22,5 @@ export const noCategory: Category = {
 	order: 0,
 	createdAt: '',
 };
+
+export const categoriesAtom = atom<Category[]>([]);

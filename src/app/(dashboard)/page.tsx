@@ -8,21 +8,27 @@ import { emptyRoutine, type Routine, routinesAtom } from '@/lib/routine/routine.
 import { PlusIcon } from 'lucide-react';
 import { move } from '@dnd-kit/helpers';
 import { useBackendStatus } from '@/lib/use-backend-status';
-import { useCategories } from '@/lib/category/category.context';
 import { flattenRoutinesByCategory, groupRoutinesByCategory } from '@/lib/category/category.utils';
-import { Category, noCategory, UNCATEGORIZED_KEY } from '@/lib/category/category.type';
+import {
+	categoriesAtom,
+	Category,
+	noCategory,
+	UNCATEGORIZED_KEY,
+} from '@/lib/category/category.type';
 import { DragDropProvider } from '@dnd-kit/react';
 import { RoutineCategory } from '@/app/(dashboard)/routine/routine-category';
 import { RoutineRow } from '@/app/(dashboard)/routine/routine-row';
 import { useAtom } from 'jotai';
 import { useRoutineActions } from '@/lib/routine/routine.hooks';
+import { useCategoryActions } from '@/lib/category/category.hooks';
 
 export default function Routines() {
 	const [routineForm, setRoutineForm] = useState<Routine | null>(null);
 	const [routines, setRoutines] = useAtom(routinesAtom);
-	const { categories, handleCategorySort } = useCategories();
+	const [categories, setCategories] = useAtom(categoriesAtom);
 	const { status } = useBackendStatus();
 	const { updateRoutines } = useRoutineActions();
+	const { updateCategories } = useCategoryActions();
 
 	const [routinesByCategories, setRoutinesByCategories] = useState<Record<string, Routine[]>>({});
 	const [sortedCategories, setSortedCategories] = useState<Category[]>([]);
@@ -63,8 +69,12 @@ export default function Routines() {
 
 		setSortedCategories(resortedCategories);
 
+		const newCategories = resortedCategories.filter(
+			(category) => category.id !== UNCATEGORIZED_KEY,
+		);
 		//persist category order
-		handleCategorySort(resortedCategories.filter((category) => category.id !== UNCATEGORIZED_KEY));
+		setCategories(newCategories);
+		void updateCategories(newCategories);
 	}
 
 	return (
