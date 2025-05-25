@@ -31,7 +31,10 @@ export function FocusController() {
 
 	const router = useRouter();
 	const { routineId } = useParams<{ routineId: string }>();
-	const { startSession, stopSession } = useSessionActions(routineId, task?.id);
+	const { startSession, stopSession, continueSession, resetSession } = useSessionActions(
+		routineId,
+		task?.id,
+	);
 	const { createPrompt } = usePrompt();
 
 	const hasStarted = !!currentSession?.startAt;
@@ -39,10 +42,7 @@ export function FocusController() {
 	const isRunning = hasStarted && !hasEnded;
 
 	useEffect(() => {
-		const tick = () => {
-			const x = getSessionDuration(currentSession);
-			setElapsedTime(x);
-		};
+		const tick = () => setElapsedTime(getSessionDuration(currentSession));
 
 		tick(); // run immediately
 		const interval = setInterval(tick, 1000);
@@ -69,6 +69,10 @@ export function FocusController() {
 	const handleNextTask = () => {
 		if (isRunning) return;
 
+		goToNextTask();
+	};
+
+	const goToNextTask = () => {
 		if (taskIndex >= tasks.length - 1) {
 			router.push(Routes.FINISH(routineId));
 			return;
@@ -78,17 +82,7 @@ export function FocusController() {
 	};
 
 	const handleStart = async () => {
-		if (currentSession?.startAt) {
-			if (
-				!(await createPrompt({
-					title: 'Task already accomplished today',
-					message: 'Are you sure you wanna to override it ?',
-				}))
-			) {
-				return;
-			}
-		}
-		void startSession(currentSession);
+		startSession();
 	};
 
 	const handleStop = async () => {
@@ -96,13 +90,34 @@ export function FocusController() {
 			return safeThrow('no session was found');
 		}
 
-		void stopSession(currentSession);
-		handleNextTask();
+		stopSession(currentSession);
+		goToNextTask();
 	};
 
-	const handleContinue = () => {};
+	const handleContinue = () => {
+		if (!currentSession) {
+			return safeThrow('no session was found');
+		}
 
-	const handleReset = () => {};
+		continueSession(currentSession);
+	};
+
+	const handleReset = async () => {
+		if (!currentSession) {
+			return safeThrow('no session was found');
+		}
+
+		if (
+			!(await createPrompt({
+				title: 'Task already accomplished today',
+				message: 'Are you sure you wanna to reset it ?',
+			}))
+		) {
+			return;
+		}
+
+		resetSession(currentSession);
+	};
 
 	return (
 		<div className="relative flex h-14 rounded-lg bg-linear-to-r/srgb from-indigo-500 to-teal-400 text-white dark:bg-gray-200">

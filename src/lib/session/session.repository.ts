@@ -1,4 +1,4 @@
-import { collection, doc, onSnapshot, query, setDoc, where } from 'firebase/firestore';
+import { collection, doc, onSnapshot, query, setDoc, updateDoc, where } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Session } from '@/lib/session/session.type';
 import { DB_PATH } from '@/lib/consts';
@@ -35,12 +35,7 @@ export function fetchSessions(
 	});
 }
 
-export async function startSession(
-	userId: string,
-	routineId: string,
-	taskId: string,
-	session?: Session,
-) {
+export async function startSession(userId: string, routineId: string, taskId: string) {
 	const newSessionRef = doc(collection(db, getSessionPath(userId, routineId)));
 
 	const newSession: Omit<Session, 'id'> = {
@@ -57,4 +52,23 @@ export async function stopSession(userId: string, routineId: string, session: Se
 	const sessionRef = doc(db, getSessionPath(userId, routineId), session.id);
 
 	void setDoc(sessionRef, { ...session, endAt: new Date().toISOString() });
+}
+
+export async function continueSession(userId: string, routineId: string, session: Session) {
+	const sessionRef = doc(db, getSessionPath(userId, routineId), session.id);
+
+	const update: Pick<Session, 'endAt'> = { endAt: '' };
+
+	await updateDoc(sessionRef, update);
+}
+
+export async function resetSession(userId: string, routineId: string, session: Session) {
+	const sessionRef = doc(db, getSessionPath(userId, routineId), session.id);
+
+	const update: Pick<Session, 'startAt' | 'endAt'> = {
+		startAt: new Date().toISOString(),
+		endAt: '',
+	};
+
+	await updateDoc(sessionRef, update);
 }
