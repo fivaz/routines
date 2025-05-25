@@ -30,7 +30,7 @@ import { auth } from '@/lib/firebase';
 import { APP_NAME, Routes } from '@/lib/consts';
 import { useRouter } from 'next/navigation';
 import { Logo } from '@/components/Logo';
-import { ThemeToggle } from '@/components/ThemeToggle';
+import { ThemeToggle } from '@/components/theme-toggle/ThemeToggle';
 import { BackEndStatus } from '@/components/BackEndStatus';
 import { Tooltip } from '@/components/base/tooltip';
 import { useAtomValue } from 'jotai/index';
