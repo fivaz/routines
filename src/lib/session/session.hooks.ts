@@ -9,14 +9,14 @@ import { safeThrow, safeThrowUnauthorized } from '@/lib/error-handle';
 export function useSessionActions(routineId?: string, taskId?: string) {
 	const { user } = useAuth();
 
-	async function startSession() {
+	async function startSession(session?: Session) {
 		if (!user?.uid) {
 			return safeThrowUnauthorized();
 		}
 		if (!routineId || !taskId) {
 			return safeThrow('routine id or task id is missing');
 		}
-		return startSessionRepo(user.uid, routineId, taskId);
+		return startSessionRepo(user.uid, routineId, taskId, session);
 	}
 
 	async function stopSession(session: Session) {

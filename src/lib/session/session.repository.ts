@@ -35,7 +35,12 @@ export function fetchSessions(
 	});
 }
 
-export async function startSession(userId: string, routineId: string, taskId: string) {
+export async function startSession(
+	userId: string,
+	routineId: string,
+	taskId: string,
+	session?: Session,
+) {
 	const newSessionRef = doc(collection(db, getSessionPath(userId, routineId)));
 
 	const newSession: Omit<Session, 'id'> = {

@@ -1,5 +1,5 @@
-import { PropsWithChildren } from 'react';
-import { Routine } from '@/lib/routine/routine.type';
+import type { MouseEvent, PropsWithChildren } from 'react';
+import type { Routine } from '@/lib/routine/routine.type';
 
 import { Routes } from '@/lib/consts';
 import Link from 'next/link';
@@ -26,15 +26,15 @@ export function RoutineRow({
 		<div
 			ref={ref}
 			data-dragging={isDragging}
-			className="group hover:border border-green-400 relative h-40 flex flex-col bg-cover bg-center rounded-lg"
+			className="group relative flex h-40 flex-col rounded-lg border-green-400 bg-cover bg-center hover:border"
 			style={{ backgroundImage: `url('${routine.image}')` }}
 		>
 			<ImageWaitingSkeleton image={routine.image} />
-			<div className="z-30 absolute top-4 left-4">
+			<div className="absolute top-4 left-4 z-30">
 				<Button
 					outline
-					className="touch-none dark cursor-grab"
-					onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+					className="dark cursor-grab touch-none"
+					onClick={(e: MouseEvent<HTMLButtonElement>) => {
 						e.stopPropagation(); // Prevent link click when button is clicked
 					}}
 				>
@@ -43,21 +43,21 @@ export function RoutineRow({
 			</div>
 
 			<Link
-				href={`${Routes.ROUTINE}/${routine.id}`}
-				className="p-4 h-full w-full z-20 grid grid-cols-2 grid-rows-2"
+				href={Routes.ROUTINE(routine.id)}
+				className="z-20 grid h-full w-full grid-cols-2 grid-rows-2 p-4"
 			>
-				<div className="justify-self-end col-start-2 col-span-1 row-start-1 row-span-1 text-white p-0.5 first-letter:uppercase group-hover:underline">
+				<div className="col-span-1 col-start-2 row-span-1 row-start-1 justify-self-end p-0.5 text-white group-hover:underline first-letter:uppercase">
 					{formatSeconds(routine.totalDuration || 0) || '0 s'}
 				</div>
-				<div className="self-end col-start-1 col-span-1 row-start-2 row-span-1 text-white p-0.5 first-letter:uppercase group-hover:underline">
+				<div className="col-span-1 col-start-1 row-span-1 row-start-2 self-end p-0.5 text-white group-hover:underline first-letter:uppercase">
 					{routine.name}
 				</div>
-				<div className="self-end justify-self-end col-start-2 col-span-1 row-start-2 row-span-1 text-white p-0.5 first-letter:uppercase group-hover:underline">
+				<div className="col-span-1 col-start-2 row-span-1 row-start-2 self-end justify-self-end p-0.5 text-white group-hover:underline first-letter:uppercase">
 					{routine.taskCount || 0} tasks
 				</div>
 			</Link>
 
-			<div className="absolute inset-0 group-hover:bg-black/25 bg-black/10  rounded-lg"></div>
+			<div className="absolute inset-0 rounded-lg bg-black/10 group-hover:bg-black/25"></div>
 		</div>
 	);
 }
