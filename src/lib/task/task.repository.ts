@@ -263,10 +263,6 @@ export async function deleteTask(
 
 			const taskData = taskDoc.data() as Task;
 
-			// Update routine summary
-			const routineRef = doc(db, getRoutinePath(userId), routineId);
-			const routineDoc = await transaction.get(routineRef);
-
 			// Delete the task
 			transaction.delete(taskRef);
 
