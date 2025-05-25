@@ -10,7 +10,7 @@ export default function RoutineFocusPage() {
 	const routine = useRoutine();
 
 	return (
-		<div className="flex flex-col gap-5 h-full md:h-[calc(100vh-136px)]">
+		<div className="flex h-full flex-col gap-5 md:h-[calc(100vh-136px)]">
 			<FocusHeader routine={routine} />
 
 			<RoutineTasksSummary />

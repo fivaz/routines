@@ -5,13 +5,12 @@ import {
 	RotateCcwIcon,
 	SquareIcon,
 } from 'lucide-react';
-import { useEffect } from 'react';
 import { safeThrow } from '@/lib/error-handle';
 import { useAtom, useAtomValue } from 'jotai';
 import {
+	currentElapsedTimeAtom,
 	currentSessionAtom,
 	currentTaskAtom,
-	elapsedTimeAtom,
 	taskIndexAtom,
 } from '@/app/(dashboard)/routine/[routineId]/new-focus/service';
 import { useParams, useRouter } from 'next/navigation';
@@ -19,14 +18,13 @@ import { Routes } from '@/lib/consts';
 import { useSessionActions } from '@/lib/session/session.hooks';
 import { usePrompt } from '@/lib/prompt-context';
 import { tasksAtom } from '@/lib/task/task.type';
-import { getSessionDuration } from '@/lib/session/session.utils';
 import { ContinueIcon } from '@/components/icons/ContinueIcon';
 
 export function FocusController() {
 	const task = useAtomValue(currentTaskAtom);
 	const tasks = useAtomValue(tasksAtom);
 	const [taskIndex, setTaskIndex] = useAtom(taskIndexAtom);
-	const [elapsedTime, setElapsedTime] = useAtom(elapsedTimeAtom);
+	const elapsedTime = useAtomValue(currentElapsedTimeAtom);
 	const currentSession = useAtomValue(currentSessionAtom);
 
 	const router = useRouter();
@@ -40,15 +38,6 @@ export function FocusController() {
 	const hasStarted = !!currentSession?.startAt;
 	const hasEnded = !!currentSession?.endAt;
 	const isRunning = hasStarted && !hasEnded;
-
-	useEffect(() => {
-		const tick = () => setElapsedTime(getSessionDuration(currentSession));
-
-		tick(); // run immediately
-		const interval = setInterval(tick, 1000);
-
-		return () => clearInterval(interval);
-	}, [currentSession, setElapsedTime]);
 
 	const progressBarSize = () => {
 		if (!task) return { width: `0%` };

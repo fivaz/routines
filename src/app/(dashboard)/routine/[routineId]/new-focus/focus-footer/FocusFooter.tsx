@@ -1,26 +1,20 @@
 import { Skeleton } from '@/components/Skeleton';
 import { formatSeconds, getTotalExpectedTime } from '@/lib/task/task.utils';
 import { useMemo } from 'react';
-import { getCurrentTotalElapsedTime } from '@/app/(dashboard)/routine/[routineId]/new-focus/focus-footer/service';
 import { useAtomValue } from 'jotai';
 import {
+	currentElapsedTimeAtom,
 	currentTaskAtom,
-	elapsedTimeAtom,
-	sessionsAtom,
+	totalElapsedTimeAtom,
 } from '@/app/(dashboard)/routine/[routineId]/new-focus/service';
 import { tasksAtom } from '@/lib/task/task.type';
 import RoutineStatus from '../../focus/routine-status';
 
 export function FocusFooter() {
 	const task = useAtomValue(currentTaskAtom);
-	const elapsedTime = useAtomValue(elapsedTimeAtom);
-	const sessions = useAtomValue(sessionsAtom);
+	const elapsedTime = useAtomValue(currentElapsedTimeAtom);
 	const tasks = useAtomValue(tasksAtom);
-
-	const totalElapsedTime = useMemo(
-		() => formatSeconds(getCurrentTotalElapsedTime(sessions)),
-		[sessions],
-	);
+	const totalElapsedTime = useAtomValue(totalElapsedTimeAtom);
 
 	const totalExpectedTime = useMemo(() => formatSeconds(getTotalExpectedTime(tasks)), [tasks]);
 
@@ -53,7 +47,8 @@ export function FocusFooter() {
 						<span>{formatSeconds(task.durationInSeconds)}</span>
 					</div>
 					<div className="text-lg font-semibold text-red-500">
-						<span className="truncate">{totalElapsedTime}</span> / <span>{totalExpectedTime}</span>
+						<span className="truncate">{formatSeconds(totalElapsedTime)}</span> /{' '}
+						<span>{totalExpectedTime}</span>
 					</div>
 				</div>
 			</div>

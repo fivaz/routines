@@ -1,23 +1,6 @@
 import { Session } from '@/lib/session/session.type';
 import { Task } from '@/lib/task/task.type';
 
-export function getCurrentTotalElapsedTime(sessions: Session[]): number {
-	return sessions.reduce((total, session) => total + getSessionDuration(session), 0);
-}
-
-export function getSessionDuration(session?: Session): number {
-	if (!session || !session.startAt) {
-		return 0;
-	}
-	try {
-		const startDate = new Date(session.startAt);
-		const endDate = session.endAt ? new Date(session.endAt) : new Date();
-		return Math.abs((endDate.getTime() - startDate.getTime()) / 1000);
-	} catch {
-		return 0;
-	}
-}
-
 export const getRoutineDelta = (tasks: Task[], sessions: Session[]) => {
 	let totalDelta = 0;
 
