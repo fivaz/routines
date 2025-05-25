@@ -6,7 +6,6 @@ import { useAuth } from '@/lib/user/auth-context';
 import { useRouter } from 'next/navigation';
 import { LoaderCircle } from 'lucide-react';
 import { RoutineProvider } from '@/lib/routine/routine.context';
-import { TaskProvider } from '@/lib/task/task.context';
 import { CategoryProvider } from '@/lib/category/category.context';
 
 export default function Layout({
@@ -26,8 +25,8 @@ export default function Layout({
 
 	if (loading) {
 		return (
-			<div className="h-full w-full flex justify-center items-center">
-				<LoaderCircle className="animate-spin text-green-500 w-10 h-10" />
+			<div className="flex h-full w-full items-center justify-center">
+				<LoaderCircle className="h-10 w-10 animate-spin text-green-500" />
 			</div>
 		);
 	}
@@ -38,11 +37,9 @@ export default function Layout({
 
 	return (
 		<RoutineProvider>
-			<TaskProvider>
-				<CategoryProvider>
-					<Dashboard>{children}</Dashboard>
-				</CategoryProvider>
-			</TaskProvider>
+			<CategoryProvider>
+				<Dashboard>{children}</Dashboard>
+			</CategoryProvider>
 		</RoutineProvider>
 	);
 }

@@ -5,11 +5,13 @@ import {
 	editTask as editTaskRepo,
 	fetchTasks,
 	generateTaskImage as generateTaskImageRepo,
+	updateTasks as updateTasksRepo,
 } from './task.repository';
 import { ImageFocus, Task, tasksAtom } from './task.type';
 import { atomEffect } from 'jotai-effect';
 import { currentUserAtom } from '@/lib/user/user.type';
 import { routineIdAtom } from '@/lib/routine/routine.type';
+import { safeThrow, safeThrowUnauthorized } from '@/lib/error-handle';
 
 export const tasksAtomEffect = atomEffect((get, set) => {
 	const user = get(currentUserAtom);
@@ -25,7 +27,7 @@ export const tasksAtomEffect = atomEffect((get, set) => {
 	return () => unsubscribe();
 });
 
-export function useTaskActions() {
+export function useTaskActions(routineId: string) {
 	const { user } = useAuth();
 
 	async function deleteTask(routineId: string, taskId: string) {
@@ -47,6 +49,16 @@ export function useTaskActions() {
 			return;
 		}
 		return editTaskRepo({ userId: user.uid, ...params });
+	}
+
+	async function updateTasks(tasks: Task[]) {
+		if (!user?.uid) {
+			return safeThrowUnauthorized();
+		}
+		if (!routineId) {
+			return safeThrow('routine id is missing');
+		}
+		return updateTasksRepo(user.uid, routineId, tasks);
 	}
 
 	async function addTask(params: {
@@ -79,5 +91,5 @@ export function useTaskActions() {
 		return generateTaskImageRepo({ ...params, tokenId });
 	}
 
-	return { deleteTask, editTask, addTask, generateTaskImage };
+	return { deleteTask, editTask, addTask, generateTaskImage, updateTasks };
 }

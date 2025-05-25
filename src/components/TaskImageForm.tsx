@@ -34,7 +34,7 @@ export function TaskImageForm({
 	close: () => void;
 }) {
 	const { status } = useBackendStatus();
-	const { editTask, generateTaskImage } = useTaskActions();
+	const { editTask, generateTaskImage } = useTaskActions(routineId);
 
 	async function handleImageGeneration(imageFocus: ImageFocus) {
 		if (!taskIn) return;
@@ -81,7 +81,7 @@ export function TaskImageForm({
 	}
 
 	return (
-		<Disclosure as="div" className="border rounded-md p-2 dark:border-white border-gray-200 shadow">
+		<Disclosure as="div" className="rounded-md border border-gray-200 p-2 shadow dark:border-white">
 			<DisclosureButton className="group flex w-full items-center justify-between">
 				<Label className="font-semibold">Image</Label>
 				<ChevronDownIcon className="size-5 group-data-[open]:rotate-180 dark:text-white" />
@@ -90,7 +90,7 @@ export function TaskImageForm({
 				<FieldGroup>
 					<Field>
 						<Label>
-							<div className="flex justify-between items-center">
+							<div className="flex items-center justify-between">
 								<span>Upload Image</span>
 								{taskIn.image && <ImageDialogButton image={taskIn.image} />}
 							</div>
@@ -106,7 +106,7 @@ export function TaskImageForm({
 					{taskIn.id ? (
 						<Field>
 							<Label>Or generate an image for:</Label>
-							<div className="grid grid-cols-2 gap-2 mt-5">
+							<div className="mt-5 grid grid-cols-2 gap-2">
 								<Button
 									className="col-span-2 md:col-span-1"
 									color="green"
@@ -139,15 +139,15 @@ export function TaskImageForm({
 								className="mt-4 grid grid-cols-2 items-center justify-center gap-2"
 								onChange={handleImageFocus}
 							>
-								<HeadlessField className="col-span-2 md:col-span-1 flex items-center gap-2">
+								<HeadlessField className="col-span-2 flex items-center gap-2 md:col-span-1">
 									<Radio value="person" color="green" />
-									<HeadlessLabel className="text-base/6 select-none sm:text-sm/6 text-gray-800 dark:text-white">
+									<HeadlessLabel className="text-base/6 text-gray-800 select-none sm:text-sm/6 dark:text-white">
 										the person of the task
 									</HeadlessLabel>
 								</HeadlessField>
-								<HeadlessField className="col-span-2 md:col-span-1 flex items-center gap-2">
+								<HeadlessField className="col-span-2 flex items-center gap-2 md:col-span-1">
 									<Radio value="object" color="green" />
-									<HeadlessLabel className="text-base/6 select-none sm:text-sm/6 text-gray-800 dark:text-white">
+									<HeadlessLabel className="text-base/6 text-gray-800 select-none sm:text-sm/6 dark:text-white">
 										the object of the task
 									</HeadlessLabel>
 								</HeadlessField>

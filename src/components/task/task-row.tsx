@@ -19,7 +19,7 @@ export function TaskRow({
 	const [taskForm, setTaskForm] = useState<Task | null>(null);
 	const { createPrompt } = usePrompt();
 
-	const { deleteTask } = useTaskActions();
+	const { deleteTask } = useTaskActions(routine.id);
 
 	const { ref } = useSortable({ id: task.id, index });
 
@@ -41,14 +41,14 @@ export function TaskRow({
 	return (
 		<div
 			ref={ref}
-			className=" group hover:border border-green-400 relative rounded-lg text-white p-4 h-40 bg-cover bg-center flex flex-col justify-between"
+			className="group relative flex h-40 flex-col justify-between rounded-lg border-green-400 bg-cover bg-center p-4 text-white hover:border"
 			style={{ backgroundImage: `url('${task.image}')` }}
 		>
 			<ImageWaitingSkeleton image={task.image} />
-			<div className="z-20 absolute top-4 left-4">
+			<div className="absolute top-4 left-4 z-20">
 				<Button
 					outline
-					className="touch-none dark cursor-grab"
+					className="dark cursor-grab touch-none"
 					onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
 						e.stopPropagation(); // Prevent link click when button is clicked
 					}}
@@ -57,7 +57,7 @@ export function TaskRow({
 				</Button>
 			</div>
 
-			<div className="z-20 absolute top-4 right-4">
+			<div className="absolute top-4 right-4 z-20">
 				<Dropdown>
 					<DropdownButton outline className="dark">
 						<Ellipsis />
@@ -73,14 +73,14 @@ export function TaskRow({
 
 			<div
 				onClick={handleEdit}
-				className="cursor-pointer z-10 w-full h-full flex items-end justify-between"
+				className="z-10 flex h-full w-full cursor-pointer items-end justify-between"
 			>
-				<span className="first-letter:uppercase p-0.5 group-hover:underline">{task.name}</span>
+				<span className="p-0.5 group-hover:underline first-letter:uppercase">{task.name}</span>
 
 				<span className="p-0.5 group-hover:underline">{formatSeconds(task.durationInSeconds)}</span>
 			</div>
 
-			<div className="absolute inset-0 bg-black/25 rounded-lg"></div>
+			<div className="absolute inset-0 rounded-lg bg-black/25"></div>
 
 			<TaskForm routineId={routine.id} taskIn={taskForm} setTaskIn={setTaskForm} />
 		</div>

@@ -32,7 +32,7 @@ export function TaskForm({
 	const [newRoutineId, setNewRoutineId] = useState<string>(routineId);
 	const [imageFile, setImageFile] = useState<File | null>(null);
 	const [focus, setFocus] = useState<ImageFocus>('person');
-	const { addTask, editTask } = useTaskActions();
+	const { addTask, editTask } = useTaskActions(routineId);
 
 	function close() {
 		setImageFile(null);
