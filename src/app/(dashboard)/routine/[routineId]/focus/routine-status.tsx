@@ -1,32 +1,17 @@
-import { Task } from '@/lib/task/task.type';
+import { tasksAtom } from '@/lib/task/task.type';
 import { formatSeconds } from '@/lib/task/task.utils';
 import { ChevronDown, ChevronsDown, ChevronsUp, ChevronUp } from 'lucide-react';
 import clsx from 'clsx';
-import { useTasks } from '@/lib/task/task.context';
+import { useAtomValue } from 'jotai';
+import { sessionsAtom } from '@/app/(dashboard)/routine/[routineId]/new-focus/service';
+import { useMemo } from 'react';
+import { getRoutineDelta } from '@/app/(dashboard)/routine/[routineId]/new-focus/focus-footer/service';
 
 export default function RoutineStatus() {
-	const { tasks } = useTasks();
-	function getRoutineDelta(tasks: Task[]): number {
-		let totalDelta = 0;
+	const tasks = useAtomValue(tasksAtom);
+	const sessions = useAtomValue(sessionsAtom);
 
-		for (const task of tasks) {
-			const session = task.currentSession;
-			if (!session || !session.startAt || !session.endAt) continue;
-
-			const start = new Date(session.startAt).getTime();
-			const end = new Date(session.endAt).getTime();
-
-			const actualDuration = (end - start) / 1000; // in seconds
-			const expectedDuration = task.durationInSeconds;
-
-			const delta = actualDuration - expectedDuration;
-			totalDelta += delta;
-		}
-
-		return totalDelta;
-	}
-
-	const deltaInSeconds = getRoutineDelta(tasks);
+	const deltaInSeconds = useMemo(() => getRoutineDelta(tasks, sessions), [tasks, sessions]);
 
 	const isLate = deltaInSeconds > 0;
 	const isSlight = Math.abs(deltaInSeconds) < 60;
@@ -42,7 +27,7 @@ export default function RoutineStatus() {
 	};
 
 	return (
-		<div className={clsx('flex gap-2 items-center', isLate ? 'text-red-500' : 'text-green-500')}>
+		<div className={clsx('flex items-center gap-2', isLate ? 'text-red-500' : 'text-green-500')}>
 			<span className="text-sm">{formatSeconds(Math.abs(deltaInSeconds))}</span>
 			<StatusIcon />
 		</div>

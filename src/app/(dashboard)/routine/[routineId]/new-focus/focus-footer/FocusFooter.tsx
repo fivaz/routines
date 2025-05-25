@@ -9,6 +9,7 @@ import {
 	sessionsAtom,
 } from '@/app/(dashboard)/routine/[routineId]/new-focus/service';
 import { tasksAtom } from '@/lib/task/task.type';
+import RoutineStatus from '../../focus/routine-status';
 
 export function FocusFooter() {
 	const task = useAtomValue(currentTaskAtom);
@@ -25,7 +26,7 @@ export function FocusFooter() {
 
 	if (!task) {
 		return (
-			<div className="flex flex-col gap-4 w-full">
+			<div className="flex w-full flex-col gap-4">
 				<div className="gap-2">
 					<div className="flex justify-between">
 						<Skeleton />
@@ -37,21 +38,22 @@ export function FocusFooter() {
 	}
 
 	return (
-		<div className="flex flex-col gap-4 w-full">
+		<div className="flex w-full flex-col gap-4">
 			<div className="gap-2">
 				<div className="flex justify-between">
-					<h2 className="first-letter:capitalize text-xl font-bold text-green-600 dark:text-green-500">
+					<h2 className="text-xl font-bold text-green-600 first-letter:capitalize dark:text-green-500">
 						{task.name}
 					</h2>
-					{/*<RoutineStatus />*/}
+					<RoutineStatus />
 				</div>
 
-				<div className="flex justify-between items-end">
+				<div className="flex items-end justify-between">
 					<div className="text-lg text-gray-800 dark:text-gray-300">
-						{formatSeconds(elapsedTime) || '0s'} / {formatSeconds(task.durationInSeconds)}
+						<span className="truncate">{formatSeconds(elapsedTime) || '0s'}</span> /{' '}
+						<span>{formatSeconds(task.durationInSeconds)}</span>
 					</div>
-					<div className="text-red-500 text-lg font-semibold">
-						{totalElapsedTime} / {totalExpectedTime}
+					<div className="text-lg font-semibold text-red-500">
+						<span className="truncate">{totalElapsedTime}</span> / <span>{totalExpectedTime}</span>
 					</div>
 				</div>
 			</div>

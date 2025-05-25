@@ -1,4 +1,4 @@
-import { formatDuration, intervalToDuration } from 'date-fns';
+import { intervalToDuration } from 'date-fns';
 import { Task } from '@/lib/task/task.type';
 
 export function formatSeconds(seconds: number) {
@@ -7,27 +7,19 @@ export function formatSeconds(seconds: number) {
 	}
 
 	const duration = intervalToDuration({ start: 0, end: seconds * 1000 });
-
-	return formatDuration(duration, {
-		format: ['hours', 'minutes', 'seconds'], // Only include needed units
-		delimiter: ' ', // Separate with space
-	}).replace(/hours?|minutes?|seconds?/g, (match) => match[0] + ''); // Convert to "h m s"
-}
-
-export function formatSecondsSmall(seconds: number) {
-	if (seconds === 0) {
-		return '-';
-	}
-
-	const duration = intervalToDuration({ start: 0, end: seconds * 1000 });
-
 	const { hours = 0, minutes = 0, seconds: secs = 0 } = duration;
 
 	if (hours > 0) {
-		return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-	} else {
-		return `${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+		// Format as HH:MM:SS
+		const pad = (n: number) => n.toString().padStart(2, '0');
+		return `${pad(hours)}:${pad(minutes)}:${pad(secs)}`;
 	}
+
+	// Format as Xm Ys
+	const parts = [];
+	if (minutes > 0) parts.push(`${minutes}m`);
+	if (secs > 0) parts.push(`${secs}s`);
+	return parts.join(' ');
 }
 
 export function getTotalExpectedTime(tasks: Task[]): number {
