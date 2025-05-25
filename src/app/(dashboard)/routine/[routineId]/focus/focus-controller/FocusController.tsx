@@ -111,7 +111,7 @@ export function FocusController() {
 	};
 
 	return (
-		<div className="relative flex h-14 rounded-lg bg-linear-to-r/srgb from-indigo-500 to-teal-400 text-white md:h-20 dark:bg-gray-200">
+		<div className="relative flex h-14 rounded-lg bg-linear-to-r/srgb from-indigo-500 to-teal-400 text-white dark:bg-gray-200">
 			{/* Progress Bar */}
 			<div
 				style={progressBarSize()}
