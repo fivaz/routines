@@ -1,6 +1,7 @@
 import {
 	ChevronLeftIcon,
 	ChevronRightIcon,
+	ChevronsRightIcon,
 	PlayIcon,
 	RotateCcwIcon,
 	SquareIcon,
@@ -40,6 +41,7 @@ export function FocusController() {
 	const hasStarted = !!currentSession?.startAt;
 	const hasEnded = !!currentSession?.endAt;
 	const isRunning = hasStarted && !hasEnded;
+	const hasNext = taskIndex < tasks.length - 1;
 
 	const progressBarSize = () => {
 		if (!task) return { width: `0%` };
@@ -153,7 +155,7 @@ export function FocusController() {
 				)}
 
 				<div className="flex flex-1">
-					{sessions.length > 0 && (
+					{hasNext ? (
 						<button
 							className="flex flex-1 items-center justify-center"
 							onClick={handleNextTask}
@@ -161,6 +163,15 @@ export function FocusController() {
 						>
 							<ChevronRightIcon className="size-7" />
 						</button>
+					) : (
+						sessions.length && (
+							<a
+								className="flex flex-1 items-center justify-center"
+								href={Routes.FINISH(routineId)}
+							>
+								<ChevronsRightIcon className="size-7" />
+							</a>
+						)
 					)}
 				</div>
 			</div>
