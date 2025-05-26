@@ -1,20 +1,18 @@
 import { Session } from '@/lib/session/session.type';
 import { Task } from '@/lib/task/task.type';
+import { getSessionDuration, getTaskSessions } from '@/lib/session/session.utils';
 
 export const getRoutineDelta = (tasks: Task[], sessions: Session[]) => {
 	let totalDelta = 0;
 
 	for (const task of tasks) {
-		const session = sessions.find((s) => s.taskId === task.id);
+		const session = getTaskSessions(sessions, task.id);
 		if (!session || !session.startAt || !session.endAt) continue;
 
-		const start = new Date(session.startAt).getTime();
-		const end = new Date(session.endAt).getTime();
-
-		const actualDuration = (end - start) / 1000; // in seconds
 		const expectedDuration = task.durationInSeconds;
+		const duration = getSessionDuration(session);
 
-		const delta = actualDuration - expectedDuration;
+		const delta = duration - expectedDuration;
 		totalDelta += delta;
 	}
 

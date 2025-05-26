@@ -1,7 +1,7 @@
 import { intervalToDuration } from 'date-fns';
 import { Task } from '@/lib/task/task.type';
 import { Session } from '@/lib/session/session.type';
-import { getSessionDuration } from '@/lib/session/session.utils';
+import { getSessionDuration, getTaskSessions } from '@/lib/session/session.utils';
 
 export function formatSeconds(seconds: number) {
 	if (seconds === 0) {
@@ -55,7 +55,7 @@ export function getRoutineExpectedTime(tasks: Task[]): number {
 export function getDurationFromDate(task: Task, sessions: Session[]) {
 	if (sessions.length === 0) return 0;
 
-	const session = sessions.find((s) => s.taskId === task.id);
+	const session = getTaskSessions(sessions, task.id);
 
 	return getSessionDuration(session);
 }

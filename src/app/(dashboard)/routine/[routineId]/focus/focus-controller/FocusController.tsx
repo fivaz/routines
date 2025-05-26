@@ -10,7 +10,7 @@ import { safeThrow } from '@/lib/error-handle';
 import { useAtom, useAtomValue } from 'jotai';
 import {
 	currentElapsedTimeAtom,
-	currentSessionAtom,
+	currentSessionsAtom,
 	currentTaskAtom,
 	sessionsAtom,
 	taskIndexAtom,
@@ -27,7 +27,7 @@ export function FocusController() {
 	const tasks = useAtomValue(tasksAtom);
 	const [taskIndex, setTaskIndex] = useAtom(taskIndexAtom);
 	const elapsedTime = useAtomValue(currentElapsedTimeAtom);
-	const currentSession = useAtomValue(currentSessionAtom);
+	const currentSession = useAtomValue(currentSessionsAtom);
 
 	const router = useRouter();
 	const { routineId } = useParams<{ routineId: string }>();

@@ -1,7 +1,11 @@
 import { atom } from 'jotai';
 import { Task, tasksAtom } from '@/lib/task/task.type';
 import { Session } from '@/lib/session/session.type';
-import { getSessionDuration, getTotalElapsedTime } from '@/lib/session/session.utils';
+import {
+	getSessionDuration,
+	getTaskSessions,
+	getTotalElapsedTime,
+} from '@/lib/session/session.utils';
 import { getCurrentRoutineExpectedTime, getRoutineExpectedTime } from '@/lib/task/task.utils';
 
 export const taskIndexAtom = atom(0);
@@ -14,10 +18,10 @@ export const currentTaskAtom = atom<Task | undefined>((get) => {
 
 export const sessionsAtom = atom<Session[]>([]);
 
-export const currentSessionAtom = atom((get) => {
+export const currentSessionsAtom = atom((get) => {
 	const task = get(currentTaskAtom);
 	const sessions = get(sessionsAtom);
-	return sessions.find((session) => session.taskId === task?.id);
+	return getTaskSessions(sessions, task?.id);
 });
 
 export const tickAtom = atom(0);
@@ -35,8 +39,8 @@ tickAtom.onMount = (set) => {
 export const currentElapsedTimeAtom = atom((get) => {
 	get(tickAtom); // ensures re-eval every second
 
-	const session = get(currentSessionAtom);
-	return getSessionDuration(session);
+	const sessions = get(currentSessionsAtom);
+	return getSessionDuration(sessions);
 });
 
 export const totalElapsedTimeAtom = atom((get) => {

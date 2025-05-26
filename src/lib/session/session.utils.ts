@@ -5,7 +5,7 @@ export function getToday(): string {
 	return new Date().toISOString().split('T')[0];
 }
 
-export function getSessionDuration(session?: Session): number {
+export function getSessionDuration(session: Session[]): number {
 	if (!session?.startAt) return 0;
 
 	const start = parseISO(session.startAt);
@@ -15,3 +15,6 @@ export function getSessionDuration(session?: Session): number {
 
 export const getTotalElapsedTime = (sessions: Session[]) =>
 	sessions.reduce((total, session) => total + getSessionDuration(session), 0);
+
+export const getTaskSessions = (sessions: Session[], taskId: string | undefined) =>
+	sessions.filter((session) => session.taskId === taskId);
