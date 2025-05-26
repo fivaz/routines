@@ -36,8 +36,6 @@ export function FocusController() {
 	const { startSession, endSession, resetSession } = useSessionActions(routineId, task?.id);
 	const { createPrompt } = usePrompt();
 
-	const isSessionStopped =
-		currentTaskSessions.length > 0 && currentTaskSessions.every((session) => session.endAt);
 	const hasNext = taskIndex < tasks.length - 1;
 
 	const progressBarSize = () => {
