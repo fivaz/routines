@@ -32,7 +32,8 @@ export function RoutineRow({
 			<div className="absolute top-4 left-4 z-30">
 				<Button
 					outline
-					className="dark cursor-grab touch-none"
+					size="p-2"
+					className="dark cursor-grab touch-none border-gray-700 shadow"
 					onClick={(e: MouseEvent<HTMLButtonElement>) => {
 						e.stopPropagation(); // Prevent link click when button is clicked
 					}}

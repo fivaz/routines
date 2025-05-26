@@ -26,14 +26,15 @@ export function RoutineCategory({
 		<div
 			className={clsx(
 				bgClass,
-				'flex gap-2 flex-col p-4 border dark:border-gray-800 border-gray-200 rounded-lg',
+				'flex flex-col gap-2 rounded-lg border border-gray-200 p-4 dark:border-gray-800',
 			)}
 			ref={ref}
 		>
-			<div className="flex gap-2 items-center">
+			<div className="flex items-center gap-2">
 				<Button
 					outline
-					className="touch-none bg-white dark:bg-gray-900 cursor-grab p-1"
+					size="p-2"
+					className="cursor-grab touch-none bg-white dark:bg-gray-900"
 					onClick={(e: MouseEvent<HTMLButtonElement>) => {
 						e.stopPropagation(); // Prevent link click when button is clicked
 					}}
@@ -43,7 +44,7 @@ export function RoutineCategory({
 
 				<Subheading className="text-yellow-600 first-letter:uppercase">{category.name}</Subheading>
 			</div>
-			<div className="flex flex-col gap-2 min-h-45">{children}</div>
+			<div className="flex min-h-45 flex-col gap-2">{children}</div>
 		</div>
 	);
 }

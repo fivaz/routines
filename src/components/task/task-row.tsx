@@ -1,4 +1,4 @@
-import { PropsWithChildren, useState } from 'react';
+import { MouseEvent, PropsWithChildren, useState } from 'react';
 import { type Task } from '@/lib/task/task.type';
 import { type Routine } from '@/lib/routine/routine.type';
 import { Dropdown, DropdownButton, DropdownItem, DropdownMenu } from '@/components/base/dropdown';
@@ -49,7 +49,7 @@ export function TaskRow({
 				<Button
 					outline
 					className="dark cursor-grab touch-none"
-					onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+					onClick={(e: MouseEvent<HTMLButtonElement>) => {
 						e.stopPropagation(); // Prevent link click when button is clicked
 					}}
 				>
