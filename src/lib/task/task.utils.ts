@@ -1,7 +1,7 @@
 import { intervalToDuration } from 'date-fns';
 import { Task } from '@/lib/task/task.type';
 import { Session } from '@/lib/session/session.type';
-import { getSessionDuration, getTaskSessions } from '@/lib/session/session.utils';
+import { getSessionsDuration, getTaskSessions } from '@/lib/session/session.utils';
 
 export function formatSeconds(seconds: number) {
 	if (seconds === 0) {
@@ -40,12 +40,13 @@ export function formatSecondsSmall(seconds: number) {
 	}
 }
 
+// get the expected time of a task, but counting only the tasks that have a session already,
+// so I can use this to check how these specific tasks were done compared to their expectation
 export function getCurrentRoutineExpectedTime(tasks: Task[], sessions: Session[]): number {
-	return sessions.reduce((sum, session) => {
-		const task = tasks.find((t) => t.id === session.taskId);
-		if (!task) return sum;
-		return sum + task.durationInSeconds;
-	}, 0);
+	const tasksAccomplished = tasks.filter((task) =>
+		sessions.find((session) => session.taskId === task.id),
+	);
+	return getRoutineExpectedTime(tasksAccomplished);
 }
 
 export function getRoutineExpectedTime(tasks: Task[]): number {
@@ -57,5 +58,5 @@ export function getDurationFromDate(task: Task, sessions: Session[]) {
 
 	const session = getTaskSessions(sessions, task.id);
 
-	return getSessionDuration(session);
+	return getSessionsDuration(session);
 }

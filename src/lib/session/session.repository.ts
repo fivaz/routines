@@ -1,9 +1,10 @@
-import { collection, doc, onSnapshot, query, setDoc, updateDoc, where } from 'firebase/firestore';
+import { collection, deleteDoc, doc, onSnapshot, query, setDoc, where } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Session } from '@/lib/session/session.type';
 import { DB_PATH } from '@/lib/consts';
 import { getToday } from '@/lib/session/session.utils';
 import { Task } from '../task/task.type';
+import { NonEmptyArray } from '@/lib/error-handle';
 
 export function getSessionPath(userId: string, routineId: string) {
 	return `${DB_PATH.USERS}/${userId}/${DB_PATH.ROUTINES}/${routineId}/${DB_PATH.SESSIONS}`;
@@ -55,21 +56,16 @@ export async function stopSession(userId: string, routineId: string, session: Se
 	void setDoc(sessionRef, { ...session, endAt: new Date().toISOString() });
 }
 
-export async function continueSession(userId: string, routineId: string, session: Session) {
-	const sessionRef = doc(db, getSessionPath(userId, routineId), session.id);
+export async function resetSession(
+	userId: string,
+	routineId: string,
+	sessions: NonEmptyArray<Session>,
+) {
+	sessions.forEach((session) => void deleteSession(userId, routineId, session.id));
 
-	const update: Pick<Session, 'endAt'> = { endAt: '' };
-
-	await updateDoc(sessionRef, update);
+	void startSession(userId, routineId, sessions[0].id);
 }
 
-export async function resetSession(userId: string, routineId: string, session: Session) {
-	const sessionRef = doc(db, getSessionPath(userId, routineId), session.id);
-
-	const update: Pick<Session, 'startAt' | 'endAt'> = {
-		startAt: new Date().toISOString(),
-		endAt: '',
-	};
-
-	await updateDoc(sessionRef, update);
+export function deleteSession(userId: string, routineId: string, sessionId: string) {
+	deleteDoc(doc(db, getSessionPath(userId, routineId), sessionId));
 }

@@ -6,16 +6,16 @@ import {
 	RotateCcwIcon,
 	SquareIcon,
 } from 'lucide-react';
-import { safeThrow } from '@/lib/error-handle';
+import { isNonEmptyArray, safeThrow } from '@/lib/error-handle';
 import { useAtom, useAtomValue } from 'jotai';
 import {
 	currentElapsedTimeAtom,
-	currentSessionsAtom,
 	currentTaskAtom,
+	currentTaskSessionsAtom,
 	sessionsAtom,
 	taskIndexAtom,
 } from '@/app/(dashboard)/routine/[routineId]/focus/service';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { Routes } from '@/lib/consts';
 import { useSessionActions } from '@/lib/session/session.hooks';
 import { usePrompt } from '@/lib/prompt-context';
@@ -27,20 +27,17 @@ export function FocusController() {
 	const tasks = useAtomValue(tasksAtom);
 	const [taskIndex, setTaskIndex] = useAtom(taskIndexAtom);
 	const elapsedTime = useAtomValue(currentElapsedTimeAtom);
-	const currentSession = useAtomValue(currentSessionsAtom);
+	const currentTaskSessions = useAtomValue(currentTaskSessionsAtom);
 
-	const router = useRouter();
+	const runningSession = currentTaskSessions.find((session) => session.endAt === '');
+
 	const { routineId } = useParams<{ routineId: string }>();
 	const sessions = useAtomValue(sessionsAtom);
-	const { startSession, stopSession, continueSession, resetSession } = useSessionActions(
-		routineId,
-		task?.id,
-	);
+	const { startSession, endSession, resetSession } = useSessionActions(routineId, task?.id);
 	const { createPrompt } = usePrompt();
 
-	const hasStarted = !!currentSession?.startAt;
-	const hasEnded = !!currentSession?.endAt;
-	const isRunning = hasStarted && !hasEnded;
+	const isSessionStopped =
+		currentTaskSessions.length > 0 && currentTaskSessions.every((session) => session.endAt);
 	const hasNext = taskIndex < tasks.length - 1;
 
 	const progressBarSize = () => {
@@ -52,7 +49,7 @@ export function FocusController() {
 	};
 
 	const handlePrevTask = () => {
-		if (isRunning) return;
+		if (runningSession) return;
 
 		if (taskIndex <= 0) return;
 
@@ -60,56 +57,41 @@ export function FocusController() {
 	};
 
 	const handleNextTask = () => {
-		if (isRunning) return;
-
-		goToNextTask();
-	};
-
-	const goToNextTask = () => {
-		if (taskIndex >= tasks.length - 1) {
-			router.push(Routes.FINISH(routineId));
-			return;
-		}
+		if (runningSession) return;
 
 		setTaskIndex((index) => index + 1);
 	};
 
-	const handleStart = async () => {
+	const handleStart = () => {
 		startSession();
 	};
 
 	const handleStop = async () => {
-		if (!currentSession) {
-			return safeThrow('no session was found');
+		if (!runningSession) {
+			return safeThrow('no session is running');
 		}
 
-		stopSession(currentSession);
-		goToNextTask();
+		endSession(runningSession);
 	};
 
 	const handleContinue = () => {
-		if (!currentSession) {
-			return safeThrow('no session was found');
-		}
-
-		continueSession(currentSession);
+		startSession();
 	};
 
 	const handleReset = async () => {
-		if (!currentSession) {
-			return safeThrow('no session was found');
+		if (!isNonEmptyArray(currentTaskSessions)) {
+			return safeThrow('No session was found');
 		}
 
-		if (
-			!(await createPrompt({
-				title: 'Task already accomplished today',
-				message: 'Are you sure you wanna to reset it ?',
-			}))
-		) {
-			return;
-		}
+		const confirmed = await createPrompt({
+			title: 'Do you want to restart this session from now?',
+			message:
+				'Your previous time will be deleted. If you’d rather continue from where you left off, click the Continue button.',
+		});
 
-		resetSession(currentSession);
+		if (!confirmed) return;
+
+		resetSession(currentTaskSessions);
 	};
 
 	return (
@@ -124,25 +106,29 @@ export function FocusController() {
 			<div className="z-10 flex h-full grow">
 				<div className="flex flex-1">
 					{taskIndex > 0 && (
-						<button className="flex grow items-center justify-center" onClick={handlePrevTask}>
+						<button
+							className="flex grow items-center justify-center"
+							onClick={handlePrevTask}
+							disabled={!runningSession}
+						>
 							<ChevronLeftIcon className="size-7" />
 						</button>
 					)}
 				</div>
 
-				{!hasStarted && (
+				{!runningSession && (
 					<button onClick={handleStart} className="flex flex-2 items-center justify-center">
 						<PlayIcon className="size-7" />
 					</button>
 				)}
 
-				{isRunning && (
+				{runningSession && (
 					<button onClick={handleStop} className="flex flex-2 items-center justify-center">
 						<SquareIcon className="size-7" />
 					</button>
 				)}
 
-				{hasEnded && (
+				{isSessionStopped && (
 					<>
 						<button onClick={handleContinue} className="flex flex-1 items-center justify-center">
 							<ContinueIcon className="size-7" />
@@ -159,7 +145,7 @@ export function FocusController() {
 						<button
 							className="flex flex-1 items-center justify-center"
 							onClick={handleNextTask}
-							disabled={isRunning}
+							disabled={!!runningSession}
 						>
 							<ChevronRightIcon className="size-7" />
 						</button>
