@@ -49,16 +49,10 @@ export function FocusController() {
 	};
 
 	const handlePrevTask = () => {
-		if (runningSession) return;
-
-		if (taskIndex <= 0) return;
-
 		setTaskIndex((index) => index - 1);
 	};
 
 	const handleNextTask = () => {
-		if (runningSession) return;
-
 		setTaskIndex((index) => index + 1);
 	};
 
@@ -109,28 +103,24 @@ export function FocusController() {
 						<button
 							className="flex grow items-center justify-center"
 							onClick={handlePrevTask}
-							disabled={!runningSession}
+							disabled={!!runningSession}
 						>
 							<ChevronLeftIcon className="size-7" />
 						</button>
 					)}
 				</div>
 
-				{!runningSession && (
-					<button onClick={handleStart} className="flex flex-2 items-center justify-center">
-						<PlayIcon className="size-7" />
-					</button>
-				)}
-
-				{runningSession && (
+				{runningSession ? (
 					<button onClick={handleStop} className="flex flex-2 items-center justify-center">
 						<SquareIcon className="size-7" />
 					</button>
-				)}
-
-				{isSessionStopped && (
+				) : currentTaskSessions.length ? (
 					<>
-						<button onClick={handleContinue} className="flex flex-1 items-center justify-center">
+						<button
+							onClick={handleContinue}
+							disabled={!!runningSession}
+							className="flex flex-1 items-center justify-center"
+						>
 							<ContinueIcon className="size-7" />
 						</button>
 
@@ -138,12 +128,16 @@ export function FocusController() {
 							<RotateCcwIcon className="size-6" />
 						</button>
 					</>
+				) : (
+					<button onClick={handleStart} className="flex flex-2 items-center justify-center">
+						<PlayIcon className="size-7" />
+					</button>
 				)}
 
 				<div className="flex flex-1">
 					{hasNext ? (
 						<button
-							className="flex flex-1 items-center justify-center"
+							className="flex grow items-center justify-center"
 							onClick={handleNextTask}
 							disabled={!!runningSession}
 						>
@@ -151,10 +145,7 @@ export function FocusController() {
 						</button>
 					) : (
 						sessions.length && (
-							<a
-								className="flex flex-1 items-center justify-center"
-								href={Routes.FINISH(routineId)}
-							>
+							<a className="flex grow items-center justify-center" href={Routes.FINISH(routineId)}>
 								<ChevronsRightIcon className="size-7" />
 							</a>
 						)
