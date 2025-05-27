@@ -2,7 +2,7 @@
 import { useParams, useRouter } from 'next/navigation';
 import { type Routine, routineAtom } from '@/lib/routine/routine.type';
 import { Dropdown, DropdownButton, DropdownItem, DropdownMenu } from '@/components/base/dropdown';
-import { Ellipsis, LoaderCircleIcon, PlusIcon, ScrollTextIcon, ZapIcon } from 'lucide-react';
+import { ChartLineIcon, Ellipsis, LoaderCircleIcon, PlusIcon, TimerIcon } from 'lucide-react';
 import { Routes } from '@/lib/consts';
 import { TaskRow } from '@/components/task/task-row';
 import { emptyTask, Task, tasksAtom } from '@/lib/task/task.type';
@@ -113,7 +113,7 @@ export default function RoutinePage() {
 							<PlusIcon className="size-5" />
 						</Button>
 						<Button outline href={Routes.RECAP(routineId)}>
-							<ScrollTextIcon className="size-5" />
+							<ChartLineIcon className="size-5" />
 						</Button>
 					</div>
 					<Dropdown>
@@ -152,7 +152,7 @@ export default function RoutinePage() {
 
 			<div className="fixed bottom-4 left-1/2 z-20 -translate-x-1/2">
 				<Button disabled={tasks.length === 0} color="green" href={Routes.FOCUS(routineId)}>
-					<ZapIcon className="size-5" />
+					<TimerIcon className="size-5" />
 					Enter Focus
 				</Button>
 			</div>
