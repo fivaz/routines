@@ -143,7 +143,7 @@ export function FocusController() {
 							<ChevronRightIcon className="size-7" />
 						</button>
 					) : (
-						sessions.length && (
+						sessions.length > 0 && (
 							<a className="flex grow items-center justify-center" href={Routes.FINISH(routineId)}>
 								<ChevronsRightIcon className="size-7" />
 							</a>
