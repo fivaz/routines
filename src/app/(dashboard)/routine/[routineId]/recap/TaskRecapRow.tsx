@@ -10,8 +10,8 @@ import { sessionsAtom } from '@/app/(dashboard)/routine/[routineId]/focus/servic
 export function TaskRecapRow({ task }: { task: Task }) {
 	const sessions = useAtomValue(sessionsAtom);
 	return (
-		<li className="flex items-center justify-between gap-2 py-2">
-			<div className="flex w-1/2 items-center gap-2 truncate">
+		<li className="flex justify-between py-2">
+			<div className="flex w-2/4 items-center gap-2 truncate">
 				{task.image && (
 					<Image
 						src={task.image}
@@ -23,21 +23,23 @@ export function TaskRecapRow({ task }: { task: Task }) {
 				)}
 				<Text className={clsx({ 'w-1/2': !!task.image }, 'truncate')}>{task.name}</Text>
 			</div>
-			<div className="flex items-center gap-2">
+
+			<div className="flex w-1/4 items-center justify-end">
 				<Text className="hidden w-30 text-right md:block">
 					{formatSeconds(task.durationInSeconds)}
 				</Text>
 				<Text className="block w-17 text-right md:hidden">
 					{formatSecondsSmall(task.durationInSeconds)}
 				</Text>
+			</div>
 
+			<div className="flex w-1/4 items-center justify-end gap-2">
 				<Text className="hidden w-30 text-right md:block">
 					{formatSeconds(getDurationFromDate(task, sessions))}
 				</Text>
 				<Text className="block w-17 text-right md:hidden">
 					{formatSecondsSmall(getDurationFromDate(task, sessions))}
 				</Text>
-
 				<DeltaIcon task={task} />
 			</div>
 		</li>
@@ -50,16 +52,16 @@ function DeltaIcon({ task }: { task: Task }) {
 	const actualTime = getDurationFromDate(task, sessions);
 
 	if (actualTime === 0) {
-		return <div className="size-5"></div>;
+		return <div className="size-5 shrink-0"></div>;
 	}
 
 	if (expectedTime < actualTime) {
-		return <ChevronUpIcon className="size-5 text-red-500" />;
+		return <ChevronUpIcon className="size-5 shrink-0 text-red-500" />;
 	}
 
 	if (expectedTime > actualTime) {
-		return <ChevronDownIcon className="size-5 text-green-500" />;
+		return <ChevronDownIcon className="size-5 shrink-0 text-green-500" />;
 	}
 
-	return <div className="size-5"></div>;
+	return <div className="size-5 shrink-0"></div>;
 }

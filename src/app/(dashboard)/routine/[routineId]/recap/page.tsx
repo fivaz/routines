@@ -34,9 +34,9 @@ export default function RoutineRecapPage() {
 
 			<div>
 				<li className="flex justify-between py-4">
-					<Text className="w-2/4 truncate">Total: </Text>
+					<Text className="w-2/4 truncate">Total</Text>
 					<Text className="w-1/4 text-right">{getExpectedTime}</Text>
-					<Text className="w-1/4 text-right">{formatSeconds(totalElapsedTime)}</Text>
+					<Text className="w-1/4 pr-7 text-right">{formatSeconds(totalElapsedTime)}</Text>
 				</li>
 				<ul role="list" className="divide-y divide-gray-200">
 					{tasks.map((task) => (
