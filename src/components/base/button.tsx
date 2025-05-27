@@ -185,7 +185,11 @@ export const Button = forwardRef(function Button(
 	);
 
 	return 'href' in props ? (
-		<Link {...props} className={classes} ref={ref as React.ForwardedRef<HTMLAnchorElement>}>
+		<Link
+			{...props}
+			className={clsx(classes, size || styles.padding)}
+			ref={ref as React.ForwardedRef<HTMLAnchorElement>}
+		>
 			<TouchTarget>{children}</TouchTarget>
 		</Link>
 	) : (
