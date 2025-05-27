@@ -13,12 +13,16 @@ import { dateAtom } from '@/lib/session/session.type';
 import { Routes } from '@/lib/consts';
 import { TaskRecapRow } from '@/app/(dashboard)/routine/[routineId]/recap/TaskRecapRow';
 import { useMemo } from 'react';
+import { RoutineTimeByDate } from '@/app/(dashboard)/routine/[routineId]/recap/RoutineTimeByDate';
+import { sessionsAtom, sessionsAtomEffect } from './service';
 
 export default function RoutineRecapPage() {
 	const [date, setDate] = useAtom(dateAtom);
 	const tasks = useAtomValue(tasksAtom);
 	const totalElapsedTime = useAtomValue(totalElapsedTimeAtom);
 	const { routineId } = useParams<{ routineId: string }>();
+	useAtom(sessionsAtomEffect);
+	const sessions = useAtomValue(sessionsAtom);
 
 	const getExpectedTime = useMemo(() => formatSeconds(getRoutineExpectedTime(tasks)), [tasks]);
 
@@ -30,14 +34,18 @@ export default function RoutineRecapPage() {
 					<UndoIcon className="size-5" />
 				</Button>
 			</div>
+
 			<TaskHistoryCarousel date={date} setDate={setDate} />
 
 			<div>
-				<li className="flex justify-between py-4">
+				<div className="flex justify-between py-4">
 					<Text className="w-2/4 truncate">Total</Text>
 					<Text className="w-1/4 text-right">{getExpectedTime}</Text>
 					<Text className="w-1/4 pr-7 text-right">{formatSeconds(totalElapsedTime)}</Text>
-				</li>
+				</div>
+
+				<RoutineTimeByDate sessions={sessions} />
+
 				<ul role="list" className="divide-y divide-gray-200">
 					{tasks.map((task) => (
 						<TaskRecapRow task={task} key={task.id} />

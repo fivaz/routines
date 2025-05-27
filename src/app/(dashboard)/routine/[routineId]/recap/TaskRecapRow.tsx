@@ -5,10 +5,10 @@ import { formatSeconds, formatSecondsSmall, getDurationFromDate } from '@/lib/ta
 import { Task } from '@/lib/task/task.type';
 import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
 import { useAtomValue } from 'jotai/index';
-import { sessionsAtom } from '@/app/(dashboard)/routine/[routineId]/focus/service';
+import { currentSessionsAtom } from '@/app/(dashboard)/routine/[routineId]/focus/service';
 
 export function TaskRecapRow({ task }: { task: Task }) {
-	const sessions = useAtomValue(sessionsAtom);
+	const sessions = useAtomValue(currentSessionsAtom);
 	return (
 		<li className="flex justify-between py-2">
 			<div className="flex w-2/4 items-center gap-2 truncate">
@@ -47,7 +47,7 @@ export function TaskRecapRow({ task }: { task: Task }) {
 }
 
 function DeltaIcon({ task }: { task: Task }) {
-	const sessions = useAtomValue(sessionsAtom);
+	const sessions = useAtomValue(currentSessionsAtom);
 	const expectedTime = task.durationInSeconds;
 	const actualTime = getDurationFromDate(task, sessions);
 

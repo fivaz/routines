@@ -2,9 +2,9 @@
 import { PropsWithChildren, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { tasksAtomEffect } from '@/lib/task/task.hooks';
-import { sessionsAtomEffect } from '@/lib/session/session.hooks';
 import { useAtom, useSetAtom } from 'jotai';
 import { routineIdAtom } from '@/lib/routine/routine.type';
+import { currentSessionsAtomEffect } from '@/app/(dashboard)/routine/[routineId]/focus/service';
 
 export default function RoutineLayout({ children }: PropsWithChildren) {
 	const { routineId } = useParams<{ routineId: string }>();
@@ -15,7 +15,7 @@ export default function RoutineLayout({ children }: PropsWithChildren) {
 	}, [routineId, setRoutineId]);
 
 	useAtom(tasksAtomEffect);
-	useAtom(sessionsAtomEffect);
+	useAtom(currentSessionsAtomEffect);
 
 	return <>{children}</>;
 }

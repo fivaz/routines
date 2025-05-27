@@ -12,8 +12,8 @@ import { getToday } from '@/lib/session/session.utils';
 import { useAtomValue } from 'jotai';
 import { tasksAtom } from '@/lib/task/task.type';
 import {
+	currentSessionsAtom,
 	routineDeltaAtom,
-	sessionsAtom,
 	totalElapsedTimeAtom,
 } from '@/app/(dashboard)/routine/[routineId]/focus/service';
 
@@ -21,7 +21,7 @@ export default function FinishPage() {
 	const today = getToday();
 	const { routineId } = useParams<{ routineId: string }>();
 	const tasks = useAtomValue(tasksAtom);
-	const sessions = useAtomValue(sessionsAtom);
+	const sessions = useAtomValue(currentSessionsAtom);
 	const totalElapsedTime = useAtomValue(totalElapsedTimeAtom);
 	const routineDelta = useAtomValue(routineDeltaAtom);
 	const expectedTime = getRoutineExpectedTime(tasks);

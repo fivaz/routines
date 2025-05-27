@@ -10,16 +10,52 @@ export function getSessionPath(userId: string, routineId: string) {
 	return `${DB_PATH.USERS}/${userId}/${DB_PATH.ROUTINES}/${routineId}/${DB_PATH.SESSIONS}`;
 }
 
-export function fetchSessions(
-	userId: string,
-	routineId: string,
-	tasks: Task[],
-	date: string,
-	setSessions: (sessions: Session[]) => void,
-) {
+export function fetchSessionsByDate({
+	userId,
+	routineId,
+	tasks,
+	date,
+	setSessions,
+}: {
+	userId: string;
+	routineId: string;
+	tasks: Task[];
+	date: string;
+	setSessions: (sessions: Session[]) => void;
+}) {
 	const q = query(
 		collection(db, getSessionPath(userId, routineId)),
 		where('date', '==', date),
+		where(
+			'taskId',
+			'in',
+			tasks.map((task) => task.id),
+		),
+	);
+
+	return onSnapshot(q, (snapshot) => {
+		const sessions: Session[] = [];
+		snapshot.forEach((doc) => {
+			sessions.push({ ...doc.data(), id: doc.id } as Session);
+		});
+
+		setSessions(sessions);
+	});
+}
+
+export function fetchSessions({
+	userId,
+	routineId,
+	tasks,
+	setSessions,
+}: {
+	userId: string;
+	routineId: string;
+	tasks: Task[];
+	setSessions: (sessions: Session[]) => void;
+}) {
+	const q = query(
+		collection(db, getSessionPath(userId, routineId)),
 		where(
 			'taskId',
 			'in',

@@ -10,9 +10,9 @@ import { isNonEmptyArray, safeThrow } from '@/lib/error-handle';
 import { useAtom, useAtomValue } from 'jotai';
 import {
 	currentElapsedTimeAtom,
+	currentSessionsAtom,
 	currentTaskAtom,
 	currentTaskSessionsAtom,
-	sessionsAtom,
 	taskIndexAtom,
 } from '@/app/(dashboard)/routine/[routineId]/focus/service';
 import { useParams } from 'next/navigation';
@@ -32,7 +32,7 @@ export function FocusController() {
 	const runningSession = currentTaskSessions.find((session) => session.endAt === '');
 
 	const { routineId } = useParams<{ routineId: string }>();
-	const sessions = useAtomValue(sessionsAtom);
+	const sessions = useAtomValue(currentSessionsAtom);
 	const { startSession, endSession, resetSession } = useSessionActions(routineId, task?.id);
 	const { createPrompt } = usePrompt();
 

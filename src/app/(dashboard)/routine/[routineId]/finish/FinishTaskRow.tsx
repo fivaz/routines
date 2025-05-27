@@ -5,11 +5,11 @@ import { Subheading } from '@/components/base/heading';
 import { Text } from '@/components/base/text';
 import clsx from 'clsx';
 import { useAtomValue } from 'jotai/index';
-import { sessionsAtom } from '@/app/(dashboard)/routine/[routineId]/focus/service';
+import { currentSessionsAtom } from '@/app/(dashboard)/routine/[routineId]/focus/service';
 
 export function FinishTaskRow({ task, index }: { index: number; task: Task; date: string }) {
 	const expectedTime = task.durationInSeconds;
-	const sessions = useAtomValue(sessionsAtom);
+	const sessions = useAtomValue(currentSessionsAtom);
 	const actualTime = getDurationFromDate(task, sessions);
 	const deltaTime = expectedTime - actualTime;
 

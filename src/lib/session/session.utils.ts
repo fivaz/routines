@@ -20,3 +20,38 @@ export const getTotalElapsedTime = (sessions: Session[]) => getSessionsDuration(
 
 export const getTaskSessions = (sessions: Session[], taskId: string | undefined) =>
 	sessions.filter((session) => session.taskId === taskId);
+
+export const getElapsedTimeByDate = (sessions: Session[]): Record<string, number> => {
+	return sessions.reduce(
+		(acc, session) => {
+			const date = session.date;
+			const duration = getSessionDuration(session);
+
+			if (!acc[date]) {
+				acc[date] = 0;
+			}
+
+			acc[date] += duration;
+			return acc;
+		},
+		{} as Record<string, number>,
+	);
+};
+
+export const getChartDataFromSessions = (sessions: Session[]) => {
+	const elapsedByDate = getElapsedTimeByDate(sessions);
+	const sortedDates = Object.keys(elapsedByDate).sort();
+
+	return {
+		labels: sortedDates,
+		datasets: [
+			{
+				label: 'Elapsed Time (minutes)',
+				data: sortedDates.map((date) => Math.round(elapsedByDate[date] / 60)), // Convert seconds to minutes
+				backgroundColor: 'rgba(75, 192, 192, 0.6)',
+				borderColor: 'rgba(75, 192, 192, 1)',
+				borderWidth: 1,
+			},
+		],
+	};
+};
