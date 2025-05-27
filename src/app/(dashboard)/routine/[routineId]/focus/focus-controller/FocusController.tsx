@@ -64,6 +64,7 @@ export function FocusController() {
 		}
 
 		endSession(runningSession);
+		handleNextTask();
 	};
 
 	const handleContinue = () => {
