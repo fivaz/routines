@@ -8,6 +8,7 @@ import { fetchSessions } from '@/lib/session/session.repository';
 
 // sessions of the routine
 export const sessionsAtom = atom<Session[]>([]);
+export const loadingSessionsAtom = atom(true);
 
 //sessions of a given routine and tasks
 export const sessionsAtomEffect = atomEffect((get, set) => {
@@ -17,6 +18,7 @@ export const sessionsAtomEffect = atomEffect((get, set) => {
 
 	if (!user?.uid || tasks.length === 0 || !routineId) {
 		set(sessionsAtom, []);
+		set(loadingSessionsAtom, false);
 		return;
 	}
 
@@ -25,6 +27,7 @@ export const sessionsAtomEffect = atomEffect((get, set) => {
 		routineId,
 		tasks,
 		setSessions: (sessions) => set(sessionsAtom, sessions),
+		setLoading: (loading) => set(loadingSessionsAtom, loading),
 	});
 
 	return () => unsubscribe();

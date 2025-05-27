@@ -2,27 +2,32 @@
 import { Heading } from '@/components/base/heading';
 import { formatSeconds, getRoutineExpectedTime } from '@/lib/task/task.utils';
 import clsx from 'clsx';
-import { FinishTaskRow } from '@/app/(dashboard)/routine/[routineId]/finish/FinishTaskRow';
+import { FinishTaskList } from '@/app/(dashboard)/routine/[routineId]/finish/FinishTaskRow';
 import { useEffect } from 'react';
 import confetti from 'canvas-confetti';
 import { Button } from '@/components/base/button';
-import { MoveLeftIcon, TrophyIcon, UndoIcon } from 'lucide-react';
-import { useParams } from 'next/navigation';
+import { UndoIcon } from 'lucide-react';
 import { getToday } from '@/lib/session/session.utils';
 import { useAtomValue } from 'jotai';
 import { tasksAtom } from '@/lib/task/task.type';
 import {
 	currentSessionsAtom,
+	loadingCurrentSessionsAtom,
 	routineDeltaAtom,
 	totalElapsedTimeAtom,
 } from '@/app/(dashboard)/routine/[routineId]/focus/service';
-import { OffIcon } from '@/components/icons/OffIcon';
+import { LoadingText } from '@/components/LoadingText';
+import { FinishTaskListSkeleton } from '@/app/(dashboard)/routine/[routineId]/finish/FinishTaskListSkeleton';
+import { routineIdAtom } from '@/lib/routine/routine.type';
+import { EmptyFinishPage } from './EmptyFinishPage';
 
 export default function FinishPage() {
 	const today = getToday();
-	const { routineId } = useParams<{ routineId: string }>();
+	const routineId = useAtomValue(routineIdAtom);
 	const tasks = useAtomValue(tasksAtom);
 	const sessions = useAtomValue(currentSessionsAtom);
+	const loading = useAtomValue(loadingCurrentSessionsAtom);
+	// const loading = true;
 	const totalElapsedTime = useAtomValue(totalElapsedTimeAtom);
 	const routineDelta = useAtomValue(routineDeltaAtom);
 	const expectedTime = getRoutineExpectedTime(tasks);
@@ -35,6 +40,10 @@ export default function FinishPage() {
 		const end = Date.now() + duration;
 
 		const intervalId = setInterval(() => {
+			if (loading) {
+				return;
+			}
+
 			if (Date.now() > end) {
 				clearInterval(intervalId);
 				return;
@@ -58,28 +67,10 @@ export default function FinishPage() {
 		}, interval);
 
 		return () => clearInterval(intervalId);
-	}, [sessions.length]);
+	}, [loading, sessions.length]);
 
-	if (sessions.length === 0) {
-		return (
-			<>
-				<div className="flex flex-col items-center justify-center gap-5 pt-32 md:pt-28">
-					<OffIcon className="size-12 text-gray-400">
-						<TrophyIcon className="size-12 text-gray-400" />
-					</OffIcon>
-					<Heading className="mt-2 text-base font-semibold text-gray-900 dark:text-white">
-						Nothing to Recap Yet!
-					</Heading>
-					<p className="mt-1 text-sm text-gray-500">
-						Looks like you didn’t start the task series. Once you complete a session, you’ll see a
-						full recap of your progress here. Ready to give it a try?
-					</p>
-					<Button outline href={`/routine/${routineId}`}>
-						Return to focus mode <MoveLeftIcon className="size-5" />
-					</Button>
-				</div>
-			</>
-		);
+	if (!loading && sessions.length === 0) {
+		return <EmptyFinishPage />;
 	}
 
 	return (
@@ -95,34 +86,34 @@ export default function FinishPage() {
 					<Heading className="pb-5">Congratulations!</Heading>
 
 					<span className="text-lg font-semibold text-black dark:text-white">Your time:</span>
-					<span className="text-3xl font-semibold text-red-500">
-						{formatSeconds(totalElapsedTime)}
-					</span>
+					<LoadingText loading={loading}>
+						<span className="text-3xl font-semibold text-red-500">
+							{formatSeconds(totalElapsedTime)}
+						</span>
+					</LoadingText>
 
 					<span className="text-lg font-semibold text-black dark:text-white">Time expected:</span>
-					<span className="text-lg font-semibold text-black dark:text-white">
-						{formatSeconds(expectedTime)}
-					</span>
+					<LoadingText loading={loading}>
+						<span className="text-lg font-semibold text-black dark:text-white">
+							{formatSeconds(expectedTime)}
+						</span>
+					</LoadingText>
 
 					<span className="text-lg font-semibold text-black dark:text-white">Difference:</span>
-					<span
-						className={clsx(
-							'text-lg font-semibold',
-							routineDelta > 0 ? 'text-green-500' : 'text-red-500',
-						)}
-					>
-						{formatSeconds(Math.abs(routineDelta))} {routineDelta > 0 ? 'ahead' : 'late'}
-					</span>
+					<LoadingText loading={loading}>
+						<span
+							className={clsx(
+								'text-lg font-semibold',
+								routineDelta > 0 ? 'text-green-500' : 'text-red-500',
+							)}
+						>
+							{formatSeconds(Math.abs(routineDelta))} {routineDelta > 0 ? 'ahead' : 'late'}
+						</span>
+					</LoadingText>
 				</div>
 			</div>
 
-			<ul role="list" className="flex flex-wrap justify-between gap-3">
-				{tasks.map((task, index) => (
-					<div key={task.id} className="w-full md:w-[32%]">
-						<FinishTaskRow index={index + 1} task={task} date={today} />
-					</div>
-				))}
-			</ul>
+			{loading ? <FinishTaskListSkeleton /> : <FinishTaskList today={today} tasks={tasks} />}
 		</div>
 	);
 }

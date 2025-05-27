@@ -7,7 +7,19 @@ import clsx from 'clsx';
 import { useAtomValue } from 'jotai/index';
 import { currentSessionsAtom } from '@/app/(dashboard)/routine/[routineId]/focus/service';
 
-export function FinishTaskRow({ task, index }: { index: number; task: Task; date: string }) {
+export function FinishTaskList({ tasks, today }: { today: string; tasks: Task[] }) {
+	return (
+		<ul role="list" className="flex flex-wrap justify-between gap-3">
+			{tasks.map((task, index) => (
+				<div key={task.id} className="w-full md:w-[32%]">
+					<FinishTaskRow index={index + 1} task={task} date={today} />
+				</div>
+			))}
+		</ul>
+	);
+}
+
+function FinishTaskRow({ task, index }: { index: number; task: Task; date: string }) {
 	const expectedTime = task.durationInSeconds;
 	const sessions = useAtomValue(currentSessionsAtom);
 	const actualTime = getDurationFromDate(task, sessions);

@@ -24,6 +24,7 @@ export const currentTaskAtom = atom<Task | undefined>((get) => {
 
 // sessions of the current task
 export const currentSessionsAtom = atom<Session[]>([]);
+export const loadingCurrentSessionsAtom = atom(true);
 
 export const currentTaskSessionsAtom = atom((get) => {
 	const task = get(currentTaskAtom);
@@ -88,6 +89,7 @@ export const currentSessionsAtomEffect = atomEffect((get, set) => {
 
 	if (!user?.uid || tasks.length === 0 || !routineId) {
 		set(currentSessionsAtom, []);
+		set(loadingCurrentSessionsAtom, false);
 		return;
 	}
 
@@ -97,6 +99,7 @@ export const currentSessionsAtomEffect = atomEffect((get, set) => {
 		tasks,
 		date,
 		setSessions: (sessions) => set(currentSessionsAtom, sessions),
+		setLoading: (loading) => set(loadingCurrentSessionsAtom, loading),
 	});
 
 	return () => unsubscribe();

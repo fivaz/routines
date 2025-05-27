@@ -16,12 +16,14 @@ export function fetchSessionsByDate({
 	tasks,
 	date,
 	setSessions,
+	setLoading,
 }: {
 	userId: string;
 	routineId: string;
 	tasks: Task[];
 	date: string;
 	setSessions: (sessions: Session[]) => void;
+	setLoading: (loading: boolean) => void;
 }) {
 	const q = query(
 		collection(db, getSessionPath(userId, routineId)),
@@ -40,6 +42,7 @@ export function fetchSessionsByDate({
 		});
 
 		setSessions(sessions);
+		setLoading(false);
 	});
 }
 
@@ -48,11 +51,13 @@ export function fetchSessions({
 	routineId,
 	tasks,
 	setSessions,
+	setLoading,
 }: {
 	userId: string;
 	routineId: string;
 	tasks: Task[];
 	setSessions: (sessions: Session[]) => void;
+	setLoading: (loading: boolean) => void;
 }) {
 	const q = query(
 		collection(db, getSessionPath(userId, routineId)),
@@ -70,6 +75,7 @@ export function fetchSessions({
 		});
 
 		setSessions(sessions);
+		setLoading(false);
 	});
 }
 
