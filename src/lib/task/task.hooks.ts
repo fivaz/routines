@@ -6,7 +6,7 @@ import {
 	generateTaskImage as generateTaskImageRepo,
 	updateTasksOrder as updateTasksRepo,
 } from './task.repository';
-import { ImageFocus, Task, tasksAtom } from './task.type';
+import { ImageFocus, Task, tasksAtom, tasksLoadingAtom } from './task.type';
 import { atomEffect } from 'jotai-effect';
 import { currentUserAtom } from '@/lib/user/user.type';
 import { routineIdAtom } from '@/lib/routine/routine.type';
@@ -16,13 +16,21 @@ import { useAtomValue } from 'jotai/index';
 export const tasksAtomEffect = atomEffect((get, set) => {
 	const user = get(currentUserAtom);
 	const routineId = get(routineIdAtom);
+	const setTasks = (tasks: Task[]) => set(tasksAtom, tasks);
+	const setLoading = (loading: boolean) => set(tasksLoadingAtom, loading);
+
+	setLoading(true); // Set loading true at the start
 
 	if (!user?.uid || !routineId) {
-		set(tasksAtom, []);
+		setTasks([]);
+		setLoading(false);
 		return;
 	}
 
-	const unsubscribe = fetchTasks(user.uid, routineId, (tasks) => set(tasksAtom, tasks));
+	const unsubscribe = fetchTasks(user.uid, routineId, (tasks) => {
+		setTasks(tasks);
+		setLoading(false); // Only set false when tasks are fully fetched
+	});
 
 	return () => unsubscribe();
 });

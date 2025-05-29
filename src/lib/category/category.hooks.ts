@@ -9,14 +9,13 @@ import { categoriesAtom, Category } from './category.type';
 import { safeThrowUnauthorized } from '@/lib/error-handle';
 import { atomEffect } from 'jotai-effect';
 import { currentUserAtom } from '@/lib/user/user.type';
-import { tasksAtom } from '@/lib/task/task.type';
 import { useAtomValue } from 'jotai/index';
 
 export const categoriesAtomEffect = atomEffect((get, set) => {
 	const user = get(currentUserAtom);
 
 	if (!user?.uid) {
-		set(tasksAtom, []);
+		set(categoriesAtom, []);
 		return;
 	}
 

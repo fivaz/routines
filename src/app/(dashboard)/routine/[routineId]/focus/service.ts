@@ -1,5 +1,5 @@
 import { atom } from 'jotai';
-import { Task, tasksAtom } from '@/lib/task/task.type';
+import { Task, tasksAtom, tasksLoadingAtom } from '@/lib/task/task.type';
 import { dateAtom, Session } from '@/lib/session/session.type';
 import {
 	getSessionsDuration,
@@ -8,7 +8,7 @@ import {
 } from '@/lib/session/session.utils';
 import { getCurrentRoutineExpectedTime, getRoutineExpectedTime } from '@/lib/task/task.utils';
 import { atomEffect } from 'jotai-effect';
-import { currentUserAtom } from '@/lib/user/user.type';
+import { authLoadingAtom, currentUserAtom } from '@/lib/user/user.type';
 import { routineIdAtom } from '@/lib/routine/routine.type';
 import { fetchSessionsByDate } from '@/lib/session/session.repository';
 
@@ -84,22 +84,55 @@ export const routineDeltaAtom = atom((get) => {
 export const currentSessionsAtomEffect = atomEffect((get, set) => {
 	const date = get(dateAtom);
 	const tasks = get(tasksAtom);
+	const tasksLoading = get(tasksLoadingAtom);
 	const user = get(currentUserAtom);
+	const authLoading = get(authLoadingAtom);
 	const routineId = get(routineIdAtom);
+	const setSessions = (sessions: Session[]) => set(currentSessionsAtom, sessions);
+	const setLoading = (loading: boolean) => set(loadingCurrentSessionsAtom, loading);
 
-	if (!user?.uid || tasks.length === 0 || !routineId) {
-		set(currentSessionsAtom, []);
-		set(loadingCurrentSessionsAtom, false);
+	// Keep loading true until all dependencies are resolved
+	setLoading(true);
+
+	// Wait for auth to resolve
+	if (authLoading) {
+		return; // Do nothing while user is loading
+	}
+
+	// If no user, no sessions
+	if (!user?.uid) {
+		setSessions([]);
+		setLoading(false);
 		return;
 	}
 
+	// If no routineId, no sessions
+	if (!routineId) {
+		setSessions([]);
+		setLoading(false);
+		return;
+	}
+
+	// Wait for tasks to resolve
+	if (tasksLoading) {
+		return; // Do nothing while tasks are loading
+	}
+
+	// If tasks are loaded but empty, no sessions
+	if (tasks.length === 0) {
+		setSessions([]);
+		setLoading(false);
+		return;
+	}
+
+	// All dependencies are ready, fetch sessions
 	const unsubscribe = fetchSessionsByDate({
 		userId: user.uid,
 		routineId,
 		tasks,
 		date,
-		setSessions: (sessions) => set(currentSessionsAtom, sessions),
-		setLoading: (loading) => set(loadingCurrentSessionsAtom, loading),
+		setSessions,
+		setLoading,
 	});
 
 	return () => unsubscribe();

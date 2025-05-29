@@ -23,3 +23,4 @@ export const emptyTask: Task = {
 export type ImageFocus = 'person' | 'object';
 
 export const tasksAtom = atom<Task[]>([]);
+export const tasksLoadingAtom = atom(false);

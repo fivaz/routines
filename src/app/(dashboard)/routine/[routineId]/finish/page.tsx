@@ -33,17 +33,18 @@ export default function FinishPage() {
 	const expectedTime = getRoutineExpectedTime(tasks);
 
 	useEffect(() => {
-		if (!sessions.length) return;
+		console.log('loading', loading);
+		console.log('sessions', sessions);
+	}, [loading, sessions]);
+
+	useEffect(() => {
+		if (!loading && sessions.length === 0) return;
 
 		const duration = 10 * 1000;
 		const interval = 500;
 		const end = Date.now() + duration;
 
 		const intervalId = setInterval(() => {
-			if (loading) {
-				return;
-			}
-
 			if (Date.now() > end) {
 				clearInterval(intervalId);
 				return;
