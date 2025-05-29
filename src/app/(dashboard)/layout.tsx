@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { routinesAtomEffect } from '@/lib/routine/routine.hooks';
 import { useAtom, useAtomValue } from 'jotai/index';
 import { categoriesAtomEffect } from '@/lib/category/category.hooks';
-import { authLoadingAtom, currentUserAtom } from '@/lib/user/user.type';
+import { currentUserAtom } from '@/lib/user/user.type';
 
 export default function Layout({
 	children,
@@ -14,7 +14,6 @@ export default function Layout({
 	children: ReactNode;
 }>) {
 	const user = useAtomValue(currentUserAtom);
-	const authLoading = useAtomValue(authLoadingAtom);
 
 	useAtom(routinesAtomEffect);
 	useAtom(categoriesAtomEffect);
@@ -22,10 +21,10 @@ export default function Layout({
 	const router = useRouter();
 
 	useEffect(() => {
-		if (!authLoading && !user) {
+		if (!user.loading && !user.data) {
 			void router.push(Routes.LOGIN);
 		}
-	}, [authLoading, router, user]);
+	}, [router, user.data, user.loading]);
 
 	return <Dashboard>{children}</Dashboard>;
 }

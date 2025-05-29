@@ -8,13 +8,13 @@ import {
 } from './task.repository';
 import { ImageFocus, Task, tasksAtom, tasksLoadingAtom } from './task.type';
 import { atomEffect } from 'jotai-effect';
-import { currentUserAtom } from '@/lib/user/user.type';
+import { currentUserDataAtom } from '@/lib/user/user.type';
 import { routineIdAtom } from '@/lib/routine/routine.type';
 import { safeThrow, safeThrowUnauthorized } from '@/lib/error-handle';
 import { useAtomValue } from 'jotai/index';
 
 export const tasksAtomEffect = atomEffect((get, set) => {
-	const user = get(currentUserAtom);
+	const user = get(currentUserDataAtom);
 	const routineId = get(routineIdAtom);
 	const setTasks = (tasks: Task[]) => set(tasksAtom, tasks);
 	const setLoading = (loading: boolean) => set(tasksLoadingAtom, loading);
@@ -36,7 +36,7 @@ export const tasksAtomEffect = atomEffect((get, set) => {
 });
 
 export function useTaskActions(routineId: string) {
-	const user = useAtomValue(currentUserAtom);
+	const user = useAtomValue(currentUserDataAtom);
 
 	async function deleteTask(routineId: string, taskId: string) {
 		if (!user?.uid) {

@@ -2,7 +2,7 @@ import { atom } from 'jotai/index';
 import { Session } from '@/lib/session/session.type';
 import { atomEffect } from 'jotai-effect';
 import { tasksAtom } from '@/lib/task/task.type';
-import { currentUserAtom } from '@/lib/user/user.type';
+import { currentUserDataAtom } from '@/lib/user/user.type';
 import { routineIdAtom } from '@/lib/routine/routine.type';
 import { fetchSessions } from '@/lib/session/session.repository';
 
@@ -13,7 +13,7 @@ export const loadingSessionsAtom = atom(true);
 //sessions of a given routine and tasks
 export const sessionsAtomEffect = atomEffect((get, set) => {
 	const tasks = get(tasksAtom);
-	const user = get(currentUserAtom);
+	const user = get(currentUserDataAtom);
 	const routineId = get(routineIdAtom);
 
 	if (!user?.uid || tasks.length === 0 || !routineId) {

@@ -1,14 +1,14 @@
 import { Field, Label } from '@/components/base/fieldset';
 import { Routine } from '@/lib/routine/routine.type';
 import { ImageDialogButton } from '@/components/ImageDialogButton';
-import { Dispatch, SetStateAction } from 'react';
+import { ChangeEvent, Dispatch, SetStateAction } from 'react';
 import { editRoutine, generateRoutineImage } from '@/lib/routine/routine.repository';
 import { Button } from '@/components/base/button';
 import { ImageIcon } from 'lucide-react';
 import { useBackendStatus } from '@/lib/use-backend-status';
 import { Input } from '@/components/base/input';
 import { useAtomValue } from 'jotai/index';
-import { currentUserAtom } from '@/lib/user/user.type';
+import { currentUserDataAtom } from '@/lib/user/user.type';
 
 export function RoutineImageForm({
 	routineIn,
@@ -21,7 +21,7 @@ export function RoutineImageForm({
 	setImageFile: Dispatch<SetStateAction<File | null>>;
 	close: () => void;
 }) {
-	const user = useAtomValue(currentUserAtom);
+	const user = useAtomValue(currentUserDataAtom);
 	const { status } = useBackendStatus();
 
 	async function handleImageGeneration() {
@@ -40,7 +40,7 @@ export function RoutineImageForm({
 		close();
 	}
 
-	function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+	function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
 		const file = e.target.files?.[0];
 		if (file) {
 			setImageFile(file);

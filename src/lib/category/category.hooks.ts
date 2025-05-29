@@ -8,11 +8,11 @@ import {
 import { categoriesAtom, Category } from './category.type';
 import { safeThrowUnauthorized } from '@/lib/error-handle';
 import { atomEffect } from 'jotai-effect';
-import { currentUserAtom } from '@/lib/user/user.type';
+import { currentUserDataAtom } from '@/lib/user/user.type';
 import { useAtomValue } from 'jotai/index';
 
 export const categoriesAtomEffect = atomEffect((get, set) => {
-	const user = get(currentUserAtom);
+	const user = get(currentUserDataAtom);
 
 	if (!user?.uid) {
 		set(categoriesAtom, []);
@@ -25,7 +25,7 @@ export const categoriesAtomEffect = atomEffect((get, set) => {
 });
 
 export function useCategoryActions() {
-	const user = useAtomValue(currentUserAtom);
+	const user = useAtomValue(currentUserDataAtom);
 
 	async function addCategory(category: Category) {
 		if (!user?.uid) return safeThrowUnauthorized();

@@ -8,11 +8,11 @@ import {
 import { Routine, routinesAtom, routinesLoadingAtom } from '@/lib/routine/routine.type';
 import { safeThrowUnauthorized } from '@/lib/error-handle';
 import { atomEffect } from 'jotai-effect';
-import { currentUserAtom } from '@/lib/user/user.type';
+import { currentUserDataAtom } from '@/lib/user/user.type';
 import { useAtomValue } from 'jotai';
 
 export const routinesAtomEffect = atomEffect((get, set) => {
-	const user = get(currentUserAtom);
+	const user = get(currentUserDataAtom);
 
 	if (!user?.uid) {
 		set(routinesAtom, []);
@@ -35,7 +35,7 @@ export const routinesAtomEffect = atomEffect((get, set) => {
 });
 
 export function useRoutineActions() {
-	const user = useAtomValue(currentUserAtom);
+	const user = useAtomValue(currentUserDataAtom);
 
 	async function deleteRoutine(routineId: string) {
 		if (!user?.uid) return safeThrowUnauthorized();
