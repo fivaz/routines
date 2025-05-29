@@ -2,12 +2,14 @@
 import { useSetAtom } from 'jotai/index';
 import { authLoadingAtom, currentUserAtom } from '@/lib/user/user.type';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { PropsWithChildren, useEffect } from 'react';
 import { getRedirectResult, onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { Routes } from '@/lib/consts';
 
-export function AuthController() {
+type AuthControllerProps = PropsWithChildren;
+
+export function AuthController({ children }: AuthControllerProps) {
 	const setUserAtom = useSetAtom(currentUserAtom);
 	const setLoadingAtom = useSetAtom(authLoadingAtom);
 
@@ -28,5 +30,5 @@ export function AuthController() {
 		return () => unsubscribe();
 	}, [router, setUserAtom, setLoadingAtom]);
 
-	return <></>;
+	return <>{children}</>;
 }
