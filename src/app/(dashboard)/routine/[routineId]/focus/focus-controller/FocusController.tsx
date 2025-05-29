@@ -15,7 +15,7 @@ import {
 	currentTaskSessionsAtom,
 	taskIndexAtom,
 } from '@/app/(dashboard)/routine/[routineId]/focus/service';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { Routes } from '@/lib/consts';
 import { useSessionActions } from '@/lib/session/session.hooks';
 import { usePrompt } from '@/lib/prompt-context';
@@ -35,6 +35,7 @@ export function FocusController() {
 	const sessions = useAtomValue(currentSessionsAtom);
 	const { startSession, endSession, resetSession } = useSessionActions(routineId, task?.id);
 	const { createPrompt } = usePrompt();
+	const router = useRouter();
 
 	const hasNext = taskIndex < tasks.length - 1;
 
@@ -51,7 +52,11 @@ export function FocusController() {
 	};
 
 	const handleNextTask = () => {
-		setTaskIndex((index) => index + 1);
+		if (hasNext) {
+			setTaskIndex((index) => index + 1);
+		} else {
+			router.push(Routes.FINISH(routineId));
+		}
 	};
 
 	const handleStart = () => {
