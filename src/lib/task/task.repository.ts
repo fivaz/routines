@@ -302,7 +302,7 @@ async function deleteImage(userId: string, routineId: string, taskId: string) {
 	}
 }
 
-export async function updateTasks(userId: string, routineId: string, tasks: Task[]) {
+export async function updateTasksOrder(userId: string, routineId: string, tasks: Task[]) {
 	const batch = writeBatch(db);
 
 	tasks.forEach((task, index) => {

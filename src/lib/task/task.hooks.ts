@@ -4,7 +4,7 @@ import {
 	editTask as editTaskRepo,
 	fetchTasks,
 	generateTaskImage as generateTaskImageRepo,
-	updateTasks as updateTasksRepo,
+	updateTasksOrder as updateTasksRepo,
 } from './task.repository';
 import { ImageFocus, Task, tasksAtom } from './task.type';
 import { atomEffect } from 'jotai-effect';
