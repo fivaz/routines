@@ -32,7 +32,7 @@ export function FocusController() {
 	const runningSession = currentTaskSessions.find((session) => session.endAt === '');
 
 	const { routineId } = useParams<{ routineId: string }>();
-	const sessions = useAtomValue(currentSessionsAtom);
+	const { data: sessions } = useAtomValue(currentSessionsAtom);
 	const { startSession, endSession, resetSession } = useSessionActions(routineId, task?.id);
 	const { createPrompt } = usePrompt();
 	const router = useRouter();

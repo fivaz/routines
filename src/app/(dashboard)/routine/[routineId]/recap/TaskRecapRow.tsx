@@ -8,7 +8,7 @@ import { useAtomValue } from 'jotai/index';
 import { currentSessionsAtom } from '@/app/(dashboard)/routine/[routineId]/focus/service';
 
 export function TaskRecapRow({ task }: { task: Task }) {
-	const sessions = useAtomValue(currentSessionsAtom);
+	const { data: sessions } = useAtomValue(currentSessionsAtom);
 	return (
 		<li className="flex justify-between py-2">
 			<div className="flex w-2/4 items-center gap-2 truncate">
@@ -47,7 +47,7 @@ export function TaskRecapRow({ task }: { task: Task }) {
 }
 
 function DeltaIcon({ task }: { task: Task }) {
-	const sessions = useAtomValue(currentSessionsAtom);
+	const { data: sessions } = useAtomValue(currentSessionsAtom);
 	const expectedTime = task.durationInSeconds;
 	const actualTime = getDurationFromDate(task, sessions);
 

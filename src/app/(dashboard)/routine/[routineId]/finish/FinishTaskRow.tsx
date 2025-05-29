@@ -21,7 +21,7 @@ export function FinishTaskList({ tasks, today }: { today: string; tasks: Task[] 
 
 function FinishTaskRow({ task, index }: { index: number; task: Task; date: string }) {
 	const expectedTime = task.durationInSeconds;
-	const sessions = useAtomValue(currentSessionsAtom);
+	const { data: sessions } = useAtomValue(currentSessionsAtom);
 	const actualTime = getDurationFromDate(task, sessions);
 	const deltaTime = expectedTime - actualTime;
 

@@ -16,14 +16,12 @@ export function fetchSessionsByDate({
 	tasks,
 	date,
 	setSessions,
-	setLoading,
 }: {
 	userId: string;
 	routineId: string;
 	tasks: Task[];
 	date: string;
-	setSessions: (sessions: Session[]) => void;
-	setLoading: (loading: boolean) => void;
+	setSessions: (data: Session[], loading: boolean) => void;
 }) {
 	const q = query(
 		collection(db, getSessionPath(userId, routineId)),
@@ -41,8 +39,7 @@ export function fetchSessionsByDate({
 			sessions.push({ ...doc.data(), id: doc.id } as Session);
 		});
 
-		setSessions(sessions);
-		setLoading(false);
+		setSessions(sessions, false);
 	});
 }
 

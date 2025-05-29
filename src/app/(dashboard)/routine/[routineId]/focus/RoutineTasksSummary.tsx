@@ -1,5 +1,5 @@
 import { Skeleton } from '@/components/Skeleton';
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import {
 	currentSessionsAtom,
 	taskIndexAtom,
@@ -8,8 +8,8 @@ import { tasksAtom } from '@/lib/task/task.type';
 import { getTaskSessions } from '@/lib/session/session.utils';
 
 export function RoutineTasksSummary() {
-	const [tasks] = useAtom(tasksAtom);
-	const [sessions] = useAtom(currentSessionsAtom);
+	const tasks = useAtomValue(tasksAtom);
+	const { data: sessions } = useAtomValue(currentSessionsAtom);
 	const [currentIndex, setTaskIndex] = useAtom(taskIndexAtom);
 
 	const hasSession = (index: number) => !!getTaskSessions(sessions, tasks[index]?.id).length;

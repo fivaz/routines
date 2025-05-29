@@ -23,13 +23,15 @@ export const currentTaskAtom = atom<Task | undefined>((get) => {
 });
 
 // sessions of the current task
-export const currentSessionsAtom = atom<Session[]>([]);
-export const loadingCurrentSessionsAtom = atom(true);
+export const currentSessionsAtom = atom<{ data: Session[]; loading: boolean }>({
+	data: [],
+	loading: false,
+});
 
 export const currentTaskSessionsAtom = atom((get) => {
 	const task = get(currentTaskAtom);
 	const sessions = get(currentSessionsAtom);
-	return getTaskSessions(sessions, task?.id);
+	return getTaskSessions(sessions.data, task?.id);
 });
 
 // variable to control the update of the time in the focus page
@@ -57,14 +59,14 @@ export const currentElapsedTimeAtom = atom((get) => {
 export const totalElapsedTimeAtom = atom((get) => {
 	get(tickAtom); // re-eval every second
 
-	const sessions = get(currentSessionsAtom);
+	const { data: sessions } = get(currentSessionsAtom);
 	return getTotalElapsedTime(sessions);
 });
 
 // difference between the expected time for the routine, and the current time spent, based only on the current tasks accomplished
 export const currentRoutineDeltaAtom = atom((get) => {
 	const totalElapsed = get(totalElapsedTimeAtom);
-	const sessions = get(currentSessionsAtom);
+	const { data: sessions } = get(currentSessionsAtom);
 	const tasks = get(tasksAtom);
 	const expectedTotal = getCurrentRoutineExpectedTime(tasks, sessions);
 	return totalElapsed - expectedTotal;
@@ -88,11 +90,11 @@ export const currentSessionsAtomEffect = atomEffect((get, set) => {
 	const user = get(currentUserAtom);
 	const authLoading = get(authLoadingAtom);
 	const routineId = get(routineIdAtom);
-	const setSessions = (sessions: Session[]) => set(currentSessionsAtom, sessions);
-	const setLoading = (loading: boolean) => set(loadingCurrentSessionsAtom, loading);
+	const setSessions = (data: Session[], loading: boolean) =>
+		set(currentSessionsAtom, { data, loading });
 
 	// Keep loading true until all dependencies are resolved
-	setLoading(true);
+	setSessions([], true);
 
 	// Wait for auth to resolve
 	if (authLoading) {
@@ -101,15 +103,13 @@ export const currentSessionsAtomEffect = atomEffect((get, set) => {
 
 	// If no user, no sessions
 	if (!user?.uid) {
-		setSessions([]);
-		setLoading(false);
+		setSessions([], false);
 		return;
 	}
 
 	// If no routineId, no sessions
 	if (!routineId) {
-		setSessions([]);
-		setLoading(false);
+		setSessions([], false);
 		return;
 	}
 
@@ -120,8 +120,7 @@ export const currentSessionsAtomEffect = atomEffect((get, set) => {
 
 	// If tasks are loaded but empty, no sessions
 	if (tasks.length === 0) {
-		setSessions([]);
-		setLoading(false);
+		setSessions([], false);
 		return;
 	}
 
@@ -132,7 +131,6 @@ export const currentSessionsAtomEffect = atomEffect((get, set) => {
 		tasks,
 		date,
 		setSessions,
-		setLoading,
 	});
 
 	return () => unsubscribe();

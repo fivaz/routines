@@ -12,7 +12,6 @@ import { useAtomValue } from 'jotai';
 import { tasksAtom } from '@/lib/task/task.type';
 import {
 	currentSessionsAtom,
-	loadingCurrentSessionsAtom,
 	routineDeltaAtom,
 	totalElapsedTimeAtom,
 } from '@/app/(dashboard)/routine/[routineId]/focus/service';
@@ -26,19 +25,12 @@ export default function FinishPage() {
 	const routineId = useAtomValue(routineIdAtom);
 	const tasks = useAtomValue(tasksAtom);
 	const sessions = useAtomValue(currentSessionsAtom);
-	const loading = useAtomValue(loadingCurrentSessionsAtom);
-	// const loading = true;
 	const totalElapsedTime = useAtomValue(totalElapsedTimeAtom);
 	const routineDelta = useAtomValue(routineDeltaAtom);
 	const expectedTime = getRoutineExpectedTime(tasks);
 
 	useEffect(() => {
-		console.log('loading', loading);
-		console.log('sessions', sessions);
-	}, [loading, sessions]);
-
-	useEffect(() => {
-		if (!loading && sessions.length === 0) return;
+		if (!sessions.loading && sessions.data.length === 0) return;
 
 		const duration = 10 * 1000;
 		const interval = 500;
@@ -68,9 +60,9 @@ export default function FinishPage() {
 		}, interval);
 
 		return () => clearInterval(intervalId);
-	}, [loading, sessions.length]);
+	}, [sessions]);
 
-	if (!loading && sessions.length === 0) {
+	if (!sessions.loading && sessions.data.length === 0) {
 		return <EmptyFinishPage />;
 	}
 
@@ -87,21 +79,21 @@ export default function FinishPage() {
 					<Heading className="pb-5">Congratulations!</Heading>
 
 					<span className="text-lg font-semibold text-black dark:text-white">Your time:</span>
-					<LoadingText loading={loading}>
+					<LoadingText loading={sessions.loading}>
 						<span className="text-3xl font-semibold text-red-500">
 							{formatSeconds(totalElapsedTime)}
 						</span>
 					</LoadingText>
 
 					<span className="text-lg font-semibold text-black dark:text-white">Time expected:</span>
-					<LoadingText loading={loading}>
+					<LoadingText loading={sessions.loading}>
 						<span className="text-lg font-semibold text-black dark:text-white">
 							{formatSeconds(expectedTime)}
 						</span>
 					</LoadingText>
 
 					<span className="text-lg font-semibold text-black dark:text-white">Difference:</span>
-					<LoadingText loading={loading}>
+					<LoadingText loading={sessions.loading}>
 						<span
 							className={clsx(
 								'text-lg font-semibold',
@@ -114,7 +106,11 @@ export default function FinishPage() {
 				</div>
 			</div>
 
-			{loading ? <FinishTaskListSkeleton /> : <FinishTaskList today={today} tasks={tasks} />}
+			{sessions.loading ? (
+				<FinishTaskListSkeleton />
+			) : (
+				<FinishTaskList today={today} tasks={tasks} />
+			)}
 		</div>
 	);
 }
