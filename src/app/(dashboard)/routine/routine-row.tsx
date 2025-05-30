@@ -2,11 +2,11 @@ import type { MouseEvent, PropsWithChildren } from 'react';
 import type { Routine } from '@/lib/routine/routine.type';
 
 import { Routes } from '@/lib/consts';
-import Link from 'next/link';
 import { useSortable } from '@dnd-kit/react/sortable';
 import { GripVerticalIcon } from 'lucide-react';
 import { Button } from '@/components/base/button';
 import { ImageWaitingSkeleton } from '@/components/task/ImageWaitingSkeleton';
+import { Link } from '@/components/base/link';
 
 export function RoutineRow({
 	routine,

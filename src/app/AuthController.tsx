@@ -14,9 +14,8 @@ export function AuthController({ children }: AuthControllerProps) {
 
 	const router = useRouterWithQuery();
 
-	setUserAtom({ data: null, loading: true });
-
 	useEffect(() => {
+		setUserAtom({ data: null, loading: true });
 		getRedirectResult(auth).then((result) => {
 			if (result) {
 				void router.push(Routes.ROOT);
