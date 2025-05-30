@@ -8,7 +8,7 @@ import {
 } from '@/lib/session/session.utils';
 import { getCurrentRoutineExpectedTime, getRoutineExpectedTime } from '@/lib/task/task.utils';
 import { atomEffect } from 'jotai-effect';
-import { currentUserAtom } from '@/lib/user/user.type';
+import { currentUserAtom, loadingAuthAtom } from '@/lib/user/user.type';
 import { routineIdAtom } from '@/lib/routine/routine.type';
 import { fetchSessionsByDate } from '@/lib/session/session.repository';
 
@@ -88,6 +88,7 @@ export const currentSessionsAtomEffect = atomEffect((get, set) => {
 	const tasks = get(tasksAtom);
 	const tasksLoading = get(tasksLoadingAtom);
 	const user = get(currentUserAtom);
+	const userLoading = get(loadingAuthAtom);
 	const routineId = get(routineIdAtom);
 	const setSessions = (data: Session[], loading: boolean) =>
 		set(currentSessionsAtom, { data, loading });
@@ -96,12 +97,12 @@ export const currentSessionsAtomEffect = atomEffect((get, set) => {
 	setSessions([], true);
 
 	// Wait for auth to resolve
-	if (user.loading) {
+	if (userLoading) {
 		return; // Do nothing while user is loading
 	}
 
 	// If no user, no sessions
-	if (!user.data?.uid) {
+	if (!user?.uid) {
 		setSessions([], false);
 		return;
 	}
@@ -125,7 +126,7 @@ export const currentSessionsAtomEffect = atomEffect((get, set) => {
 
 	// All dependencies are ready, fetch sessions
 	const unsubscribe = fetchSessionsByDate({
-		userId: user.data.uid,
+		userId: user.uid,
 		routineId,
 		tasks,
 		date,

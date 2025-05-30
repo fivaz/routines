@@ -1,15 +1,22 @@
-import { ImageIcon } from 'lucide-react';
+import { FastForwardIcon, ImageIcon } from 'lucide-react';
 import Image from 'next/image';
 
-import { useAtom } from 'jotai';
+import { useAtomValue } from 'jotai';
 import {
 	currentTaskAtom,
 	taskIndexAtom,
 } from '@/app/(dashboard)/routine/[routineId]/focus/service';
+import { useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
 
 export function TaskImage() {
-	const [task] = useAtom(currentTaskAtom);
-	const [taskIndex] = useAtom(taskIndexAtom);
+	const task = useAtomValue(currentTaskAtom);
+	const taskIndex = useAtomValue(taskIndexAtom);
+	const searchParams = useSearchParams();
+
+	useEffect(() => {
+		console.log(searchParams.has('recording'));
+	}, [searchParams]);
 
 	if (!task) {
 		return (
@@ -22,7 +29,9 @@ export function TaskImage() {
 	}
 
 	return (
-		<div className="flex aspect-square items-center justify-center self-center overflow-hidden">
+		<div className="relative flex aspect-square items-center justify-center self-center overflow-hidden">
+			{searchParams.has('recording') && <FastForwardIcon className="absolute top-0 left-0 p-7" />}
+
 			{task.image ? (
 				<Image
 					src={task.image}

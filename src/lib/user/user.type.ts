@@ -1,9 +1,6 @@
 import { atom } from 'jotai';
 import { User } from 'firebase/auth';
 
-export const currentUserAtom = atom<{ data: User | null; loading: boolean }>({
-	data: null,
-	loading: false,
-});
+export const currentUserAtom = atom<User | null>(null);
 
-export const currentUserDataAtom = atom((get) => get(currentUserAtom).data);
+export const loadingAuthAtom = atom(true);

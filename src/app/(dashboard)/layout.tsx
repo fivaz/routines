@@ -5,7 +5,7 @@ import { Routes } from '@/lib/consts';
 import { routinesAtomEffect } from '@/lib/routine/routine.hooks';
 import { useAtom, useAtomValue } from 'jotai/index';
 import { categoriesAtomEffect } from '@/lib/category/category.hooks';
-import { currentUserAtom } from '@/lib/user/user.type';
+import { currentUserAtom, loadingAuthAtom } from '@/lib/user/user.type';
 import useRouterWithQuery from '@/lib/utils.hook';
 
 export default function Layout({
@@ -14,6 +14,7 @@ export default function Layout({
 	children: ReactNode;
 }>) {
 	const user = useAtomValue(currentUserAtom);
+	const loading = useAtomValue(loadingAuthAtom);
 
 	useAtom(routinesAtomEffect);
 	useAtom(categoriesAtomEffect);
@@ -21,10 +22,10 @@ export default function Layout({
 	const router = useRouterWithQuery();
 
 	useEffect(() => {
-		if (!user.loading && !user.data) {
+		if (!loading && !user) {
 			void router.push(Routes.LOGIN);
 		}
-	}, [router, user.data, user.loading]);
+	}, [router, user, loading]);
 
 	return <Dashboard>{children}</Dashboard>;
 }

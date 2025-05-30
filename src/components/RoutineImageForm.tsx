@@ -8,7 +8,7 @@ import { ImageIcon } from 'lucide-react';
 import { useBackendStatus } from '@/lib/use-backend-status';
 import { Input } from '@/components/base/input';
 import { useAtomValue } from 'jotai/index';
-import { currentUserDataAtom } from '@/lib/user/user.type';
+import { currentUserAtom } from '@/lib/user/user.type';
 
 export function RoutineImageForm({
 	routineIn,
@@ -21,7 +21,7 @@ export function RoutineImageForm({
 	setImageFile: Dispatch<SetStateAction<File | null>>;
 	close: () => void;
 }) {
-	const user = useAtomValue(currentUserDataAtom);
+	const user = useAtomValue(currentUserAtom);
 	const { status } = useBackendStatus();
 
 	async function handleImageGeneration() {

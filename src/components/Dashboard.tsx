@@ -34,7 +34,7 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 import { BackEndStatus } from '@/components/BackEndStatus';
 import { Tooltip } from '@/components/base/tooltip';
 import { useAtomValue } from 'jotai/index';
-import { currentUserDataAtom } from '@/lib/user/user.type';
+import { currentUserAtom } from '@/lib/user/user.type';
 import { PropsWithChildren } from 'react';
 
 const navItems = [
@@ -43,7 +43,7 @@ const navItems = [
 ];
 
 export function Dashboard({ children }: PropsWithChildren) {
-	const user = useAtomValue(currentUserDataAtom);
+	const user = useAtomValue(currentUserAtom);
 	const router = useRouterWithQuery();
 
 	async function handleSignOut() {

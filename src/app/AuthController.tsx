@@ -1,6 +1,6 @@
 'use client';
-import { useSetAtom } from 'jotai/index';
-import { currentUserAtom } from '@/lib/user/user.type';
+import { useSetAtom } from 'jotai';
+import { currentUserAtom, loadingAuthAtom } from '@/lib/user/user.type';
 import { PropsWithChildren, useEffect } from 'react';
 import { getRedirectResult, onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
@@ -10,12 +10,13 @@ import useRouterWithQuery from '@/lib/utils.hook';
 type AuthControllerProps = PropsWithChildren;
 
 export function AuthController({ children }: AuthControllerProps) {
-	const setUserAtom = useSetAtom(currentUserAtom);
+	const setUser = useSetAtom(currentUserAtom);
+	const setLoading = useSetAtom(loadingAuthAtom);
 
 	const router = useRouterWithQuery();
 
 	useEffect(() => {
-		setUserAtom({ data: null, loading: true });
+		setLoading(true);
 		getRedirectResult(auth).then((result) => {
 			if (result) {
 				void router.push(Routes.ROOT);
@@ -23,11 +24,12 @@ export function AuthController({ children }: AuthControllerProps) {
 		});
 
 		const unsubscribe = onAuthStateChanged(auth, (user) => {
-			setUserAtom({ data: user, loading: false });
+			setUser(user);
+			setLoading(false);
 		});
 
 		return () => unsubscribe();
-	}, [router, setUserAtom]);
+	}, [router, setLoading, setUser]);
 
 	return <>{children}</>;
 }

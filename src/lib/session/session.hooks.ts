@@ -6,10 +6,10 @@ import {
 import { Session } from '@/lib/session/session.type';
 import { NonEmptyArray, safeThrow, safeThrowUnauthorized } from '@/lib/error-handle';
 import { useAtomValue } from 'jotai/index';
-import { currentUserDataAtom } from '@/lib/user/user.type';
+import { currentUserAtom } from '@/lib/user/user.type';
 
 export function useSessionActions(routineId?: string, taskId?: string) {
-	const user = useAtomValue(currentUserDataAtom);
+	const user = useAtomValue(currentUserAtom);
 
 	function startSession() {
 		if (!user?.uid) return safeThrowUnauthorized();
