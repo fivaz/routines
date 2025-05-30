@@ -15,12 +15,14 @@ import {
 	currentTaskSessionsAtom,
 	taskIndexAtom,
 } from '@/app/(dashboard)/routine/[routineId]/focus/service';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { Routes } from '@/lib/consts';
 import { useSessionActions } from '@/lib/session/session.hooks';
 import { usePrompt } from '@/lib/prompt-context';
 import { tasksAtom } from '@/lib/task/task.type';
 import { ContinueIcon } from '@/components/icons/ContinueIcon';
+import useRouterWithQuery from '@/lib/utils.hook';
+import { Link } from '@/components/base/link';
 
 export function FocusController() {
 	const task = useAtomValue(currentTaskAtom);
@@ -35,7 +37,7 @@ export function FocusController() {
 	const { data: sessions } = useAtomValue(currentSessionsAtom);
 	const { startSession, endSession, resetSession } = useSessionActions(routineId, task?.id);
 	const { createPrompt } = usePrompt();
-	const router = useRouter();
+	const router = useRouterWithQuery();
 
 	const hasNext = taskIndex < tasks.length - 1;
 
@@ -149,9 +151,12 @@ export function FocusController() {
 						</button>
 					) : (
 						sessions.length > 0 && (
-							<a className="flex grow items-center justify-center" href={Routes.FINISH(routineId)}>
+							<Link
+								className="flex grow items-center justify-center"
+								href={Routes.FINISH(routineId)}
+							>
 								<ChevronsRightIcon className="size-7" />
-							</a>
+							</Link>
 						)
 					)}
 				</div>

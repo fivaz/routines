@@ -6,7 +6,6 @@ import { GithubIcon } from '@/components/icons/GithubIcon';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { Routes } from '@/lib/consts';
-import { useRouter } from 'next/navigation';
 import { ChangeEvent, useMemo, useState } from 'react';
 import { parseErrors, register, validateFields } from '../login/service';
 import { minidenticon } from 'minidenticons';
@@ -14,9 +13,10 @@ import { Banner } from '@/components/base/banner';
 import { Button } from '@/components/base/button';
 import Image from 'next/image';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import useRouterWithQuery from '@/lib/utils.hook';
 
 export default function RegisterPage() {
-	const router = useRouter();
+	const router = useRouterWithQuery();
 	const [name, setName] = useState('');
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');

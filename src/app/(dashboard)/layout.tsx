@@ -2,11 +2,11 @@
 import { Dashboard } from '@/components/Dashboard';
 import { ReactNode, useEffect } from 'react';
 import { Routes } from '@/lib/consts';
-import { useRouter } from 'next/navigation';
 import { routinesAtomEffect } from '@/lib/routine/routine.hooks';
 import { useAtom, useAtomValue } from 'jotai/index';
 import { categoriesAtomEffect } from '@/lib/category/category.hooks';
 import { currentUserAtom } from '@/lib/user/user.type';
+import useRouterWithQuery from '@/lib/utils.hook';
 
 export default function Layout({
 	children,
@@ -18,7 +18,7 @@ export default function Layout({
 	useAtom(routinesAtomEffect);
 	useAtom(categoriesAtomEffect);
 
-	const router = useRouter();
+	const router = useRouterWithQuery();
 
 	useEffect(() => {
 		if (!user.loading && !user.data) {

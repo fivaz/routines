@@ -1,5 +1,6 @@
 'use client';
 import { Avatar } from '@/components/base/avatar';
+import useRouterWithQuery from '@/lib/utils.hook';
 import {
 	Dropdown,
 	DropdownButton,
@@ -28,7 +29,6 @@ import { ArrowRightStartOnRectangleIcon, UserIcon } from '@heroicons/react/16/so
 import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { APP_NAME, Routes } from '@/lib/consts';
-import { useRouter } from 'next/navigation';
 import { Logo } from '@/components/Logo';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { BackEndStatus } from '@/components/BackEndStatus';
@@ -44,7 +44,7 @@ const navItems = [
 
 export function Dashboard({ children }: PropsWithChildren) {
 	const user = useAtomValue(currentUserDataAtom);
-	const router = useRouter();
+	const router = useRouterWithQuery();
 
 	async function handleSignOut() {
 		await signOut(auth);

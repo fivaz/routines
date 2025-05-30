@@ -2,7 +2,6 @@
 import { FormEvent, useEffect, useState } from 'react';
 import { parseErrors, validateFields } from './service';
 import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
-import { useRouter } from 'next/navigation';
 import { auth } from '@/lib/firebase';
 import { Routes } from '@/lib/consts';
 import { GithubIcon } from '@/components/icons/GithubIcon';
@@ -13,12 +12,13 @@ import { Button } from '@/components/base/button';
 import { Banner } from '@/components/base/banner';
 import Link from 'next/link';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import useRouterWithQuery from '@/lib/utils.hook';
 
 export default function Login() {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [errorMessage, setErrorMessage] = useState('');
-	const router = useRouter();
+	const router = useRouterWithQuery();
 
 	const [isDisabled, setIsDisabled] = useState(false);
 

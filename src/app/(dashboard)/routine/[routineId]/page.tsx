@@ -1,9 +1,10 @@
 'use client';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { type Routine, routineAtom } from '@/lib/routine/routine.type';
 import { Dropdown, DropdownButton, DropdownItem, DropdownMenu } from '@/components/base/dropdown';
 import { ChartLineIcon, Ellipsis, LoaderCircleIcon, PlusIcon, TimerIcon } from 'lucide-react';
 import { Routes } from '@/lib/consts';
+import useRouterWithQuery from '@/lib/utils.hook';
 import { TaskRow } from '@/components/task/task-row';
 import { emptyTask, Task, tasksAtom } from '@/lib/task/task.type';
 import { Button } from '@/components/base/button';
@@ -14,6 +15,7 @@ import { useRoutineActions } from '@/lib/routine/routine.hooks';
 import { Heading } from '@/components/base/heading';
 import { Text } from '@/components/base/text';
 import { DragDropProvider } from '@dnd-kit/react';
+
 import { formatSeconds, getRoutineExpectedTime } from '@/lib/task/task.utils';
 import { useBackendStatus } from '@/lib/use-backend-status';
 import { useState } from 'react';
@@ -35,7 +37,7 @@ export default function RoutinePage() {
 	const { createPrompt } = usePrompt();
 	const { deleteRoutine } = useRoutineActions();
 	const { updateTasks } = useTaskActions(routineId);
-	const router = useRouter();
+	const router = useRouterWithQuery();
 
 	function handleEdit() {
 		if (!routine) return;
