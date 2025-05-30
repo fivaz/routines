@@ -13,12 +13,12 @@ export function BackEndStatus({}) {
 		},
 		error: {
 			color: 'fill-red-500',
-			label: 'server is down',
+			label: 'server is off',
 			message: 'The server encountered an error and is unavailable.',
 		},
 		success: {
 			color: 'fill-green-500',
-			label: 'server is running',
+			label: 'server is on',
 			message: 'The server is up and running smoothly.',
 		},
 		'no-balance': {
@@ -37,7 +37,7 @@ export function BackEndStatus({}) {
 
 	return (
 		<Tooltip text={currentStatus.message}>
-			<span className="inline-flex items-center gap-x-1.5 rounded-md px-2 py-1 text-xs font-medium dark:text-white text-gray-900 ring-1 dark:ring-gray-800 ring-gray-200 ring-inset">
+			<span className="inline-flex items-center gap-x-1.5 rounded-md px-2 py-1 text-xs font-medium text-gray-900 ring-1 ring-gray-200 ring-inset dark:text-white dark:ring-gray-800">
 				<svg viewBox="0 0 6 6" aria-hidden="true" className={clsx('size-1.5', currentStatus.color)}>
 					<circle r={3} cx={3} cy={3} />
 				</svg>
