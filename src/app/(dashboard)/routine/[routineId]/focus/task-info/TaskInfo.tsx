@@ -35,7 +35,7 @@ export function TaskInfo() {
 		<div className="flex w-full flex-col gap-4">
 			<div className="gap-2">
 				<div className="flex justify-between">
-					<h2 className="text-xl font-bold text-green-600 first-letter:capitalize dark:text-green-500">
+					<h2 className="truncate text-xl font-bold text-green-600 first-letter:capitalize dark:text-green-500">
 						{task.name}
 					</h2>
 					<RoutineStatus />

@@ -21,7 +21,12 @@ export default function RoutineStatus() {
 	};
 
 	return (
-		<div className={clsx('flex items-center gap-2', isLate ? 'text-red-500' : 'text-green-500')}>
+		<div
+			className={clsx(
+				'flex shrink-0 items-center gap-2',
+				isLate ? 'text-red-500' : 'text-green-500',
+			)}
+		>
 			<span className="text-sm">{formatSeconds(Math.abs(routineTimeDelta))}</span>
 			<StatusIcon />
 		</div>
