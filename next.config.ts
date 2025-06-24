@@ -30,6 +30,11 @@ const nextConfig: NextConfig = {
 				hostname: 'img.recraft.ai',
 				pathname: '/**',
 			},
+			{
+				protocol: 'https',
+				hostname: 'lh3.googleusercontent.com',
+				pathname: '/**',
+			},
 		],
 	},
 };
