@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# RoutineMaster — Frontend 🕒
 
-## Getting Started
+**Turn Habits into Flow**
 
-First, run the development server:
+RoutineMaster is a productivity-focused mobile web application designed to help users build focus-driven routines.  
+⚠️ **Note:** This repository contains the **frontend only**. The backend API is hosted in a separate repository: [RoutineMaster Backend](https://github.com/fivaz/routines-backend).
 
+It combines countdowns, real-time tracking, and AI-generated visuals to make daily routines engaging and effective.
+
+---
+
+## 🚀 Tech Stack (Frontend)
+
+- **Framework:** Next.js, TypeScript
+- **Styling:** Tailwind CSS
+- **Progressive Web App:** PWA support
+- **Cloud Integration:** Firebase (Firestore + Firestorage)
+- **Testing & Documentation:** Storybook
+- **Deployment:** CI/CD pipelines via GitHub Actions, containerized with Docker
+
+---
+
+## ✨ Core Features
+
+- ⏱ **Countdown per Task** — Stay focused with time-bound tasks
+- 🔄 **Real-time Updates** — Powered by Firestore listeners
+- 🎨 **AI-generated Visuals** — Each task comes with unique imagery (via backend API)
+- 📊 **Performance Graphs** — Track and analyze your progress over time
+- ⚡ **CI/CD Ready** — Integrates with GitHub Actions & Docker pipelines
+- 🛡 **Error Monitoring** — Frontend errors tracked via Sentry
+
+---
+
+## 📸 Screenshots
+
+![Mobile Dark](/public/screenshots/mobile-dark.png)
+
+## How it Works
+![Internal Diagram](/public/screenshots/diagram.png)
+
+---
+
+## Installation (Frontend Only)
+
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+git clone https://github.com/fivaz/routines.git
+cd routines
