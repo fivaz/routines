@@ -2,18 +2,12 @@
 
 import * as Headless from '@headlessui/react';
 import NextLink, { type LinkProps } from 'next/link';
-import React, { forwardRef } from 'react';
-import { useSearchParams } from 'next/navigation';
+import React, { forwardRef, useMemo } from 'react';
 
-// preserve query params across page change
-function appendQueryParams(
-	href: LinkProps['href'],
-	searchParams: URLSearchParams,
-): LinkProps['href'] {
+function appendQueryParams(href: LinkProps['href'], queryString: string): LinkProps['href'] {
+	if (!queryString) return href;
+
 	if (typeof href === 'string') {
-		const queryString = searchParams.toString();
-		if (!queryString) return href;
-
 		const separator = href.includes('?') ? '&' : '?';
 		return `${href}${separator}${queryString}`;
 	}
@@ -23,7 +17,7 @@ function appendQueryParams(
 
 	const mergedQuery = {
 		...originalQuery,
-		...Object.fromEntries(searchParams.entries()),
+		...Object.fromEntries(new URLSearchParams(queryString).entries()),
 	};
 
 	return {
@@ -36,8 +30,13 @@ export const Link = forwardRef(function Link(
 	props: LinkProps & React.ComponentPropsWithoutRef<'a'>,
 	ref: React.ForwardedRef<HTMLAnchorElement>,
 ) {
-	const searchParams = useSearchParams();
-	const finalHref = appendQueryParams(props.href, searchParams);
+	// Grab current query string once on the client
+	const queryString = useMemo(() => {
+		if (typeof window === 'undefined') return '';
+		return window.location.search.slice(1); // drop leading "?"
+	}, []);
+
+	const finalHref = appendQueryParams(props.href, queryString);
 
 	return (
 		<Headless.DataInteractive>
