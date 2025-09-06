@@ -4,7 +4,7 @@ export const Routes = {
 	REGISTER: '/register',
 	CATEGORIES: '/categories',
 	ROUTINE: (routineId: string) => `/routine/${routineId}`,
-	FOCUS: (routineId: string) => `/routine/${routineId}/focus`,
+	FOCUS: (routineId: string, taskIndex: number) => `/routine/${routineId}/focus?index=${taskIndex}`,
 	RECAP: (routineId: string) => `/routine/${routineId}/recap`,
 	FINISH: (routineId: string) => `/routine/${routineId}/finish`,
 };

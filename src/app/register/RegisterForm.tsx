@@ -9,7 +9,7 @@ import { Input } from '@/components/base/input';
 import { Field, Label } from '@/components/base/fieldset';
 import { GoogleIcon } from '@/components/icons/GoogleIcon';
 import { FormEvent, useEffect, useMemo, useState } from 'react';
-import useRouterWithQuery from '@/lib/utils.hook';
+import { useRouter } from 'next/navigation';
 import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { parseErrors, register, validateFields } from '@/app/login/service';
@@ -21,7 +21,7 @@ export function RegisterForm() {
 	const [name, setName] = useState('');
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const router = useRouterWithQuery();
+	const router = useRouter();
 
 	const [isDisabled, setIsDisabled] = useState(false);
 

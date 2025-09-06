@@ -23,7 +23,7 @@ import { useRoutineActions } from '@/lib/routine/routine.hooks';
 import { useCategoryActions } from '@/lib/category/category.hooks';
 import { RoutineListSkeleton } from '@/app/(dashboard)/RoutineListSkeleton';
 import { activeSessionAtom } from '@/app/(dashboard)/service';
-import useRouterWithQuery from '@/lib/utils.hook';
+import { useRouter } from 'next/navigation';
 import { Routes } from '@/lib/consts';
 import { taskIndexAtom } from '@/app/(dashboard)/routine/[routineId]/focus/service';
 import { useParams } from 'next/navigation';

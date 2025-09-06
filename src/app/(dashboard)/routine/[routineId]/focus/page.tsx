@@ -7,13 +7,14 @@ import { FocusController } from '@/app/(dashboard)/routine/[routineId]/focus/foc
 import { useAtomValue, useSetAtom } from 'jotai';
 import { dateAtom } from '@/lib/session/session.type';
 import { getToday } from '@/lib/session/session.utils';
-import { resetTaskIndexOnRoutineChangeEffect } from '@/app/(dashboard)/routine/[routineId]/focus/service';
+import { taskIndexAtom } from '@/app/(dashboard)/routine/[routineId]/focus/service';
 
 export default function RoutineFocusPage() {
 	const setDate = useSetAtom(dateAtom);
 	setDate(getToday());
-	// Mount effect to reset the task index whenever routineId changes
-	useAtomValue(resetTaskIndexOnRoutineChangeEffect);
+
+	const setTaskIndex = useSetAtom(taskIndexAtom);
+	setTaskIndex(0);
 
 	return (
 		<div className="flex h-full flex-col justify-between gap-5 md:h-[calc(100vh-136px)]">

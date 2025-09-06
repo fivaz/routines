@@ -1,6 +1,6 @@
 'use client';
 import { Avatar } from '@/components/base/avatar';
-import useRouterWithQuery from '@/lib/utils.hook';
+import { useRouter } from 'next/navigation';
 import {
 	Dropdown,
 	DropdownButton,
@@ -44,7 +44,7 @@ const navItems = [
 
 export function Dashboard({ children }: PropsWithChildren) {
 	const user = useAtomValue(currentUserAtom);
-	const router = useRouterWithQuery();
+	const router = useRouter();
 
 	async function handleSignOut() {
 		await signOut(auth);

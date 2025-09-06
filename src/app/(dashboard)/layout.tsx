@@ -6,7 +6,7 @@ import { routinesAtomEffect } from '@/lib/routine/routine.hooks';
 import { useAtom, useAtomValue } from 'jotai/index';
 import { categoriesAtomEffect } from '@/lib/category/category.hooks';
 import { currentUserAtom, loadingAuthAtom } from '@/lib/user/user.type';
-import useRouterWithQuery from '@/lib/utils.hook';
+import { useRouter } from 'next/navigation';
 
 export default function Layout({
 	children,
@@ -19,7 +19,7 @@ export default function Layout({
 	useAtom(routinesAtomEffect);
 	useAtom(categoriesAtomEffect);
 
-	const router = useRouterWithQuery();
+	const router = useRouter();
 
 	useEffect(() => {
 		if (!loading && !user) {

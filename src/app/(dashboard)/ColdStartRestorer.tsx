@@ -1,15 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Routes } from '@/lib/consts';
-import useRouterWithQuery from '@/lib/utils.hook';
+import { useRouter } from 'next/navigation';
 import { useAtom, useAtomValue } from 'jotai/index';
 import { activeSessionAtom } from '@/app/(dashboard)/service';
 import { taskIndexAtom } from '@/app/(dashboard)/routine/[routineId]/focus/service';
 
 export default function ColdStartRestorer() {
-	const router = useRouterWithQuery();
+	const router = useRouter();
 
 	const activeSession = useAtomValue(activeSessionAtom);
-	const [, setTaskIndex] = useAtom(taskIndexAtom);
 
 	useEffect(() => {
 		// Wait for activeSession to be loaded
@@ -22,8 +21,7 @@ export default function ColdStartRestorer() {
 
 		if (!alreadyBooted) {
 			// Redirect once on cold start
-			setTaskIndex(activeSession.taskIndex);
-			router.replace(Routes.FOCUS(activeSession.routineId));
+			router.replace(Routes.FOCUS(activeSession.routineId, activeSession.taskIndex));
 		}
 	}, [activeSession, router]);
 

@@ -9,7 +9,7 @@ import { Input } from '@/components/base/input';
 import { Field, Label } from '@/components/base/fieldset';
 import { GoogleIcon } from '@/components/icons/GoogleIcon';
 import { FormEvent, useEffect, useState } from 'react';
-import useRouterWithQuery from '@/lib/utils.hook';
+import { useRouter } from 'next/navigation';
 import {
 	GoogleAuthProvider,
 	signInWithEmailAndPassword,
@@ -21,7 +21,7 @@ import { parseErrors, validateFields } from '@/app/login/service';
 
 export function LoginForm() {
 	const [errorMessage, setErrorMessage] = useState('');
-	const router = useRouterWithQuery();
+	const router = useRouter();
 
 	const [isDisabled, setIsDisabled] = useState(false);
 
