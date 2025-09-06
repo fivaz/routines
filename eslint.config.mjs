@@ -10,30 +10,28 @@ const compat = new FlatCompat({
 	baseDirectory: __dirname,
 });
 
-const eslintConfig = [
-	...compat.extends('next/core-web-vitals', 'next/typescript'),
-	{
-		rules: {
-			'@typescript-eslint/no-unused-vars': 'off',
-			'@typescript-eslint/no-explicit-any': 'off',
-			'unused-imports/no-unused-imports': 'warn',
-			'@typescript-eslint/no-empty-object-type': 'off',
-			'unused-imports/no-unused-vars': [
-				'warn',
-				{
-					vars: 'all',
-					varsIgnorePattern: '^_',
-					args: 'after-used',
-					argsIgnorePattern: '^_',
-				},
-			],
-		},
-	},
-	{
-		plugins: {
-			'unused-imports': unusedImports,
-		},
-	},
-];
+const eslintConfig = [{
+    ignores: ["node_modules/**", ".next/**", "out/**", "build/**", "next-env.d.ts"]
+}, ...compat.extends('next/core-web-vitals', 'next/typescript'), {
+    rules: {
+        '@typescript-eslint/no-unused-vars': 'off',
+        '@typescript-eslint/no-explicit-any': 'off',
+        'unused-imports/no-unused-imports': 'warn',
+        '@typescript-eslint/no-empty-object-type': 'off',
+        'unused-imports/no-unused-vars': [
+            'warn',
+            {
+                vars: 'all',
+                varsIgnorePattern: '^_',
+                args: 'after-used',
+                argsIgnorePattern: '^_',
+            },
+        ],
+    },
+}, {
+    plugins: {
+        'unused-imports': unusedImports,
+    },
+}];
 
 export default eslintConfig;
