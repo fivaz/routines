@@ -14,6 +14,7 @@ import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 
 import { auth } from '@/lib/firebase';
 import { parseErrors, register, validateFields } from '@/app/login/service';
 import { minidenticon } from 'minidenticons';
+import Image from 'next/image';
 
 export function RegisterForm() {
 	const [errorMessage, setErrorMessage] = useState('');
@@ -83,6 +84,20 @@ export function RegisterForm() {
 			<Banner setMessage={setErrorMessage}>{errorMessage}</Banner>
 			<div className="py-12">
 				<div className="space-y-6">
+					{email && (
+						<div className="flex flex-col justify-center">
+							<h3 className="block text-center text-sm leading-6 font-medium text-gray-900">
+								Your Avatar
+							</h3>
+							<Image
+								className="h-10 w-auto"
+								width={40}
+								height={40}
+								alt="your avatar"
+								src={photoURL}
+							/>
+						</div>
+					)}
 					<Field>
 						<Label>Name</Label>
 						<Input name="name" required onChange={(e) => setName(e.target.value)} />
