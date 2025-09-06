@@ -28,6 +28,8 @@ export function parseErrors(error: unknown) {
 			return 'login or password are incorrect';
 		} else if (error.code === 'auth/network-request-failed') {
 			return "you can't login if you're not connected to the internet";
+		} else if (error.code === 'auth/weak-password') {
+			return 'password should be at least 6 characters';
 		} else if (error.code === 'auth/popup-closed-by-user') {
 			return 'the pop up was closed, try again';
 		} else {

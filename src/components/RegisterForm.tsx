@@ -67,7 +67,7 @@ export function RegisterForm() {
 
 		try {
 			await register(name, email, password, avatar);
-			void router.push(Routes.ROOT);
+			void router.push(Routes.LOGIN);
 		} catch (error) {
 			setErrorMessage(parseErrors(error));
 		} finally {
@@ -76,8 +76,11 @@ export function RegisterForm() {
 	}
 
 	return (
-		<form className="bg-white px-6 shadow-sm sm:rounded-lg sm:px-12 dark:bg-zinc-900">
-			{/*<Banner setMessage={setErrorMessage}>{errorMessage}</Banner>*/}
+		<form
+			onSubmit={onSubmit}
+			className="bg-white px-6 shadow-sm sm:rounded-lg sm:px-12 dark:bg-zinc-900"
+		>
+			<Banner setMessage={setErrorMessage}>{errorMessage}</Banner>
 			<div className="py-12">
 				<div className="space-y-6">
 					<Field>
@@ -101,7 +104,7 @@ export function RegisterForm() {
 					</Field>
 
 					<div>
-						<Button type="submit" color="green" className="w-full">
+						<Button isLoading={isLoading.email} type="submit" color="green" className="w-full">
 							Sign in
 						</Button>
 					</div>
@@ -121,6 +124,8 @@ export function RegisterForm() {
 
 					<Button
 						outline
+						type="button"
+						isLoading={isLoading.google}
 						className="flex w-full items-center justify-center gap-3 rounded-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50 focus-visible:ring-transparent"
 					>
 						<GoogleIcon />

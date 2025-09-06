@@ -48,13 +48,26 @@ export function LoginForm() {
 		event.preventDefault();
 		setIsLoading({ ...isLoading, email: true });
 
-		setErrorMessage(validateFields('email', 'password'));
+		const formData = new FormData(event.currentTarget);
+		const email = formData.get('email') as string;
+		const password = formData.get('password') as string;
+
+		setErrorMessage(validateFields(email, password));
 		if (errorMessage) {
 			return;
 		}
 
 		try {
-			await signInWithEmailAndPassword(auth, 'email', 'password');
+			const credential = await signInWithEmailAndPassword(auth, email, password);
+
+			const idToken = await credential.user.getIdToken();
+
+			await fetch('/api/login', {
+				headers: {
+					Authorization: `Bearer ${idToken}`,
+				},
+			});
+
 			void router.push(Routes.ROOT);
 		} catch (error) {
 			setErrorMessage(parseErrors(error));
@@ -64,8 +77,11 @@ export function LoginForm() {
 	}
 
 	return (
-		<form className="bg-white px-6 shadow-sm sm:rounded-lg sm:px-12 dark:bg-zinc-900">
-			{/*<Banner setMessage={setErrorMessage}>{errorMessage}</Banner>*/}
+		<form
+			onSubmit={onSubmit}
+			className="bg-white px-6 shadow-sm sm:rounded-lg sm:px-12 dark:bg-zinc-900"
+		>
+			<Banner setMessage={setErrorMessage}>{errorMessage}</Banner>
 			<div className="py-12">
 				<div className="space-y-6">
 					<Field>
@@ -126,7 +142,7 @@ export function LoginForm() {
 					</div>
 
 					<div>
-						<Button type="submit" color="green" className="w-full">
+						<Button type="submit" color="green" className="w-full" isLoading={isLoading.email}>
 							Sign in
 						</Button>
 					</div>
@@ -146,6 +162,7 @@ export function LoginForm() {
 
 					<Button
 						outline
+						isLoading={isLoading.google}
 						className="flex w-full items-center justify-center gap-3 rounded-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50 focus-visible:ring-transparent"
 					>
 						<GoogleIcon />
