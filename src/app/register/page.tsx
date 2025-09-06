@@ -1,7 +1,7 @@
 import { Routes } from '@/lib/consts';
 import { Logo } from '@/components/Logo';
 import Link from 'next/link';
-import { ThemeToggle3 } from '@/components/shared/ThemeToggle2';
+import { ThemeToggle } from '@/components/shared/ThemeToggle';
 
 import { RegisterForm } from '@/app/register/RegisterForm';
 
@@ -10,7 +10,7 @@ export default async function Register() {
 		<>
 			<div className="flex min-h-full flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8">
 				<div className="absolute top-6 right-6">
-					<ThemeToggle3 />
+					<ThemeToggle />
 				</div>
 				<div className="sm:mx-auto sm:w-full sm:max-w-md">
 					<Logo className="mx-auto h-10 w-auto text-green-500" />

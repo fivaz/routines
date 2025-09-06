@@ -5,7 +5,7 @@ import { MonitorCogIcon, MoonIcon, SunIcon } from 'lucide-react';
 
 import { DropdownMenu, Dropdown, DropdownItem, DropdownButton } from '@/components/base/dropdown';
 
-export function ThemeToggle3() {
+export function ThemeToggle() {
 	const { theme, setTheme } = useTheme();
 
 	const [mounted, setMounted] = useState(false);

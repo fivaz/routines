@@ -30,7 +30,7 @@ import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { APP_NAME, Routes } from '@/lib/consts';
 import { Logo } from '@/components/Logo';
-import { ThemeToggle } from '@/components/ThemeToggle';
+import { ThemeToggle } from '@/components/shared/ThemeToggle';
 import { BackEndStatus } from '@/components/BackEndStatus';
 import { Tooltip } from '@/components/base/tooltip';
 import { useAtomValue } from 'jotai/index';
@@ -48,6 +48,7 @@ export function Dashboard({ children }: PropsWithChildren) {
 
 	async function handleSignOut() {
 		await signOut(auth);
+		await fetch('/api/logout');
 		void router.push(Routes.LOGIN);
 	}
 

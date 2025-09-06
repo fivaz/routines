@@ -1,12 +1,8 @@
 import { Routes } from '@/lib/consts';
 import { Logo } from '@/components/Logo';
 import Link from 'next/link';
-import { ThemeToggle3 } from '@/components/shared/ThemeToggle2';
+import { ThemeToggle } from '@/components/shared/ThemeToggle';
 import { LoginForm } from '@/app/login/LoginForm';
-import { redirect } from 'next/navigation';
-import { getUserTokens } from '@/lib/config';
-import { NextRequest } from 'next/server';
-import { cookies } from 'next/headers';
 
 interface LoginPageProps {}
 
@@ -15,7 +11,7 @@ export default async function Login({}: LoginPageProps) {
 		<>
 			<div className="flex min-h-full flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8">
 				<div className="absolute top-6 right-6">
-					<ThemeToggle3 />
+					<ThemeToggle />
 				</div>
 				<div className="sm:mx-auto sm:w-full sm:max-w-md">
 					<Logo className="mx-auto h-10 w-auto text-green-500" />
