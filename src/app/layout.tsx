@@ -5,6 +5,7 @@ import { APP_NAME } from '@/lib/consts';
 import { Metadata } from 'next';
 import { AuthController } from '@/app/AuthController';
 import { Provider } from 'jotai';
+import { ThemeProvider } from 'next-themes';
 
 export const metadata: Metadata = {
 	title: APP_NAME,
@@ -12,13 +13,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
 	return (
-		<html lang="en" className="h-full bg-white dark:bg-zinc-900">
+		<html lang="en" className="h-full bg-white dark:bg-zinc-900" suppressHydrationWarning>
 			<body className="h-full">
-				<Provider>
-					<AuthController>
-						<PromptProvider>{children}</PromptProvider>
-					</AuthController>
-				</Provider>
+				<ThemeProvider attribute="class">
+					<Provider>
+						<AuthController>
+							<PromptProvider>{children}</PromptProvider>
+						</AuthController>
+					</Provider>
+				</ThemeProvider>
 			</body>
 		</html>
 	);

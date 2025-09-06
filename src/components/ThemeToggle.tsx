@@ -1,3 +1,4 @@
+'use client';
 import { Button } from '@/components/base/button';
 import { MoonIcon, SunIcon } from 'lucide-react';
 import { useEffect } from 'react';
