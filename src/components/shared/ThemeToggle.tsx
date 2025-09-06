@@ -20,7 +20,7 @@ export function ThemeToggle() {
 
 	return (
 		<Dropdown>
-			<DropdownButton>
+			<DropdownButton outline size="p-1.5">
 				{theme === 'light' ? (
 					<SunIcon className="size-5 text-yellow-500" />
 				) : theme === 'dark' ? (

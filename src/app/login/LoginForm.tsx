@@ -10,7 +10,12 @@ import { Field, Label } from '@/components/base/fieldset';
 import { GoogleIcon } from '@/components/icons/GoogleIcon';
 import { FormEvent, useEffect, useState } from 'react';
 import useRouterWithQuery from '@/lib/utils.hook';
-import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import {
+	GoogleAuthProvider,
+	signInWithEmailAndPassword,
+	signInWithPopup,
+	UserCredential,
+} from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { parseErrors, validateFields } from '@/app/login/service';
 
@@ -33,11 +38,24 @@ export function LoginForm() {
 		}
 	}, [isLoading.email, isLoading.google]);
 
+	async function authServer(credential: UserCredential) {
+		const idToken = await credential.user.getIdToken();
+
+		await fetch('/api/login', {
+			headers: {
+				Authorization: `Bearer ${idToken}`,
+			},
+		});
+	}
+
 	async function handleGoogleProvider() {
 		const provider = new GoogleAuthProvider();
 
 		try {
-			await signInWithPopup(auth, provider);
+			const credential = await signInWithPopup(auth, provider);
+
+			await authServer(credential);
+
 			void router.push(Routes.ROOT);
 		} catch (error) {
 			console.error('Error during Google sign-in:', (error as Error).message);
@@ -60,13 +78,7 @@ export function LoginForm() {
 		try {
 			const credential = await signInWithEmailAndPassword(auth, email, password);
 
-			const idToken = await credential.user.getIdToken();
-
-			await fetch('/api/login', {
-				headers: {
-					Authorization: `Bearer ${idToken}`,
-				},
-			});
+			await authServer(credential);
 
 			void router.push(Routes.ROOT);
 		} catch (error) {
@@ -164,6 +176,7 @@ export function LoginForm() {
 						outline
 						isLoading={isLoading.google}
 						className="flex w-full items-center justify-center gap-3 rounded-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50 focus-visible:ring-transparent"
+						onClick={handleGoogleProvider}
 					>
 						<GoogleIcon />
 						<span className="text-sm/6 font-semibold">Google</span>
