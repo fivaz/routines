@@ -2,7 +2,7 @@ import { Routes } from '@/lib/consts';
 import { Logo } from '@/components/Logo';
 import Link from 'next/link';
 import { ThemeToggle3 } from '@/components/shared/ThemeToggle2';
-import { LoginForm } from '@/components/LoginForm';
+import { LoginForm } from '@/app/login2/LoginForm';
 import { redirect } from 'next/navigation';
 import { getUserTokens } from '@/lib/config';
 import { NextRequest } from 'next/server';

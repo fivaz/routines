@@ -1,6 +1,7 @@
 import { getUserTokens } from '@/lib/config';
 import { cookies } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
+import LogoutButton from '@/components/LogoutButton';
 
 export default async function Page() {
 	const tokens = await getUserTokens(await cookies());
@@ -9,5 +10,10 @@ export default async function Page() {
 		notFound();
 	}
 
-	return <div>Hello World {tokens?.decodedToken.email}</div>;
+	return (
+		<div>
+			Hello World {tokens?.decodedToken.email}
+			<LogoutButton>logout</LogoutButton>
+		</div>
+	);
 }
