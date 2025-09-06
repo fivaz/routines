@@ -7,6 +7,7 @@ import { redirect } from 'next/navigation';
 import { getUserTokens } from '@/lib/config';
 import { NextRequest } from 'next/server';
 import { cookies } from 'next/headers';
+import { RegisterForm } from '@/components/RegisterForm';
 
 interface LoginPageProps {}
 
@@ -14,7 +15,7 @@ export default async function Login({}: LoginPageProps) {
 	const tokens = await getUserTokens(await cookies());
 
 	if (tokens) {
-		redirect('/dashboard');
+		redirect('/');
 	}
 
 	return (
@@ -31,14 +32,11 @@ export default async function Login({}: LoginPageProps) {
 				</div>
 
 				<div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
-					<LoginForm />
+					<RegisterForm />
 					<p className="mt-10 text-center text-sm/6 text-gray-500">
-						Not a member?{' '}
-						<Link
-							href={Routes.REGISTER}
-							className="font-semibold text-green-600 hover:text-green-500"
-						>
-							Sign up
+						Do you an account already?{' '}
+						<Link href={Routes.LOGIN} className="font-semibold text-green-600 hover:text-green-500">
+							Sign in
 						</Link>
 					</p>
 				</div>
