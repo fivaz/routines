@@ -1,16 +1,14 @@
 'use client';
-import Link from 'next/link';
 import { Routes } from '@/lib/consts';
 
 import { Button } from '@/components/base/button';
 import { Banner } from '@/components/base/banner';
-import { GithubIcon } from '@/components/icons/GithubIcon';
 import { Input } from '@/components/base/input';
 import { Field, Label } from '@/components/base/fieldset';
 import { GoogleIcon } from '@/components/icons/GoogleIcon';
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { parseErrors, register, validateFields } from '@/app/login/service';
 import { minidenticon } from 'minidenticons';

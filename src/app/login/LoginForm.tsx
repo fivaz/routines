@@ -1,10 +1,8 @@
 'use client';
-import Link from 'next/link';
 import { Routes } from '@/lib/consts';
 
 import { Button } from '@/components/base/button';
 import { Banner } from '@/components/base/banner';
-import { GithubIcon } from '@/components/icons/GithubIcon';
 import { Input } from '@/components/base/input';
 import { Field, Label } from '@/components/base/fieldset';
 import { GoogleIcon } from '@/components/icons/GoogleIcon';

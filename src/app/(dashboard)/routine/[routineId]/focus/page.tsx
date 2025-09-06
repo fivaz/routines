@@ -4,7 +4,7 @@ import { RoutineTasksSummary } from '@/app/(dashboard)/routine/[routineId]/focus
 import { TaskImage } from '@/app/(dashboard)/routine/[routineId]/focus/TaskImage';
 import { TaskInfo } from '@/app/(dashboard)/routine/[routineId]/focus/task-info/TaskInfo';
 import { FocusController } from '@/app/(dashboard)/routine/[routineId]/focus/focus-controller/FocusController';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useSetAtom } from 'jotai';
 import { dateAtom } from '@/lib/session/session.type';
 import { getToday } from '@/lib/session/session.utils';
 import { taskIndexAtom } from '@/app/(dashboard)/routine/[routineId]/focus/service';

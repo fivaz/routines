@@ -4,9 +4,7 @@ import Link from 'next/link';
 import { ThemeToggle } from '@/components/shared/ThemeToggle';
 import { LoginForm } from '@/app/login/LoginForm';
 
-interface LoginPageProps {}
-
-export default async function Login({}: LoginPageProps) {
+export default async function Login() {
 	return (
 		<>
 			<div className="flex min-h-full flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8">

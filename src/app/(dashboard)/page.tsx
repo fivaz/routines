@@ -18,15 +18,10 @@ import {
 import { DragDropProvider } from '@dnd-kit/react';
 import { RoutineCategory } from '@/app/(dashboard)/routine/routine-category';
 import { RoutineRow } from '@/app/(dashboard)/routine/routine-row';
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtom } from 'jotai';
 import { useRoutineActions } from '@/lib/routine/routine.hooks';
 import { useCategoryActions } from '@/lib/category/category.hooks';
 import { RoutineListSkeleton } from '@/app/(dashboard)/RoutineListSkeleton';
-import { activeSessionAtom } from '@/app/(dashboard)/service';
-import { useRouter } from 'next/navigation';
-import { Routes } from '@/lib/consts';
-import { taskIndexAtom } from '@/app/(dashboard)/routine/[routineId]/focus/service';
-import { useParams } from 'next/navigation';
 import ColdStartRestorer from '@/app/(dashboard)/ColdStartRestorer';
 
 export default function Routines() {

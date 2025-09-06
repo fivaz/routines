@@ -1,9 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Routes } from '@/lib/consts';
 import { useRouter } from 'next/navigation';
-import { useAtom, useAtomValue } from 'jotai/index';
+import { useAtomValue } from 'jotai/index';
 import { activeSessionAtom } from '@/app/(dashboard)/service';
-import { taskIndexAtom } from '@/app/(dashboard)/routine/[routineId]/focus/service';
 
 export default function ColdStartRestorer() {
 	const router = useRouter();

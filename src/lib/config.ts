@@ -1,5 +1,4 @@
 import { getTokens, Tokens } from 'next-firebase-auth-edge';
-import { NextRequest } from 'next/server';
 import { type ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies';
 
 export type ServerConfig = {
