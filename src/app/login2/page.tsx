@@ -7,7 +7,7 @@ import { Logo } from '@/components/Logo';
 import { Button } from '@/components/base/button';
 import { Banner } from '@/components/base/banner';
 import Link from 'next/link';
-import ThemeToggle2 from '@/components/shared/ThemeToggle2';
+import ThemeToggle2, { ThemeToggle3 } from '@/components/shared/ThemeToggle2';
 import useRouterWithQuery from '@/lib/utils.hook';
 
 export default function Login() {
@@ -15,7 +15,7 @@ export default function Login() {
 		<>
 			<div className="flex min-h-full flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8">
 				<div className="absolute top-6 right-6">
-					<ThemeToggle2 />
+					<ThemeToggle3 />
 				</div>
 				<div className="sm:mx-auto sm:w-full sm:max-w-md">
 					<Logo className="mx-auto h-10 w-auto text-green-500" />
