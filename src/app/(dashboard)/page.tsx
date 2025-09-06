@@ -22,6 +22,7 @@ import { useAtom } from 'jotai';
 import { useRoutineActions } from '@/lib/routine/routine.hooks';
 import { useCategoryActions } from '@/lib/category/category.hooks';
 import { RoutineListSkeleton } from '@/app/(dashboard)/RoutineListSkeleton';
+import ColdStartRestorer from '@/app/(dashboard)/ColdStartRestorer';
 
 export default function Routines() {
 	const [routineForm, setRoutineForm] = useState<Routine | null>(null);
@@ -83,6 +84,8 @@ export default function Routines() {
 			<Heading className="mb-4">Routines</Heading>
 
 			<RoutineListSkeleton />
+
+			<ColdStartRestorer />
 
 			<DragDropProvider onDragOver={handleDragOver} onDragEnd={handleDragEnd}>
 				<div className="flex flex-col gap-2">

@@ -5,7 +5,7 @@ import { PropsWithChildren, useEffect } from 'react';
 import { getRedirectResult, onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { Routes } from '@/lib/consts';
-import useRouterWithQuery from '@/lib/utils.hook';
+import { useRouter } from 'next/navigation';
 
 type AuthControllerProps = PropsWithChildren;
 
@@ -13,7 +13,7 @@ export function AuthController({ children }: AuthControllerProps) {
 	const setUser = useSetAtom(currentUserAtom);
 	const setLoading = useSetAtom(loadingAuthAtom);
 
-	const router = useRouterWithQuery();
+	const router = useRouter();
 
 	useEffect(() => {
 		setLoading(true);

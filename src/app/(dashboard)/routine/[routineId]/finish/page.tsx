@@ -97,10 +97,10 @@ export default function FinishPage() {
 						<span
 							className={clsx(
 								'text-lg font-semibold',
-								routineDelta > 0 ? 'text-green-500' : 'text-red-500',
+								routineDelta > 0 ? 'text-red-500' : 'text-green-500',
 							)}
 						>
-							{formatSeconds(Math.abs(routineDelta))} {routineDelta > 0 ? 'ahead' : 'late'}
+							{formatSeconds(Math.abs(routineDelta))} {routineDelta > 0 ? 'late' : 'ahead'}
 						</span>
 					</LoadingText>
 				</div>

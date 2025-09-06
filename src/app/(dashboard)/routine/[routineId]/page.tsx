@@ -4,7 +4,7 @@ import { type Routine, routineAtom } from '@/lib/routine/routine.type';
 import { Dropdown, DropdownButton, DropdownItem, DropdownMenu } from '@/components/base/dropdown';
 import { ChartLineIcon, Ellipsis, LoaderCircleIcon, PlusIcon, TimerIcon } from 'lucide-react';
 import { Routes } from '@/lib/consts';
-import useRouterWithQuery from '@/lib/utils.hook';
+import { useRouter } from 'next/navigation';
 import { TaskRow } from '@/components/task/task-row';
 import { emptyTask, Task, tasksAtom } from '@/lib/task/task.type';
 import { Button } from '@/components/base/button';
@@ -37,7 +37,7 @@ export default function RoutinePage() {
 	const { createPrompt } = usePrompt();
 	const { deleteRoutine } = useRoutineActions();
 	const { updateTasks } = useTaskActions(routineId);
-	const router = useRouterWithQuery();
+	const router = useRouter();
 
 	function handleEdit() {
 		if (!routine) return;
@@ -153,7 +153,7 @@ export default function RoutinePage() {
 			)}
 
 			<div className="fixed bottom-4 left-1/2 z-20 -translate-x-1/2">
-				<Button disabled={tasks.length === 0} color="green" href={Routes.FOCUS(routineId)}>
+				<Button disabled={tasks.length === 0} color="green" href={Routes.FOCUS(routineId, 0)}>
 					<TimerIcon className="size-5" />
 					Enter Focus
 				</Button>

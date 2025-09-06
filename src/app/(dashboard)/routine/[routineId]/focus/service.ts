@@ -135,12 +135,3 @@ export const currentSessionsAtomEffect = atomEffect((get, set) => {
 
 	return () => unsubscribe();
 });
-
-
-// Reset task index to 0 whenever routineId changes
-export const resetTaskIndexOnRoutineChangeEffect = atomEffect((get, set) => {
-	// Reading routineId establishes the dependency; effect re-runs on change
-	const _routineId = get(routineIdAtom);
-	// Reset the index on routine switch
-	set(taskIndexAtom, 0);
-});
