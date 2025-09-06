@@ -12,7 +12,7 @@ import { resetTaskIndexOnRoutineChangeEffect } from '@/app/(dashboard)/routine/[
 export default function RoutineFocusPage() {
 	const setDate = useSetAtom(dateAtom);
 	setDate(getToday());
-	// Mount effect to reset task index whenever routineId changes
+	// Mount effect to reset the task index whenever routineId changes
 	useAtomValue(resetTaskIndexOnRoutineChangeEffect);
 
 	return (

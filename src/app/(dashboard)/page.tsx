@@ -18,10 +18,16 @@ import {
 import { DragDropProvider } from '@dnd-kit/react';
 import { RoutineCategory } from '@/app/(dashboard)/routine/routine-category';
 import { RoutineRow } from '@/app/(dashboard)/routine/routine-row';
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { useRoutineActions } from '@/lib/routine/routine.hooks';
 import { useCategoryActions } from '@/lib/category/category.hooks';
 import { RoutineListSkeleton } from '@/app/(dashboard)/RoutineListSkeleton';
+import { activeSessionAtom } from '@/app/(dashboard)/service';
+import useRouterWithQuery from '@/lib/utils.hook';
+import { Routes } from '@/lib/consts';
+import { taskIndexAtom } from '@/app/(dashboard)/routine/[routineId]/focus/service';
+import { useParams } from 'next/navigation';
+import ColdStartRestorer from '@/app/(dashboard)/ColdStartRestorer';
 
 export default function Routines() {
 	const [routineForm, setRoutineForm] = useState<Routine | null>(null);
@@ -83,6 +89,8 @@ export default function Routines() {
 			<Heading className="mb-4">Routines</Heading>
 
 			<RoutineListSkeleton />
+
+			<ColdStartRestorer />
 
 			<DragDropProvider onDragOver={handleDragOver} onDragEnd={handleDragEnd}>
 				<div className="flex flex-col gap-2">

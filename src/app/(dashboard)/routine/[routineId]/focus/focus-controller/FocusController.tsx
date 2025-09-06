@@ -1,3 +1,5 @@
+'use client';
+
 import {
 	ChevronLeftIcon,
 	ChevronRightIcon,
@@ -7,7 +9,7 @@ import {
 	SquareIcon,
 } from 'lucide-react';
 import { isNonEmptyArray, safeThrow } from '@/lib/error-handle';
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import {
 	currentElapsedTimeAtom,
 	currentSessionsAtom,
@@ -23,6 +25,7 @@ import { tasksAtom } from '@/lib/task/task.type';
 import { ContinueIcon } from '@/components/icons/ContinueIcon';
 import useRouterWithQuery from '@/lib/utils.hook';
 import { Link } from '@/components/base/link';
+import { activeSessionAtom } from '@/app/(dashboard)/service';
 
 export function FocusController() {
 	const task = useAtomValue(currentTaskAtom);
@@ -38,6 +41,8 @@ export function FocusController() {
 	const { startSession, endSession, resetSession } = useSessionActions(routineId, task?.id);
 	const { createPrompt } = usePrompt();
 	const router = useRouterWithQuery();
+
+	const setActiveSession = useSetAtom(activeSessionAtom);
 
 	const hasNext = taskIndex < tasks.length - 1;
 
@@ -63,6 +68,7 @@ export function FocusController() {
 
 	const handleStart = () => {
 		startSession();
+		setActiveSession({ routineId, taskIndex });
 	};
 
 	const handleStop = async () => {
@@ -71,11 +77,13 @@ export function FocusController() {
 		}
 
 		endSession(runningSession);
+		setActiveSession(null);
 		handleNextTask();
 	};
 
 	const handleContinue = () => {
 		startSession();
+		setActiveSession({ routineId, taskIndex });
 	};
 
 	const handleReset = async () => {
@@ -92,6 +100,7 @@ export function FocusController() {
 		if (!confirmed) return;
 
 		resetSession(currentTaskSessions);
+		setActiveSession({ routineId, taskIndex });
 	};
 
 	return (
