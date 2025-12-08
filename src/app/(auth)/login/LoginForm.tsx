@@ -1,68 +1,29 @@
 'use client';
-import { Routes } from '@/lib/consts';
 
 import { Button } from '@/components/base/button';
 import { Banner } from '@/components/base/banner';
 import { Input } from '@/components/base/input';
 import { Field, Label } from '@/components/base/fieldset';
-import { GoogleIcon } from '@/components/icons/GoogleIcon';
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
-	GoogleAuthProvider,
 	signInWithEmailAndPassword,
-	signInWithPopup,
-	UserCredential,
 } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
-import { parseErrors, validateFields } from '@/app/login/service';
+import { parseErrors, validateFields } from '@/app/(auth)/login/service';
+import { GoogleAuthentication } from '@/components/GoogleAuthentication';
+import { authServer } from '@/app/(auth)/auth.service';
 
 export function LoginForm() {
 	const [errorMessage, setErrorMessage] = useState('');
 	const router = useRouter();
 
-	const [isDisabled, setIsDisabled] = useState(false);
-
-	const [isLoading, setIsLoading] = useState({
-		email: false,
-		google: false,
-	});
-
-	useEffect(() => {
-		if (isLoading.email || isLoading.google) {
-			setIsDisabled(true);
-		} else {
-			setIsDisabled(false);
-		}
-	}, [isLoading.email, isLoading.google]);
-
-	async function authServer(credential: UserCredential) {
-		const idToken = await credential.user.getIdToken();
-
-		await fetch('/api/login', {
-			headers: {
-				Authorization: `Bearer ${idToken}`,
-			},
-		});
-	}
-
-	async function handleGoogleProvider() {
-		const provider = new GoogleAuthProvider();
-
-		try {
-			const credential = await signInWithPopup(auth, provider);
-
-			await authServer(credential);
-
-			void router.push(Routes.ROOT);
-		} catch (error) {
-			console.error('Error during Google sign-in:', (error as Error).message);
-		}
-	}
+	const [isEmailLoading, setIsEmailLoading] = useState(false);
+	const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
 	async function onSubmit(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault();
-		setIsLoading({ ...isLoading, email: true });
+		setIsEmailLoading(true);
 
 		const formData = new FormData(event.currentTarget);
 		const email = formData.get('email') as string;
@@ -77,12 +38,10 @@ export function LoginForm() {
 			const credential = await signInWithEmailAndPassword(auth, email, password);
 
 			await authServer(credential);
-
-			void router.push(Routes.ROOT);
 		} catch (error) {
 			setErrorMessage(parseErrors(error));
 		} finally {
-			setIsLoading({ ...isLoading, email: false });
+			setIsEmailLoading(false);
 		}
 	}
 
@@ -152,7 +111,7 @@ export function LoginForm() {
 					</div>
 
 					<div>
-						<Button type="submit" color="green" className="w-full" isLoading={isLoading.email}>
+						<Button type="submit" color="green" className="w-full" isLoading={isEmailLoading}>
 							Sign in
 						</Button>
 					</div>
@@ -169,16 +128,7 @@ export function LoginForm() {
 							</span>
 						</div>
 					</div>
-
-					<Button
-						outline
-						isLoading={isLoading.google}
-						className="flex w-full items-center justify-center gap-3 rounded-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50 focus-visible:ring-transparent"
-						onClick={handleGoogleProvider}
-					>
-						<GoogleIcon />
-						<span className="text-sm/6 font-semibold">Google</span>
-					</Button>
+					<GoogleAuthentication setError={setErrorMessage} setIsLoading={setIsGoogleLoading} />
 				</div>
 			</div>
 		</form>
