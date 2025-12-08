@@ -36,6 +36,7 @@ import { Tooltip } from '@/components/base/tooltip';
 import { useAtomValue } from 'jotai/index';
 import { currentUserAtom } from '@/lib/user/user.type';
 import { PropsWithChildren } from 'react';
+import { logOutServer } from '@/app/(auth)/auth.service';
 
 const navItems = [
 	{ label: 'Routines', url: Routes.ROOT },
@@ -44,13 +45,6 @@ const navItems = [
 
 export function Dashboard({ children }: PropsWithChildren) {
 	const user = useAtomValue(currentUserAtom);
-	const router = useRouter();
-
-	async function handleSignOut() {
-		await signOut(auth);
-		await fetch('/api/logout');
-		void router.push(Routes.LOGIN);
-	}
 
 	return (
 		<StackedLayout
@@ -88,7 +82,7 @@ export function Dashboard({ children }: PropsWithChildren) {
 								<DropdownDivider />
 								<DropdownItem>
 									<ArrowRightStartOnRectangleIcon />
-									<DropdownLabel onClick={handleSignOut}>Sign out</DropdownLabel>
+									<DropdownLabel onClick={logOutServer}>Sign out</DropdownLabel>
 								</DropdownItem>
 							</DropdownMenu>
 						</Dropdown>
