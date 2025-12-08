@@ -9,7 +9,8 @@ const STATIC_PATHS = [
 	'/_next/', // Next.js compiled chunks
 	'/static/', // static files
 	'/favicon.ico', // favicon
-	'/manifest.json', // manifest
+	'/manifest.webmanifest',
+	'/manifest.json',
 	'/robots.txt',
 ];
 

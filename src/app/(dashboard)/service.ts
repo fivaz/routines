@@ -1,4 +1,3 @@
-// app/(dashboard)/routine/[routineId]/focus/atoms.ts
 import { atomWithStorage } from 'jotai/utils';
 
 export type ActiveSession = {

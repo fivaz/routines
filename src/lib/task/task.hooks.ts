@@ -3,7 +3,6 @@ import {
 	deleteTask as deleteTaskRepo,
 	editTask as editTaskRepo,
 	fetchTasks,
-	generateTaskImage as generateTaskImageRepo,
 	updateTasksOrder as updateTasksRepo,
 } from './task.repository';
 import { ImageFocus, Task, tasksAtom, tasksLoadingAtom } from './task.type';
@@ -12,6 +11,7 @@ import { currentUserAtom } from '@/lib/user/user.type';
 import { routineIdAtom } from '@/lib/routine/routine.type';
 import { safeThrow, safeThrowUnauthorized } from '@/lib/error-handle';
 import { useAtomValue } from 'jotai/index';
+import { generateTaskImage as generateTaskImageRepo } from '@/app/(dashboard)/routine/action';
 
 export const tasksAtomEffect = atomEffect((get, set) => {
 	const user = get(currentUserAtom);
@@ -95,8 +95,7 @@ export function useTaskActions(routineId: string) {
 			console.log('No authenticated user found');
 			return 'error';
 		}
-		const tokenId = await user.getIdToken();
-		return generateTaskImageRepo({ ...params, tokenId });
+		return generateTaskImageRepo({ ...params });
 	}
 
 	return { deleteTask, editTask, addTask, generateTaskImage, updateTasks };

@@ -1,6 +1,5 @@
 'use client';
 import { Avatar } from '@/components/base/avatar';
-import { useRouter } from 'next/navigation';
 import {
 	Dropdown,
 	DropdownButton,
@@ -26,8 +25,6 @@ import {
 } from '@/components/base/sidebar';
 import { StackedLayout } from '@/components/base/stacked-layout';
 import { ArrowRightStartOnRectangleIcon, UserIcon } from '@heroicons/react/16/solid';
-import { signOut } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
 import { APP_NAME, Routes } from '@/lib/consts';
 import { Logo } from '@/components/Logo';
 import { ThemeToggle } from '@/components/shared/ThemeToggle';

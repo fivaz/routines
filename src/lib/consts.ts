@@ -9,6 +9,8 @@ export const Routes = {
 	FINISH: (routineId: string) => `/routine/${routineId}/finish`,
 };
 
+export const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+
 // firebase paths
 export const DB_PATH = {
 	AVATARS: 'avatars',

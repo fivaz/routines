@@ -15,6 +15,7 @@ import { deleteObject, getDownloadURL, getMetadata, ref, uploadBytes } from 'fir
 import { ImageFocus, Task } from '@/lib/task/task.type';
 import { getRoutinePath } from '@/lib/routine/routine.repository';
 import { FirebaseError } from 'firebase/app';
+import { generateTaskImage } from '@/app/(dashboard)/routine/action';
 
 export function getTaskPath(userId: string, routineId: string) {
 	return `${DB_PATH.USERS}/${userId}/${DB_PATH.ROUTINES}/${routineId}/${DB_PATH.TASKS}`;
@@ -50,46 +51,6 @@ async function getImageUrl(userId: string, routineId: string, taskId: string, im
 	return await getDownloadURL(imageRef);
 }
 
-export async function generateTaskImage({
-	routineId,
-	taskId,
-	taskName,
-	focus,
-	tokenId,
-}: {
-	routineId: string;
-	taskId: string;
-	taskName: string;
-	focus: ImageFocus;
-	tokenId: string;
-}): Promise<string> {
-	const body = {
-		taskName,
-		focus,
-		routineId,
-		taskId,
-	};
-
-	try {
-		const response = await fetch(
-			`${process.env.NEXT_PUBLIC_BACKEND_URL}/protected/generate-task-image`,
-			{
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: `Bearer ${tokenId}`, // Add Bearer token here
-				},
-				body: JSON.stringify(body), // Send the body as JSON
-			},
-		);
-
-		return response.text();
-	} catch (error) {
-		console.error('Error making POST request:', error);
-		return 'error';
-	}
-}
-
 async function handleTaskImage({
 	userId,
 	routineId,
@@ -111,7 +72,7 @@ async function handleTaskImage({
 		if (imageFile) {
 			return await getImageUrl(userId, routineId, taskId, imageFile);
 		} else {
-			return generateTaskImage({ routineId, taskId, taskName, focus, tokenId });
+			return generateTaskImage({ routineId, taskId, taskName, focus });
 		}
 	} catch (error) {
 		console.error('Error handling task image:', error);
