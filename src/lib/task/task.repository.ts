@@ -58,7 +58,6 @@ async function handleTaskImage({
 	taskName,
 	imageFile,
 	focus,
-	tokenId,
 }: {
 	userId: string;
 	routineId: string;
@@ -66,7 +65,6 @@ async function handleTaskImage({
 	taskName: string;
 	imageFile: File | null;
 	focus: ImageFocus;
-	tokenId: string;
 }): Promise<string> {
 	try {
 		if (imageFile) {
@@ -92,14 +90,12 @@ export async function addTask({
 	task,
 	imageFile,
 	focus,
-	tokenId,
 }: {
 	userId: string;
 	routineId: string;
 	task: Omit<Task, 'id'>;
 	imageFile: File | null;
 	focus: ImageFocus;
-	tokenId: string;
 }): Promise<TaskOperationResult> {
 	try {
 		const newTaskRef = doc(collection(db, getTaskPath(userId, routineId)));
@@ -113,7 +109,6 @@ export async function addTask({
 			taskName: task.name,
 			imageFile,
 			focus,
-			tokenId,
 		});
 
 		const newTask = { ...task, id: taskId, image };

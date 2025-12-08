@@ -80,9 +80,7 @@ export function useTaskActions(routineId: string) {
 			return;
 		}
 
-		const tokenId = await user.getIdToken();
-
-		return addTaskRepo({ userId: user.uid, ...params, tokenId });
+		return addTaskRepo({ userId: user.uid, ...params });
 	}
 
 	async function generateTaskImage(params: {

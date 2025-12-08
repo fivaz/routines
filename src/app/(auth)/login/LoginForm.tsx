@@ -6,9 +6,7 @@ import { Input } from '@/components/base/input';
 import { Field, Label } from '@/components/base/fieldset';
 import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import {
-	signInWithEmailAndPassword,
-} from 'firebase/auth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { parseErrors, validateFields } from '@/app/(auth)/login/service';
 import { GoogleAuthentication } from '@/components/GoogleAuthentication';
@@ -16,7 +14,6 @@ import { authServer } from '@/app/(auth)/auth.service';
 
 export function LoginForm() {
 	const [errorMessage, setErrorMessage] = useState('');
-	const router = useRouter();
 
 	const [isEmailLoading, setIsEmailLoading] = useState(false);
 	const [isGoogleLoading, setIsGoogleLoading] = useState(false);
