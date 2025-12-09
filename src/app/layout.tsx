@@ -1,7 +1,7 @@
 import './globals.css';
 import { type ReactNode } from 'react';
 import { PromptProvider } from '@/lib/prompt-context';
-import { APP_NAME } from '@/lib/consts';
+import { APP_NAME } from '@/lib/const';
 import { Metadata, Viewport } from 'next';
 import { AuthController } from '@/app/AuthController';
 import { Provider } from 'jotai';

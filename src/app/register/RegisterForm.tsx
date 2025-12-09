@@ -1,5 +1,5 @@
 'use client';
-import { Routes } from '@/lib/consts';
+import { Routes } from '@/lib/const';
 
 import { Button } from '@/components/base/button';
 import { Banner } from '@/components/base/banner';
@@ -9,8 +9,8 @@ import { GoogleIcon } from '@/components/icons/GoogleIcon';
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
-import { parseErrors, register, validateFields } from '@/app/(auth)/login/service';
+import { auth } from '@/lib/auth/firebase';
+import { parseErrors, register, validateFields } from '@/app/login/service';
 import { minidenticon } from 'minidenticons';
 import Image from 'next/image';
 

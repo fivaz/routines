@@ -3,7 +3,7 @@ import { useParams } from 'next/navigation';
 import { type Routine, routineAtom } from '@/lib/routine/routine.type';
 import { Dropdown, DropdownButton, DropdownItem, DropdownMenu } from '@/components/base/dropdown';
 import { ChartLineIcon, Ellipsis, LoaderCircleIcon, PlusIcon, TimerIcon } from 'lucide-react';
-import { Routes } from '@/lib/consts';
+import { Routes } from '@/lib/const';
 import { useRouter } from 'next/navigation';
 import { TaskRow } from '@/components/task/task-row';
 import { emptyTask, Task, tasksAtom } from '@/lib/task/task.type';

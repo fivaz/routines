@@ -10,7 +10,7 @@ import { useParams } from 'next/navigation';
 import { useAtom, useAtomValue } from 'jotai';
 import { totalElapsedTimeAtom } from '@/app/(dashboard)/routine/[routineId]/focus/service';
 import { dateAtom } from '@/lib/session/session.type';
-import { Routes } from '@/lib/consts';
+import { Routes } from '@/lib/const';
 import { TaskRecapRow } from '@/app/(dashboard)/routine/[routineId]/recap/TaskRecapRow';
 import { useMemo } from 'react';
 import { RoutineTimeByDate } from '@/app/(dashboard)/routine/[routineId]/recap/RoutineTimeByDate';

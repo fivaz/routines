@@ -25,15 +25,17 @@ import {
 } from '@/components/base/sidebar';
 import { StackedLayout } from '@/components/base/stacked-layout';
 import { ArrowRightStartOnRectangleIcon, UserIcon } from '@heroicons/react/16/solid';
-import { APP_NAME, Routes } from '@/lib/consts';
+import { APP_NAME, Routes } from '@/lib/const';
 import { Logo } from '@/components/Logo';
 import { ThemeToggle } from '@/components/shared/ThemeToggle';
 import { BackEndStatus } from '@/components/BackEndStatus';
 import { Tooltip } from '@/components/base/tooltip';
 import { useAtomValue } from 'jotai/index';
-import { currentUserAtom } from '@/lib/user/user.type';
+import { currentUserAtom } from '@/lib/auth/user.type';
 import { PropsWithChildren } from 'react';
-import { logOutServer } from '@/app/(auth)/auth.service';
+import { signOut } from 'firebase/auth';
+import { logoutAction } from '@/lib/auth/utils.actions';
+import { auth } from '@/lib/auth/firebase';
 
 const navItems = [
 	{ label: 'Routines', url: Routes.ROOT },
@@ -42,6 +44,11 @@ const navItems = [
 
 export function Dashboard({ children }: PropsWithChildren) {
 	const user = useAtomValue(currentUserAtom);
+
+	const handleLogout = async () => {
+		await signOut(auth);
+		await logoutAction();
+	};
 
 	return (
 		<StackedLayout
@@ -79,7 +86,7 @@ export function Dashboard({ children }: PropsWithChildren) {
 								<DropdownDivider />
 								<DropdownItem>
 									<ArrowRightStartOnRectangleIcon />
-									<DropdownLabel onClick={logOutServer}>Sign out</DropdownLabel>
+									<DropdownLabel onClick={handleLogout}>Sign out</DropdownLabel>
 								</DropdownItem>
 							</DropdownMenu>
 						</Dropdown>

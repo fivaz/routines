@@ -2,7 +2,7 @@ import { atom } from 'jotai/index';
 import { Session } from '@/lib/session/session.type';
 import { atomEffect } from 'jotai-effect';
 import { tasksAtom } from '@/lib/task/task.type';
-import { currentUserAtom } from '@/lib/user/user.type';
+import { currentUserAtom } from '@/lib/auth/user.type';
 import { routineIdAtom } from '@/lib/routine/routine.type';
 import { fetchSessions } from '@/lib/session/session.repository';
 

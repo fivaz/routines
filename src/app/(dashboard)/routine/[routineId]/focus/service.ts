@@ -8,7 +8,7 @@ import {
 } from '@/lib/session/session.utils';
 import { getCurrentRoutineExpectedTime, getRoutineExpectedTime } from '@/lib/task/task.utils';
 import { atomEffect } from 'jotai-effect';
-import { currentUserAtom, loadingAuthAtom } from '@/lib/user/user.type';
+import { currentUserAtom, loadingAuthAtom } from '@/lib/auth/user.type';
 import { routineIdAtom } from '@/lib/routine/routine.type';
 import { fetchSessionsByDate } from '@/lib/session/session.repository';
 

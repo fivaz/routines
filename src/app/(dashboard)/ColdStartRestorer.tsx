@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Routes } from '@/lib/consts';
+import { Routes } from '@/lib/const';
 import { useRouter } from 'next/navigation';
 import { useAtomValue } from 'jotai/index';
 import { activeSessionAtom } from '@/app/(dashboard)/service';

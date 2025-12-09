@@ -2,7 +2,7 @@ import { Button } from '@/components/base/button';
 import { Text } from '@/components/base/text';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { addDays, format, subDays } from 'date-fns';
-import { yyyyMMdd } from '@/lib/consts';
+import { yyyyMMdd } from '@/lib/const';
 import { getToday } from '@/lib/session/session.utils';
 
 export function TaskHistoryCarousel({

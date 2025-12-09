@@ -8,7 +8,7 @@ import {
 import { Routine, routinesAtom, routinesLoadingAtom } from '@/lib/routine/routine.type';
 import { safeThrowUnauthorized } from '@/lib/error-handle';
 import { atomEffect } from 'jotai-effect';
-import { currentUserAtom } from '@/lib/user/user.type';
+import { currentUserAtom } from '@/lib/auth/user.type';
 import { useAtomValue } from 'jotai';
 
 export const routinesAtomEffect = atomEffect((get, set) => {

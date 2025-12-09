@@ -1,16 +1,16 @@
 'use server';
 
-import { getToken } from '@/app/(auth)/auth.server.service';
 import { ImageFocus } from '@/lib/task/task.type';
-import { BACKEND_URL } from '@/lib/consts';
+import { BACKEND_URL, SESSION_COOKIE } from '@/lib/const';
+import { cookies } from 'next/headers';
+import { getToken } from '@/lib/auth/utils.actions';
 
 export async function generateRoutineImage(
 	routineId: string,
 	routineName: string,
 ): Promise<string> {
-	const token = await getToken();
-
-	if (!token) throw new Error('User not authenticated');
+	const token = getToken();
+	if (!token) throw new Error('Unable to generate image: User is not authenticated.');
 
 	const body = { routineName, routineId };
 
@@ -42,7 +42,8 @@ export async function generateTaskImage({
 	taskName: string;
 	focus: ImageFocus;
 }): Promise<string> {
-	const token = await getToken();
+	const token = getToken();
+	if (!token) throw new Error('Unable to generate image: User is not authenticated.');
 
 	if (!token) throw new Error('User not authenticated');
 

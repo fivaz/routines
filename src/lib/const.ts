@@ -11,6 +11,8 @@ export const Routes = {
 
 export const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
+export const SESSION_COOKIE = process.env.SESSION_COOKIE || '__user_token';
+
 // firebase paths
 export const DB_PATH = {
 	AVATARS: 'avatars',

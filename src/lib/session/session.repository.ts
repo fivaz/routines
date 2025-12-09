@@ -1,7 +1,7 @@
 import { collection, deleteDoc, doc, onSnapshot, query, setDoc, where } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { db } from '@/lib/auth/firebase';
 import { Session } from '@/lib/session/session.type';
-import { DB_PATH } from '@/lib/consts';
+import { DB_PATH } from '@/lib/const';
 import { getToday } from '@/lib/session/session.utils';
 import { Task } from '../task/task.type';
 import { NonEmptyArray } from '@/lib/error-handle';

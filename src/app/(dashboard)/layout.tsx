@@ -1,11 +1,11 @@
 'use client';
 import { Dashboard } from '@/components/Dashboard';
 import { ReactNode, useEffect } from 'react';
-import { Routes } from '@/lib/consts';
+import { Routes } from '@/lib/const';
 import { routinesAtomEffect } from '@/lib/routine/routine.hooks';
 import { useAtom, useAtomValue } from 'jotai/index';
 import { categoriesAtomEffect } from '@/lib/category/category.hooks';
-import { currentUserAtom, loadingAuthAtom } from '@/lib/user/user.type';
+import { currentUserAtom, loadingAuthAtom } from '@/lib/auth/user.type';
 import { useRouter } from 'next/navigation';
 
 export default function Layout({

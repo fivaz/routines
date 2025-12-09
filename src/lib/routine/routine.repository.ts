@@ -8,10 +8,10 @@ import {
 	setDoc,
 	writeBatch,
 } from 'firebase/firestore';
-import { db, storage } from '@/lib/firebase';
+import { db, storage } from '@/lib/auth/firebase';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { Routine } from '@/lib/routine/routine.type';
-import { DB_PATH } from '@/lib/consts';
+import { DB_PATH } from '@/lib/const';
 
 export function getRoutinePath(userId: string) {
 	return `${DB_PATH.USERS}/${userId}/${DB_PATH.ROUTINES}`;

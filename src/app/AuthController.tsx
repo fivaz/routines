@@ -1,10 +1,10 @@
 'use client';
 import { useSetAtom } from 'jotai';
-import { currentUserAtom, loadingAuthAtom } from '@/lib/user/user.type';
+import { currentUserAtom, loadingAuthAtom } from '@/lib/auth/user.type';
 import { PropsWithChildren, useEffect } from 'react';
 import { getRedirectResult, onAuthStateChanged } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
-import { Routes } from '@/lib/consts';
+import { auth } from '@/lib/auth/firebase';
+import { Routes } from '@/lib/const';
 import { useRouter } from 'next/navigation';
 
 type AuthControllerProps = PropsWithChildren;

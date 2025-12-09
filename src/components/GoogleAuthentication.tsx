@@ -1,8 +1,9 @@
 import { GoogleIcon } from '@/components/icons/GoogleIcon';
 import { Button } from '@/components/base/button';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
-import { authServer } from '@/app/(auth)/auth.service';
+import { auth } from '@/lib/auth/firebase';
+import { loginServer } from '@/lib/auth/utils.actions';
+import { Routes } from '@/lib/const';
 
 export function GoogleAuthentication({
 	setError,
@@ -16,9 +17,12 @@ export function GoogleAuthentication({
 	async function handleGoogleProvider() {
 		try {
 			setIsLoading(true);
-			const credential = await signInWithPopup(auth, provider);
+			const result = await signInWithPopup(auth, provider);
+			const token = await result.user.getIdToken();
 
-			await authServer(credential);
+			await loginServer(token);
+
+			window.location.href = Routes.ROOT;
 		} catch (error) {
 			setError(`Error during Google sign-in: ${(error as Error).message}`);
 		} finally {

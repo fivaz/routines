@@ -8,9 +8,9 @@ import {
 	setDoc,
 	writeBatch,
 } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { db } from '@/lib/auth/firebase';
 import { Category } from './category.type';
-import { DB_PATH } from '@/lib/consts';
+import { DB_PATH } from '@/lib/const';
 
 function getCategoryPath(userId: string) {
 	return `${DB_PATH.USERS}/${userId}/${DB_PATH.CATEGORIES}`;

@@ -13,7 +13,7 @@ import {
 } from 'react';
 import { ImageFocus, Task } from '@/lib/task/task.type';
 import { addSeconds, format, isValid, parse, startOfDay } from 'date-fns';
-import { mmss } from '@/lib/consts';
+import { mmss } from '@/lib/const';
 import { Listbox, ListboxOption } from '@/components/base/listbox';
 import { TaskImageForm } from '@/components/TaskImageForm';
 import { useTaskActions } from '@/lib/task/task.hooks';

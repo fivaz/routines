@@ -1,7 +1,7 @@
 import { doc, setDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
-import { db, storage } from '@/lib/firebase';
-import { DB_PATH } from '@/lib/consts';
+import { db, storage } from '@/lib/auth/firebase';
+import { DB_PATH } from '@/lib/const';
 
 export async function createUserInDB(
 	userId: string,

@@ -18,7 +18,7 @@ import {
 	taskIndexAtom,
 } from '@/app/(dashboard)/routine/[routineId]/focus/service';
 import { useParams, useSearchParams } from 'next/navigation';
-import { Routes } from '@/lib/consts';
+import { Routes } from '@/lib/const';
 import { useSessionActions } from '@/lib/session/session.hooks';
 import { usePrompt } from '@/lib/prompt-context';
 import { tasksAtom } from '@/lib/task/task.type';

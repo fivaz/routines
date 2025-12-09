@@ -5,12 +5,12 @@ import { Banner } from '@/components/base/banner';
 import { Input } from '@/components/base/input';
 import { Field, Label } from '@/components/base/fieldset';
 import { FormEvent, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
-import { parseErrors, validateFields } from '@/app/(auth)/login/service';
+import { auth } from '@/lib/auth/firebase';
+import { parseErrors, validateFields } from '@/app/login/service';
 import { GoogleAuthentication } from '@/components/GoogleAuthentication';
-import { authServer } from '@/app/(auth)/auth.service';
+import { loginServer } from '@/lib/auth/utils.actions';
+import { Routes } from '@/lib/const';
 
 export function LoginForm() {
 	const [errorMessage, setErrorMessage] = useState('');
@@ -32,9 +32,12 @@ export function LoginForm() {
 		}
 
 		try {
-			const credential = await signInWithEmailAndPassword(auth, email, password);
+			const result = await signInWithEmailAndPassword(auth, email, password);
+			const token = await result.user.getIdToken();
 
-			await authServer(credential);
+			await loginServer(token);
+
+			window.location.href = Routes.ROOT;
 		} catch (error) {
 			setErrorMessage(parseErrors(error));
 		} finally {

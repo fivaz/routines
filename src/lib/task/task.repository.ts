@@ -1,4 +1,4 @@
-import { DB_PATH } from '@/lib/consts';
+import { DB_PATH } from '@/lib/const';
 import {
 	collection,
 	doc,
@@ -10,7 +10,7 @@ import {
 	setDoc,
 	writeBatch,
 } from 'firebase/firestore';
-import { db, storage } from '@/lib/firebase';
+import { db, storage } from '@/lib/auth/firebase';
 import { deleteObject, getDownloadURL, getMetadata, ref, uploadBytes } from 'firebase/storage';
 import { ImageFocus, Task } from '@/lib/task/task.type';
 import { getRoutinePath } from '@/lib/routine/routine.repository';

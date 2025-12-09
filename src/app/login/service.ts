@@ -1,8 +1,8 @@
 import { FirebaseError } from 'firebase/app';
 import type { User } from 'firebase/auth';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
-import { createUserInDB, storeAvatar } from '@/lib/user/user.repository';
+import { auth } from '@/lib/auth/firebase';
+import { createUserInDB, storeAvatar } from '@/lib/auth/user.repository';
 
 export function checkEmail(email: string): boolean {
 	return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);

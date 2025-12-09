@@ -8,7 +8,7 @@ import { ImageIcon } from 'lucide-react';
 import { useBackendStatus } from '@/lib/use-backend-status';
 import { Input } from '@/components/base/input';
 import { useAtomValue } from 'jotai/index';
-import { currentUserAtom } from '@/lib/user/user.type';
+import { currentUserAtom } from '@/lib/auth/user.type';
 import { generateRoutineImage } from '@/app/(dashboard)/routine/action';
 
 export function RoutineImageForm({

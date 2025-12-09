@@ -7,7 +7,7 @@ import {
 } from './task.repository';
 import { ImageFocus, Task, tasksAtom, tasksLoadingAtom } from './task.type';
 import { atomEffect } from 'jotai-effect';
-import { currentUserAtom } from '@/lib/user/user.type';
+import { currentUserAtom } from '@/lib/auth/user.type';
 import { routineIdAtom } from '@/lib/routine/routine.type';
 import { safeThrow, safeThrowUnauthorized } from '@/lib/error-handle';
 import { useAtomValue } from 'jotai/index';

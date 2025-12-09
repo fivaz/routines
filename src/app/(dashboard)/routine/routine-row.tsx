@@ -1,7 +1,7 @@
 import type { MouseEvent, PropsWithChildren } from 'react';
 import type { Routine } from '@/lib/routine/routine.type';
 
-import { Routes } from '@/lib/consts';
+import { Routes } from '@/lib/const';
 import { useSortable } from '@dnd-kit/react/sortable';
 import { GripVerticalIcon } from 'lucide-react';
 import { Button } from '@/components/base/button';
