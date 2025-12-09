@@ -9,7 +9,7 @@ export const Routes = {
 	FINISH: (routineId: string) => `/routine/${routineId}/finish`,
 };
 
-export const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+export const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080';
 
 export const SESSION_COOKIE = process.env.SESSION_COOKIE || '__user_token';
 

@@ -9,7 +9,7 @@ export async function generateRoutineImage(
 	routineId: string,
 	routineName: string,
 ): Promise<string> {
-	const token = getToken();
+	const token = await getToken();
 	if (!token) throw new Error('Unable to generate image: User is not authenticated.');
 
 	const body = { routineName, routineId };
@@ -42,10 +42,8 @@ export async function generateTaskImage({
 	taskName: string;
 	focus: ImageFocus;
 }): Promise<string> {
-	const token = getToken();
+	const token = await getToken();
 	if (!token) throw new Error('Unable to generate image: User is not authenticated.');
-
-	if (!token) throw new Error('User not authenticated');
 
 	const body = { taskName, focus, routineId, taskId };
 

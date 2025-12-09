@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { BACKEND_URL } from '@/lib/const';
 
 interface BackendStatusReturn {
 	status: BackendStatus;
@@ -21,7 +22,7 @@ export function useBackendStatus(
 
 		while (currentRetryCount < maxRetries) {
 			try {
-				const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/credits`);
+				const response = await fetch(`${BACKEND_URL}/credits`);
 				if (response.ok) {
 					const data = await response.json();
 					setCredits(data.credits);
