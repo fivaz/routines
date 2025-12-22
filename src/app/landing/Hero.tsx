@@ -1,6 +1,13 @@
+'use client';
+import { ChevronDown } from 'lucide-react';
 import { ImageWithFallback } from './ImageWithFallback';
 
 export function Hero() {
+	const scrollToHowItWorks = () => {
+		const element = document.getElementById('how-it-works');
+		element?.scrollIntoView({ behavior: 'smooth' });
+	};
+
 	return (
 		<section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-white dark:bg-zinc-900">
 			{/* Background Image with Overlay */}
@@ -39,10 +46,14 @@ export function Hero() {
 				</div>
 
 				{/* Scroll Indicator */}
-				<div className="mt-16 animate-bounce">
-					<div className="mx-auto flex h-10 w-6 items-start justify-center rounded-full border-2 border-zinc-300 p-2 dark:border-zinc-600">
-						<div className="h-3 w-1 rounded-full bg-green-600 dark:bg-green-500" />
-					</div>
+				<div className="mt-16 flex w-full justify-center">
+					<button
+						onClick={scrollToHowItWorks}
+						className="flex size-10 animate-bounce cursor-pointer items-center justify-center rounded-full border border-gray-300 transition hover:bg-gray-100 active:scale-95"
+						aria-label="Scroll to How It Works"
+					>
+						<ChevronDown className="size-8 text-green-600" />
+					</button>
 				</div>
 			</div>
 		</section>
