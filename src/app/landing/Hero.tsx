@@ -44,17 +44,16 @@ export function Hero() {
 						Start Your First Routine
 					</a>
 				</div>
-
-				{/* Scroll Indicator */}
-				<div className="mt-16 flex w-full justify-center">
-					<button
-						onClick={scrollToHowItWorks}
-						className="flex size-10 animate-bounce cursor-pointer items-center justify-center rounded-full border border-gray-300 transition hover:bg-gray-100 active:scale-95"
-						aria-label="Scroll to How It Works"
-					>
-						<ChevronDown className="size-8 text-green-600" />
-					</button>
-				</div>
+			</div>
+			{/* Scroll Indicator */}
+			<div className="absolute bottom-6 left-1/2 z-10 -translate-x-1/2">
+				<button
+					onClick={scrollToHowItWorks}
+					className="flex size-10 animate-bounce cursor-pointer items-center justify-center rounded-full bg-green-600 transition hover:bg-green-400 active:scale-95"
+					aria-label="Scroll to How It Works"
+				>
+					<ChevronDown className="size-6 text-white" />
+				</button>
 			</div>
 		</section>
 	);
