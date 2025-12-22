@@ -6,7 +6,7 @@ import { FinalCTA } from './FinalCTA';
 
 export default function Landing() {
 	return (
-		<div className="min-h-screen bg-gray-800">
+		<div className="min-h-screen bg-white dark:bg-zinc-900">
 			<Hero />
 			<HowItWorks />
 			<WhyRoutineMaster />
