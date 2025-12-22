@@ -1,6 +1,7 @@
 'use client';
 import { ChevronDown } from 'lucide-react';
 import { ImageWithFallback } from './ImageWithFallback';
+import { Link } from '@/components/base/link';
 
 export function Hero() {
 	const scrollToHowItWorks = () => {
@@ -28,7 +29,9 @@ export function Hero() {
 
 				<h1 className="mb-6 tracking-tight text-zinc-900 dark:text-white">
 					Master Your Day with{' '}
-					<span className="text-green-600 dark:text-green-500">RoutineMaster</span>
+					<span className="text-lg font-semibold text-green-600 dark:text-green-500">
+						RoutineMaster
+					</span>
 				</h1>
 
 				<p className="mx-auto mb-8 max-w-2xl text-zinc-600 dark:text-zinc-300">
@@ -37,12 +40,12 @@ export function Hero() {
 				</p>
 
 				<div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-					<a
+					<Link
 						href="/register"
 						className="rounded-lg bg-green-600 px-8 py-4 text-white transition-colors duration-200 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600"
 					>
 						Start Your First Routine
-					</a>
+					</Link>
 				</div>
 			</div>
 			{/* Scroll Indicator */}

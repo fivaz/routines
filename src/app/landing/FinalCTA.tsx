@@ -1,4 +1,5 @@
 import { ImageWithFallback } from './ImageWithFallback';
+import { Link } from '@/components/base/link';
 
 export function FinalCTA() {
 	return (
@@ -24,12 +25,12 @@ export function FinalCTA() {
 				</p>
 
 				<div className="mb-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
-					<a
+					<Link
 						href="/register"
 						className="rounded-lg bg-green-600 px-8 py-4 text-white transition-colors duration-200 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600"
 					>
 						Create Your Routine
-					</a>
+					</Link>
 				</div>
 
 				{/* Value Props */}
