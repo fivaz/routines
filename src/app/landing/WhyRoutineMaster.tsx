@@ -27,7 +27,7 @@ export function WhyRoutineMaster() {
 		<section className="bg-white px-6 py-24 dark:bg-zinc-900">
 			<div className="mx-auto max-w-7xl">
 				<div className="mb-16 text-center">
-					<h2 className="mb-4 text-zinc-900 dark:text-white">Why RoutineMaster</h2>
+					<h2 className="mb-4 text-2xl text-zinc-900 dark:text-white">Why RoutineMaster</h2>
 					<p className="mx-auto max-w-2xl text-zinc-600 dark:text-zinc-400">
 						Designed for consistency, clarity, and calm. Structure creates freedom.
 					</p>

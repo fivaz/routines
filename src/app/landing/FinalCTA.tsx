@@ -14,7 +14,9 @@ export function FinalCTA() {
 
 			{/* Content */}
 			<div className="relative z-10 mx-auto max-w-4xl text-center">
-				<h2 className="mb-6 text-zinc-900 dark:text-white">Start Simple. Stay Consistent.</h2>
+				<h2 className="mb-6 text-2xl text-zinc-900 dark:text-white">
+					Start Simple. Stay Consistent.
+				</h2>
 
 				<p className="mx-auto mb-8 max-w-2xl text-zinc-600 dark:text-zinc-300">
 					You don't need motivation. You need structure, clarity, and a system that meets you where
