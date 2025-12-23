@@ -24,9 +24,18 @@ export async function generateRoutineImage(
 			body: JSON.stringify(body),
 		});
 
+		if (!response.ok) {
+			const errorText = await response.text();
+			console.error(
+				`Error generating routine image (Status: ${response.status} ${response.statusText}):`,
+				errorText,
+			);
+			return 'error';
+		}
+
 		return response.text();
 	} catch (error) {
-		console.error('Error making POST request:', error);
+		console.error('Network error while generating routine image:', error);
 		return 'error';
 	}
 }
@@ -57,9 +66,18 @@ export async function generateTaskImage({
 			body: JSON.stringify(body),
 		});
 
+		if (!response.ok) {
+			const errorText = await response.text();
+			console.error(
+				`Error generating task image (Status: ${response.status} ${response.statusText}):`,
+				errorText,
+			);
+			return 'error';
+		}
+
 		return response.text();
 	} catch (error) {
-		console.error('Error making POST request:', error);
+		console.error('Network error while generating task image:', error);
 		return 'error';
 	}
 }
