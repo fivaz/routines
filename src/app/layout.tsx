@@ -18,9 +18,26 @@ export const viewport: Viewport = {
 	userScalable: false,
 };
 
+import localFont from 'next/font/local';
+import clsx from 'clsx';
+
+const inter = localFont({
+	src: [
+		{ path: './fonts/Inter-Medium.woff2', weight: '500', style: 'normal' },
+		{ path: './fonts/Inter-MediumItalic.woff2', weight: '500', style: 'italic' },
+		{ path: './fonts/Inter-SemiBold.woff2', weight: '600', style: 'normal' },
+		{ path: './fonts/Inter-SemiBoldItalic.woff2', weight: '600', style: 'italic' },
+	],
+	variable: '--font-inter',
+});
+
 export default function RootLayout({ children }: { children: ReactNode }) {
 	return (
-		<html lang="en" className="h-full bg-white dark:bg-zinc-900" suppressHydrationWarning>
+		<html
+			lang="en"
+			className={clsx('h-full bg-white dark:bg-zinc-900', inter.className)}
+			suppressHydrationWarning
+		>
 			<body className="h-full">
 				<ThemeProvider attribute="class">
 					<Provider>
