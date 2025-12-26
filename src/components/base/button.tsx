@@ -166,8 +166,14 @@ type ButtonProps = (
 	| { color?: never; outline: true; plain?: never }
 	| { color?: never; outline?: never; plain: true }
 ) & { isLoading?: boolean; className?: string; size?: string; children: React.ReactNode } & (
+		| ({ href: string; disabled?: false } & Omit<
+				React.ComponentPropsWithoutRef<typeof Link>,
+				'className'
+		  >)
+		// Case 2: href is a string and disabled is true → use Headless.Button props
+		| ({ href: string; disabled: true } & Omit<Headless.ButtonProps, 'as' | 'className'>)
+		// Case 3: href is never → use Headless.Button props
 		| ({ href?: never } & Omit<Headless.ButtonProps, 'as' | 'className'>)
-		| ({ href: string } & Omit<React.ComponentPropsWithoutRef<typeof Link>, 'className'>)
 	);
 
 export const Button = forwardRef(function Button(
@@ -184,7 +190,7 @@ export const Button = forwardRef(function Button(
 				: clsx(styles.solid, styles.colors[color ?? 'dark/zinc']),
 	);
 
-	return typeof props.href === 'string' ? (
+	return typeof props.href === 'string' && !props.disabled ? (
 		<Link
 			{...props}
 			className={clsx(classes, size || styles.padding)}
