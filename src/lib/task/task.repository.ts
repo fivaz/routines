@@ -8,6 +8,7 @@ import {
 	runTransaction,
 	serverTimestamp,
 	setDoc,
+	Transaction,
 	writeBatch,
 } from 'firebase/firestore';
 import { db, storage } from '@/lib/auth/firebase';
@@ -129,71 +130,88 @@ export async function addTask({
 	}
 }
 
-export async function editTask({
-	userId,
-	routineId,
-	newRoutineId,
-	imageFile,
-	task,
-}: {
+async function handleTaskImageUpdate(
+	userId: string,
+	routineId: string,
+	newRoutineId: string,
+	task: Task,
+	imageFile: File | null,
+): Promise<Task> {
+	if (!imageFile) return task;
+
+	if (task.image && !task.image.startsWith('https://storage.googleapis.com/')) {
+		await deleteImage(userId, routineId, task.id);
+	}
+
+	const image = await getImageUrl(userId, newRoutineId, task.id, imageFile);
+
+	return { ...task, image };
+}
+
+async function updateRoutineIfDurationChanged(
+	transaction: Transaction,
+	userId: string,
+	routineId: string,
+	oldTask: Task | null,
+	newTask: Task,
+) {
+	if (!oldTask) return;
+
+	const oldDuration = oldTask.durationInSeconds ?? 0;
+	const newDuration = newTask.durationInSeconds ?? 0;
+
+	if (oldDuration !== newDuration) {
+		const routineRef = doc(db, getRoutinePath(userId), routineId);
+		transaction.update(routineRef, {
+			lastUpdated: serverTimestamp(),
+		});
+	}
+}
+
+async function editTaskTransaction(
+	transaction: Transaction,
+	userId: string,
+	routineId: string,
+	newRoutineId: string,
+	task: Task,
+) {
+	const oldTaskRef = doc(db, getTaskPath(userId, routineId), task.id);
+	const newTaskRef = doc(db, getTaskPath(userId, newRoutineId), task.id);
+
+	if (routineId === newRoutineId) {
+		const taskDoc = await transaction.get(oldTaskRef);
+		const oldTask = taskDoc.exists() ? (taskDoc.data() as Task) : null;
+
+		await updateRoutineIfDurationChanged(transaction, userId, routineId, oldTask, task);
+
+		transaction.set(oldTaskRef, task);
+	} else {
+		transaction.delete(oldTaskRef);
+		transaction.set(newTaskRef, task);
+	}
+}
+
+type EditTaskArgs = {
 	userId: string;
 	routineId: string;
 	newRoutineId: string;
 	imageFile: File | null;
 	task: Task;
-}): Promise<TaskOperationResult> {
+};
+
+export async function editTask(args: EditTaskArgs): Promise<TaskOperationResult> {
 	try {
-		let updatedTask = task;
+		const updatedTask = await handleTaskImageUpdate(
+			args.userId,
+			args.routineId,
+			args.newRoutineId,
+			args.task,
+			args.imageFile,
+		);
 
-		// Handle image if needed
-		if (imageFile) {
-			if (task.image) {
-				await deleteImage(userId, routineId, task.id);
-			}
-			const image = await getImageUrl(userId, routineId, task.id, imageFile);
-
-			updatedTask = { ...task, image };
-		}
-
-		// If moving to a different routine
-		if (routineId !== newRoutineId) {
-			await runTransaction(db, async (transaction) => {
-				// Move the task
-				const oldTaskRef = doc(db, getTaskPath(userId, routineId), task.id);
-				const newTaskRef = doc(db, getTaskPath(userId, newRoutineId), task.id);
-
-				transaction.delete(oldTaskRef);
-				transaction.set(newTaskRef, updatedTask);
-			});
-		} else {
-			// Same routine, but need to check if duration changed
-			await runTransaction(db, async (transaction) => {
-				// Get the existing task to compare duration
-				const taskRef = doc(db, getTaskPath(userId, routineId), task.id);
-				const taskDoc = await transaction.get(taskRef);
-
-				if (taskDoc.exists()) {
-					const oldTask = taskDoc.data() as Task;
-					const oldDuration = oldTask.durationInSeconds || 0;
-					const newDuration = updatedTask.durationInSeconds || 0;
-
-					// If duration changed, update routine summary
-					if (oldDuration !== newDuration) {
-						const routineRef = doc(db, getRoutinePath(userId), routineId);
-						const routineDoc = await transaction.get(routineRef);
-
-						if (routineDoc.exists()) {
-							transaction.update(routineRef, {
-								lastUpdated: serverTimestamp(),
-							});
-						}
-					}
-				}
-
-				// Update the task
-				transaction.set(taskRef, updatedTask);
-			});
-		}
+		await runTransaction(db, (transaction) =>
+			editTaskTransaction(transaction, args.userId, args.routineId, args.newRoutineId, updatedTask),
+		);
 
 		return { success: true, task: updatedTask };
 	} catch (error) {
