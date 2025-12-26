@@ -43,12 +43,12 @@ export function CategoryRow({
 			style={style}
 			ref={ref}
 			key={category.id}
-			className="p-4 shadow-md border border-green-100 dark:border-green-600 rounded-md flex justify-between items-center bg-green-500 dark:bg-green-800"
+			className="flex items-center justify-between rounded-md border border-green-100 bg-green-500 p-4 shadow-md dark:border-green-600 dark:bg-green-800"
 		>
-			<div className="flex gap-2 items-center">
+			<div className="flex items-center gap-2">
 				<Button
 					outline
-					className="touch-none cursor-grab"
+					className="cursor-grab touch-none"
 					onClick={(e: MouseEvent<HTMLButtonElement>) => {
 						e.stopPropagation(); // Prevent link click when button is clicked
 					}}

@@ -9,7 +9,7 @@ export function ImageDialogButton({ image }: { image: string }) {
 	return (
 		<>
 			<Button plain onClick={() => setIsOpen(true)}>
-				<ImageUpscaleIcon className="w-5 h-5 text-green-500" />
+				<ImageUpscaleIcon className="size-5 text-green-500" />
 			</Button>
 			<Dialog open={isOpen} onClose={setIsOpen}>
 				{/* eslint-disable-next-line @next/next/no-img-element */}

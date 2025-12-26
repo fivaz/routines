@@ -3,7 +3,6 @@ import clsx from 'clsx';
 import React, { forwardRef } from 'react';
 import { TouchTarget } from './button';
 import { Link } from './link';
-import Image from 'next/image';
 
 type AvatarProps = {
 	src?: string | null;
@@ -28,9 +27,9 @@ export function Avatar({
 			className={clsx(
 				className,
 				// Basic layout
-				'inline-grid shrink-0 align-middle [--avatar-radius:20%] [--ring-opacity:20%] *:col-start-1 *:row-start-1',
-				'outline -outline-offset-1 outline-black/(--ring-opacity) dark:outline-white/(--ring-opacity)',
-				// Add the correct border radius
+				'inline-grid shrink-0 align-middle [--avatar-radius:20%] *:col-start-1 *:row-start-1',
+				'outline -outline-offset-1 outline-black/10 dark:outline-white/10',
+				// Border radius
 				square
 					? 'rounded-(--avatar-radius) *:rounded-(--avatar-radius)'
 					: 'rounded-full *:rounded-full',
@@ -55,7 +54,7 @@ export function Avatar({
 					</text>
 				</svg>
 			)}
-			{src && <Image className="size-full" width={28} height={28} src={src} alt={alt} />}
+			{src && <img className="size-full" src={src} alt={alt} />}
 		</span>
 	);
 }
@@ -70,18 +69,18 @@ export const AvatarButton = forwardRef(function AvatarButton(
 		...props
 	}: AvatarProps &
 		(
-			| Omit<Headless.ButtonProps, 'as' | 'className'>
-			| Omit<React.ComponentPropsWithoutRef<typeof Link>, 'className'>
+			| ({ href?: never } & Omit<Headless.ButtonProps, 'as' | 'className'>)
+			| ({ href: string } & Omit<React.ComponentPropsWithoutRef<typeof Link>, 'className'>)
 		),
-	ref: React.ForwardedRef<HTMLElement>,
+	ref: React.ForwardedRef<HTMLButtonElement>,
 ) {
 	const classes = clsx(
 		className,
 		square ? 'rounded-[20%]' : 'rounded-full',
-		'relative inline-grid focus:outline-hidden data-focus:outline-2 data-focus:outline-offset-2 data-focus:outline-blue-500',
+		'relative inline-grid focus:not-data-focus:outline-hidden data-focus:outline-2 data-focus:outline-offset-2 data-focus:outline-blue-500',
 	);
 
-	return 'href' in props ? (
+	return typeof props.href === 'string' ? (
 		<Link {...props} className={classes} ref={ref as React.ForwardedRef<HTMLAnchorElement>}>
 			<TouchTarget>
 				<Avatar src={src} square={square} initials={initials} alt={alt} />

@@ -36,6 +36,7 @@ It combines countdowns, real-time tracking, and AI-generated visuals to make dai
 ![Mobile Dark](/public/screenshots/mobile-dark.png)
 
 ## How it Works
+
 ![Internal Diagram](/public/screenshots/diagram.png)
 
 ---
@@ -43,6 +44,8 @@ It combines countdowns, real-time tracking, and AI-generated visuals to make dai
 ## Installation (Frontend Only)
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/fivaz/routines.git
 cd routines
+```

@@ -7,7 +7,7 @@ import { Button } from './button';
 import { Link } from './link';
 
 export function Dropdown(props: Headless.MenuProps) {
-	return <Headless.Menu {...props} as="div" />;
+	return <Headless.Menu {...props} />;
 }
 
 export function DropdownButton<T extends React.ElementType = typeof Button>({
@@ -54,8 +54,8 @@ export function DropdownItem({
 	className,
 	...props
 }: { className?: string } & (
-	| Omit<Headless.MenuItemProps<'button'>, 'as' | 'className'>
-	| Omit<Headless.MenuItemProps<typeof Link>, 'as' | 'className'>
+	| ({ href?: never } & Omit<Headless.MenuItemProps<'button'>, 'as' | 'className'>)
+	| ({ href: string } & Omit<Headless.MenuItemProps<typeof Link>, 'as' | 'className'>)
 )) {
 	const classes = clsx(
 		className,
@@ -78,7 +78,7 @@ export function DropdownItem({
 		'*:data-[slot=avatar]:mr-2.5 *:data-[slot=avatar]:-ml-1 *:data-[slot=avatar]:size-6 sm:*:data-[slot=avatar]:mr-2 sm:*:data-[slot=avatar]:size-5',
 	);
 
-	return 'href' in props ? (
+	return typeof props.href === 'string' ? (
 		<Headless.MenuItem as={Link} {...props} className={classes} />
 	) : (
 		<Headless.MenuItem as="button" type="button" {...props} className={classes} />
@@ -135,12 +135,9 @@ export function DropdownDivider({
 	);
 }
 
-export function DropdownLabel({
-	className,
-	...props
-}: { className?: string } & Omit<Headless.LabelProps, 'as' | 'className'>) {
+export function DropdownLabel({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
 	return (
-		<Headless.Label
+		<div
 			{...props}
 			data-slot="label"
 			className={clsx(className, 'col-start-2 row-start-1')}

@@ -1,8 +1,7 @@
 'use server';
 
 import { ImageFocus } from '@/lib/task/task.type';
-import { BACKEND_URL, SESSION_COOKIE } from '@/lib/const';
-import { cookies } from 'next/headers';
+import { BACKEND_URL } from '@/lib/const';
 import { getToken } from '@/lib/auth/utils.actions';
 
 export async function generateRoutineImage(

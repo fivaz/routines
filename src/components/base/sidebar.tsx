@@ -2,7 +2,7 @@
 
 import * as Headless from '@headlessui/react';
 import clsx from 'clsx';
-import { LayoutGroup, motion } from 'framer-motion';
+import { LayoutGroup, motion } from 'motion/react';
 import React, { forwardRef, useId } from 'react';
 import { TouchTarget } from './button';
 import { Link } from './link';
@@ -89,8 +89,8 @@ export const SidebarItem = forwardRef(function SidebarItem(
 		children,
 		...props
 	}: { current?: boolean; className?: string; children: React.ReactNode } & (
-		| Omit<Headless.ButtonProps, 'as' | 'className'>
-		| Omit<Headless.ButtonProps<typeof Link>, 'as' | 'className'>
+		| ({ href?: never } & Omit<Headless.ButtonProps, 'as' | 'className'>)
+		| ({ href: string } & Omit<Headless.ButtonProps<typeof Link>, 'as' | 'className'>)
 	),
 	ref: React.ForwardedRef<HTMLAnchorElement | HTMLButtonElement>,
 ) {
@@ -102,7 +102,7 @@ export const SidebarItem = forwardRef(function SidebarItem(
 		// Trailing icon (down chevron or similar)
 		'*:last:data-[slot=icon]:ml-auto *:last:data-[slot=icon]:size-5 sm:*:last:data-[slot=icon]:size-4',
 		// Avatar
-		'*:data-[slot=avatar]:-m-0.5 *:data-[slot=avatar]:size-7 *:data-[slot=avatar]:[--ring-opacity:10%] sm:*:data-[slot=avatar]:size-6',
+		'*:data-[slot=avatar]:-m-0.5 *:data-[slot=avatar]:size-7 sm:*:data-[slot=avatar]:size-6',
 		// Hover
 		'data-hover:bg-zinc-950/5 data-hover:*:data-[slot=icon]:fill-zinc-950',
 		// Active
@@ -124,7 +124,7 @@ export const SidebarItem = forwardRef(function SidebarItem(
 					className="absolute inset-y-2 -left-4 w-0.5 rounded-full bg-zinc-950 dark:bg-white"
 				/>
 			)}
-			{'href' in props ? (
+			{typeof props.href === 'string' ? (
 				<Headless.CloseButton
 					as={Link}
 					{...props}

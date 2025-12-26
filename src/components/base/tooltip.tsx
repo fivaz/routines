@@ -72,11 +72,11 @@ export function Tooltip({
 							zIndex: 50,
 						}}
 						{...getFloatingProps()}
-						className={`px-3 py-2 text-sm bg-gray-900 text-white rounded shadow-lg max-w-xs ${className}`}
+						className={`max-w-xs rounded bg-gray-900 px-3 py-2 text-sm text-white shadow-lg ${className}`}
 					>
 						<div
 							ref={arrowRef}
-							className="absolute w-2 h-2 bg-gray-900 rotate-45"
+							className="absolute h-2 w-2 rotate-45 bg-gray-900"
 							style={{
 								left: arrowX != null ? `${arrowX}px` : '',
 								top: arrowY != null ? `${arrowY}px` : '',
