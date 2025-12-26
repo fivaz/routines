@@ -1,7 +1,7 @@
 import { Field, Label } from '@/components/base/fieldset';
 import { Routine } from '@/lib/routine/routine.type';
 import { ImageDialogButton } from '@/components/ImageDialogButton';
-import { ChangeEvent, Dispatch, SetStateAction } from 'react';
+import { ChangeEvent, Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { editRoutine } from '@/lib/routine/routine.repository';
 import { Button } from '@/components/base/button';
 import { ImageIcon } from 'lucide-react';
@@ -24,9 +24,12 @@ export function RoutineImageForm({
 }) {
 	const user = useAtomValue(currentUserAtom);
 	const { status } = useBackendStatus();
+	const [loading, setLoading] = useState(false);
 
 	async function handleImageGeneration() {
 		if (!user || !routineIn) return;
+
+		setLoading(true);
 
 		const image = await generateRoutineImage(routineIn.id, routineIn.name);
 
@@ -76,7 +79,7 @@ export function RoutineImageForm({
 				<Field className="col-span-3 flex flex-col justify-between gap-2 md:col-span-1">
 					<Label>Or generate image</Label>
 					<Button
-						isLoading={status === 'loading'}
+						isLoading={loading || status === 'loading'}
 						disabled={status !== 'success'}
 						color="green"
 						onClick={handleImageGeneration}
