@@ -8,8 +8,6 @@ import { Field, Label } from '@/components/base/fieldset';
 import { GoogleIcon } from '@/components/icons/GoogleIcon';
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-import { auth } from '@/lib/auth/firebase';
 import { parseErrors, register, validateFields } from '@/app/login/service';
 import { minidenticon } from 'minidenticons';
 import Image from 'next/image';
