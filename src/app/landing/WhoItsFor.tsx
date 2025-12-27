@@ -26,7 +26,7 @@ export function WhoItsFor() {
 		<section className="bg-zinc-50 px-6 py-24 dark:bg-zinc-800">
 			<div className="mx-auto max-w-7xl">
 				<div className="mb-16 text-center">
-					<h2 className="mb-4 text-2xl text-zinc-900 dark:text-white">Who It's For</h2>
+					<h2 className="mb-4 text-2xl text-zinc-900 dark:text-white">Who It&apos;s For</h2>
 					<p className="mx-auto max-w-2xl text-zinc-600 dark:text-zinc-400">
 						RoutineMaster is designed for anyone who wants clarity, focus, and sustainable progress.
 					</p>

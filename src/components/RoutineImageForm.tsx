@@ -1,7 +1,7 @@
 import { Field, Label } from '@/components/base/fieldset';
 import { Routine } from '@/lib/routine/routine.type';
 import { ImageDialogButton } from '@/components/ImageDialogButton';
-import { ChangeEvent, Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react';
 import { editRoutine } from '@/lib/routine/routine.repository';
 import { Button } from '@/components/base/button';
 import { ImageIcon } from 'lucide-react';

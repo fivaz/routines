@@ -7,7 +7,7 @@ import {
 	RadioGroup as HeadlessRadioGroup,
 } from '@headlessui/react';
 import { Field, FieldGroup, Label } from '@/components/base/fieldset';
-import { ChevronDownIcon, HammerIcon, ImageIcon, PencilIcon, UserPenIcon } from 'lucide-react';
+import { ChevronDownIcon, PencilIcon, UserPenIcon } from 'lucide-react';
 import { Radio } from '@/components/base/radio';
 import { ImageFocus, Task } from '@/lib/task/task.type';
 import { ImageDialogButton } from '@/components/ImageDialogButton';
@@ -16,7 +16,6 @@ import { Button } from '@/components/base/button';
 import { useBackendStatus } from '@/lib/use-backend-status';
 import { Input } from '@/components/base/input';
 import { useTaskActions } from '@/lib/task/task.hooks';
-import { UserIcon } from '@heroicons/react/16/solid';
 
 export function TaskImageForm({
 	taskIn,

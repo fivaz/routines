@@ -47,7 +47,7 @@ export function WhyRoutineMaster() {
 						{/* Floating Quote */}
 						<div className="absolute -right-6 -bottom-6 max-w-xs rounded-lg border border-green-500/30 bg-white p-6 shadow-xl dark:bg-zinc-800">
 							<p className="text-green-600 italic dark:text-green-500">
-								"Consistency beats motivation"
+								&quot;Consistency beats motivation&quot;
 							</p>
 						</div>
 					</div>
@@ -72,10 +72,12 @@ export function WhyRoutineMaster() {
 						{/* Philosophy Cards */}
 						<div className="mt-12 grid grid-cols-1 gap-4">
 							<div className="rounded-lg border border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-700 dark:bg-zinc-800/50">
-								<p className="text-zinc-700 dark:text-zinc-300">"One day at a time"</p>
+								<p className="text-zinc-700 dark:text-zinc-300">&quot;One day at a time&quot;</p>
 							</div>
 							<div className="rounded-lg border border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-700 dark:bg-zinc-800/50">
-								<p className="text-zinc-700 dark:text-zinc-300">"Structure creates freedom"</p>
+								<p className="text-zinc-700 dark:text-zinc-300">
+									&quot;Structure creates freedom&quot;
+								</p>
 							</div>
 						</div>
 					</div>

@@ -20,8 +20,8 @@ export function FinalCTA() {
 				</h2>
 
 				<p className="mx-auto mb-8 max-w-2xl text-zinc-600 dark:text-zinc-300">
-					You don't need motivation. You need structure, clarity, and a system that meets you where
-					you are. Build your first routine today.
+					You don&apos;t need motivation. You need structure, clarity, and a system that meets you
+					where you are. Build your first routine today.
 				</p>
 
 				<div className="mb-12 flex flex-col items-center justify-center gap-4 sm:flex-row">

@@ -40,17 +40,6 @@ export function RegisterForm() {
 		}
 	}, [isLoading.email, isLoading.google]);
 
-	async function handleGoogleProvider() {
-		const provider = new GoogleAuthProvider();
-
-		try {
-			await signInWithPopup(auth, provider);
-			void router.push(Routes.ROOT);
-		} catch (error) {
-			console.error('Error during Google sign-in:', (error as Error).message);
-		}
-	}
-
 	async function onSubmit(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault();
 
