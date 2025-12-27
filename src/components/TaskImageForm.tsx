@@ -94,12 +94,10 @@ export function TaskImageForm({
 			<DisclosurePanel className="p-2 text-sm/5 text-white/50">
 				<FieldGroup>
 					<Field>
-						<Label>
-							<div className="flex items-center justify-between">
-								<span>Upload Image</span>
-								{taskIn.image && <ImageDialogButton image={taskIn.image} />}
-							</div>
-						</Label>
+						<div className="mb-2 flex items-center justify-between">
+							<Label>Upload Image</Label>
+							{taskIn.image && <ImageDialogButton image={taskIn.image} />}
+						</div>
 						<Input
 							type="file"
 							accept="image/*"

@@ -62,12 +62,12 @@ export function RoutineImageForm({
 	return (
 		<div className="grid grid-cols-3 gap-6 md:gap-2">
 			<Field className={routineIn.id ? 'col-span-3 md:col-span-2' : 'col-span-3'}>
-				<Label>
-					<div className="flex items-center justify-between">
-						<span>Upload Image</span>
+				<div className="flex items-center justify-between">
+					<Label className="pb-2">Upload Image</Label>
+					<div className="mb-1">
 						{routineIn.image && <ImageDialogButton image={routineIn.image} />}
 					</div>
-				</Label>
+				</div>
 				<Input
 					type="file"
 					accept="image/*"
