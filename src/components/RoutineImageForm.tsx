@@ -39,6 +39,7 @@ export function RoutineImageForm({
 
 		void editRoutine(user.uid, routineWithImage, null);
 
+		setLoading(false);
 		close();
 	}
 
@@ -80,7 +81,7 @@ export function RoutineImageForm({
 					<Label>Or generate image</Label>
 					<Button
 						isLoading={loading || status === 'loading'}
-						disabled={status !== 'success'}
+						disabled={loading || status !== 'success'}
 						color="green"
 						onClick={handleImageGeneration}
 					>

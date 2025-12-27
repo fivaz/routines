@@ -6,17 +6,8 @@ import { SESSION_COOKIE } from '@/lib/const';
 
 export async function getToken() {
 	const cookieStore = await cookies();
-	const sessionCookie = cookieStore.get(SESSION_COOKIE)?.value;
 
-	if (!sessionCookie) return null;
-
-	try {
-		const decodedClaims = await adminAuth.verifySessionCookie(sessionCookie, true);
-		return await adminAuth.createCustomToken(decodedClaims.uid);
-	} catch (error) {
-		console.error('Error verifying session cookie or creating custom token:', error);
-		return null;
-	}
+	return cookieStore.get(SESSION_COOKIE)?.value;
 }
 
 export async function loginServer(idToken: string) {

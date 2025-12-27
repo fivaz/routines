@@ -7,15 +7,16 @@ import {
 	RadioGroup as HeadlessRadioGroup,
 } from '@headlessui/react';
 import { Field, FieldGroup, Label } from '@/components/base/fieldset';
-import { ChevronDownIcon, ImageIcon } from 'lucide-react';
+import { ChevronDownIcon, HammerIcon, ImageIcon, PencilIcon, UserPenIcon } from 'lucide-react';
 import { Radio } from '@/components/base/radio';
 import { ImageFocus, Task } from '@/lib/task/task.type';
 import { ImageDialogButton } from '@/components/ImageDialogButton';
-import { Dispatch, SetStateAction } from 'react';
+import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react';
 import { Button } from '@/components/base/button';
 import { useBackendStatus } from '@/lib/use-backend-status';
 import { Input } from '@/components/base/input';
 import { useTaskActions } from '@/lib/task/task.hooks';
+import { UserIcon } from '@heroicons/react/16/solid';
 
 export function TaskImageForm({
 	taskIn,
@@ -34,10 +35,13 @@ export function TaskImageForm({
 	close: () => void;
 }) {
 	const { status } = useBackendStatus();
+	const [loading, setLoading] = useState(false);
 	const { editTask, generateTaskImage } = useTaskActions(routineId);
 
 	async function handleImageGeneration(imageFocus: ImageFocus) {
 		if (!taskIn) return;
+
+		setLoading(true);
 
 		const image = await generateTaskImage({
 			routineId,
@@ -57,10 +61,11 @@ export function TaskImageForm({
 			task: taskWithImage,
 		});
 
+		setLoading(false);
 		close();
 	}
 
-	function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+	function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
 		const file = e.target.files?.[0];
 		if (file) {
 			setImageFile(file);
@@ -110,22 +115,22 @@ export function TaskImageForm({
 								<Button
 									className="col-span-2 md:col-span-1"
 									color="green"
-									isLoading={status === 'loading'}
-									disabled={status !== 'success'}
+									isLoading={loading || status === 'loading'}
+									disabled={loading || status !== 'success'}
 									onClick={() => handleImageGeneration('person')}
 								>
-									<ImageIcon className="block md:hidden" />
+									<UserPenIcon className="block size-5 text-white md:hidden" />
 									the person of the task
 								</Button>
 
 								<Button
 									className="col-span-2 md:col-span-1"
 									color="green"
-									isLoading={status === 'loading'}
-									disabled={status !== 'success'}
+									isLoading={loading || status === 'loading'}
+									disabled={loading || status !== 'success'}
 									onClick={() => handleImageGeneration('object')}
 								>
-									<ImageIcon className="block md:hidden" />
+									<PencilIcon className="block size-5 md:hidden" />
 									the object of the task
 								</Button>
 							</div>
