@@ -7,7 +7,7 @@ import { Button } from './button';
 import { Link } from './link';
 
 export function Dropdown(props: Headless.MenuProps) {
-	return <Headless.Menu {...props} />;
+	return <Headless.Menu {...props} as="div" />;
 }
 
 export function DropdownButton<T extends React.ElementType = typeof Button>({
